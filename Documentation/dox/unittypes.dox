@@ -44,7 +44,7 @@ Value of 0  [0x0]. See BWAPI::UnitTypes::Terran_Marine.
 @ref UnitTypes::Terran_Barracks "Terran Barracks"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic</td></tr>
 </table>
-@tlTerran_Marine @sccTerran_Marine @wikTerran_Marine
+@tlTerran_Marine @sccTerran_Marine
 @m_keywords{Terran Marine}
 
 */
@@ -100,7 +100,7 @@ Value of 1  [0x1]. See BWAPI::UnitTypes::Terran_Ghost.
 @ref UnitTypes::Terran_Barracks "Terran Barracks"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic</td></tr>
 </table>
-@tlTerran_Ghost @sccTerran_Ghost @wikTerran_Ghost
+@tlTerran_Ghost @sccTerran_Ghost
 @m_keywords{Terran Ghost}
 
 */
@@ -148,7 +148,7 @@ Value of 2  [0x2]. See BWAPI::UnitTypes::Terran_Vulture.
 @ref UnitTypes::Terran_Factory "Terran Factory"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical</td></tr>
 </table>
-@tlTerran_Vulture @sccTerran_Vulture @wikTerran_Vulture
+@tlTerran_Vulture @sccTerran_Vulture
 @m_keywords{Terran Vulture}
 
 */
@@ -197,7 +197,7 @@ Value of 3  [0x3]. See BWAPI::UnitTypes::Terran_Goliath.
 @ref UnitTypes::Terran_Factory "Terran Factory"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical</td></tr>
 </table>
-@tlTerran_Goliath @sccTerran_Goliath @wikTerran_Goliath
+@tlTerran_Goliath @sccTerran_Goliath
 @m_keywords{Terran Goliath}
 
 */
@@ -245,7 +245,7 @@ Value of 5  [0x5]. See BWAPI::UnitTypes::Terran_Siege_Tank_Tank_Mode.
 @ref UnitTypes::Terran_Factory "Terran Factory"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical</td></tr>
 </table>
-@tlTerran_Siege_Tank_Tank_Mode @sccTerran_Siege_Tank_Tank_Mode @wikTerran_Siege_Tank_Tank_Mode
+@tlTerran_Siege_Tank_Tank_Mode @sccTerran_Siege_Tank_Tank_Mode
 @m_keywords{Terran Siege Tank Tank Mode}
 
 */
@@ -289,7 +289,7 @@ Value of 7  [0x7]. See BWAPI::UnitTypes::Terran_SCV.
 @ref UnitTypes::Terran_Command_Center "Terran Command Center"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Mechanical, Worker</td></tr>
 </table>
-@tlTerran_SCV @sccTerran_SCV @wikTerran_SCV
+@tlTerran_SCV @sccTerran_SCV
 @m_keywords{Terran SCV}
 
 */
@@ -339,7 +339,7 @@ Value of 8  [0x8]. See BWAPI::UnitTypes::Terran_Wraith.
 @ref UnitTypes::Terran_Starport "Terran Starport"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical</td></tr>
 </table>
-@tlTerran_Wraith @sccTerran_Wraith @wikTerran_Wraith
+@tlTerran_Wraith @sccTerran_Wraith
 @m_keywords{Terran Wraith}
 
 */
@@ -388,7 +388,7 @@ Value of 9  [0x9]. See BWAPI::UnitTypes::Terran_Science_Vessel.
 @ref UnitTypes::Terran_Starport "Terran Starport"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Detector</td></tr>
 </table>
-@tlTerran_Science_Vessel @sccTerran_Science_Vessel @wikTerran_Science_Vessel
+@tlTerran_Science_Vessel @sccTerran_Science_Vessel
 @m_keywords{Terran Science Vessel}
 
 */
@@ -418,7 +418,7 @@ Value of 10  [0xa]. See BWAPI::UnitTypes::Hero_Gui_Montag.
 <tr><td><strong>Turn Radius</strong></td><td>40</td></tr>
 <tr><td><strong>Ground Weapon</strong></td><td>@m_span{cmdbtn cmdbtn-icon335}@m_endspan
 @ref WeaponTypes::Flame_Thrower_Gui_Montag "Flame Thrower Gui Montag" x 3</td></tr>
-<tr><td><strong>Size</strong></td><td>23x22 px; 1x1 tiles</td></tr>
+<tr><td><strong>Size</strong></td><td>23x28 px; 1x1 tiles</td></tr>
 <tr><td><strong>SizeType</strong></td><td>@ref UnitSizeTypes::Small "Small"</td></tr>
 <tr><td><strong>Space Required</strong></td><td>1</td></tr>
 <tr><td><strong>Seek Range</strong></td><td>96</td></tr>
@@ -430,7 +430,7 @@ Value of 10  [0xa]. See BWAPI::UnitTypes::Hero_Gui_Montag.
 @ref UpgradeTypes::Terran_Infantry_Weapons "Terran Infantry Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero</td></tr>
 </table>
-@tlHero_Gui_Montag @sccHero_Gui_Montag @wikHero_Gui_Montag
+@tlHero_Gui_Montag @sccHero_Gui_Montag
 @m_keywords{Hero Gui Montag}
 
 */
@@ -473,7 +473,7 @@ Value of 11  [0xb]. See BWAPI::UnitTypes::Terran_Dropship.
 @ref UnitTypes::Terran_Starport "Terran Starport"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical</td></tr>
 </table>
-@tlTerran_Dropship @sccTerran_Dropship @wikTerran_Dropship
+@tlTerran_Dropship @sccTerran_Dropship
 @m_keywords{Terran Dropship}
 
 */
@@ -525,7 +525,7 @@ Value of 12  [0xc]. See BWAPI::UnitTypes::Terran_Battlecruiser.
 @ref UnitTypes::Terran_Starport "Terran Starport"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical</td></tr>
 </table>
-@tlTerran_Battlecruiser @sccTerran_Battlecruiser @wikTerran_Battlecruiser
+@tlTerran_Battlecruiser @sccTerran_Battlecruiser
 @m_keywords{Terran Battlecruiser}
 
 */
@@ -561,7 +561,7 @@ Value of 13  [0xd]. See BWAPI::UnitTypes::Terran_Vulture_Spider_Mine.
 <tr><td><strong>Sight Range</strong></td><td>96</td></tr>
 <tr><td><strong>Attributes</strong></td><td></td></tr>
 </table>
-@tlTerran_Vulture_Spider_Mine @sccTerran_Vulture_Spider_Mine @wikTerran_Vulture_Spider_Mine
+@tlTerran_Vulture_Spider_Mine @sccTerran_Vulture_Spider_Mine
 @m_keywords{Terran Vulture Spider Mine}
 
 */
@@ -599,7 +599,7 @@ Value of 14  [0xe]. See BWAPI::UnitTypes::Terran_Nuclear_Missile.
 @ref UnitTypes::Terran_Nuclear_Silo "Terran Nuclear Silo"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Invincible</td></tr>
 </table>
-@tlTerran_Nuclear_Missile @sccTerran_Nuclear_Missile @wikTerran_Nuclear_Missile
+@tlTerran_Nuclear_Missile @sccTerran_Nuclear_Missile
 @m_keywords{Terran Nuclear Missile}
 
 */
@@ -636,7 +636,7 @@ Value of 15  [0xf]. See BWAPI::UnitTypes::Terran_Civilian.
 @ref UpgradeTypes::Terran_Infantry_Armor "Terran Infantry Armor"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero</td></tr>
 </table>
-@tlTerran_Civilian @sccTerran_Civilian @wikTerran_Civilian
+@tlTerran_Civilian @sccTerran_Civilian
 @m_keywords{Terran Civilian}
 
 */
@@ -682,7 +682,7 @@ Value of 16  [0x10]. See BWAPI::UnitTypes::Hero_Sarah_Kerrigan.
 @ref UpgradeTypes::Terran_Infantry_Weapons "Terran Infantry Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero</td></tr>
 </table>
-@tlHero_Sarah_Kerrigan @sccHero_Sarah_Kerrigan @wikHero_Sarah_Kerrigan
+@tlHero_Sarah_Kerrigan @sccHero_Sarah_Kerrigan
 @m_keywords{Hero Sarah Kerrigan}
 
 */
@@ -724,7 +724,7 @@ Value of 17  [0x11]. See BWAPI::UnitTypes::Hero_Alan_Schezar.
 @ref UpgradeTypes::Terran_Vehicle_Weapons "Terran Vehicle Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Hero</td></tr>
 </table>
-@tlHero_Alan_Schezar @sccHero_Alan_Schezar @wikHero_Alan_Schezar
+@tlHero_Alan_Schezar @sccHero_Alan_Schezar
 @m_keywords{Hero Alan Schezar}
 
 */
@@ -766,7 +766,7 @@ Value of 19  [0x13]. See BWAPI::UnitTypes::Hero_Jim_Raynor_Vulture.
 @ref UpgradeTypes::Terran_Vehicle_Weapons "Terran Vehicle Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Hero</td></tr>
 </table>
-@tlHero_Jim_Raynor_Vulture @sccHero_Jim_Raynor_Vulture @wikHero_Jim_Raynor_Vulture
+@tlHero_Jim_Raynor_Vulture @sccHero_Jim_Raynor_Vulture
 @m_keywords{Hero Jim Raynor Vulture}
 
 */
@@ -810,7 +810,7 @@ Value of 20  [0x14]. See BWAPI::UnitTypes::Hero_Jim_Raynor_Marine.
 @ref UpgradeTypes::Terran_Infantry_Weapons "Terran Infantry Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero</td></tr>
 </table>
-@tlHero_Jim_Raynor_Marine @sccHero_Jim_Raynor_Marine @wikHero_Jim_Raynor_Marine
+@tlHero_Jim_Raynor_Marine @sccHero_Jim_Raynor_Marine
 @m_keywords{Hero Jim Raynor Marine}
 
 */
@@ -854,7 +854,7 @@ Value of 21  [0x15]. See BWAPI::UnitTypes::Hero_Tom_Kazansky.
 @ref UpgradeTypes::Terran_Ship_Weapons "Terran Ship Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Hero</td></tr>
 </table>
-@tlHero_Tom_Kazansky @sccHero_Tom_Kazansky @wikHero_Tom_Kazansky
+@tlHero_Tom_Kazansky @sccHero_Tom_Kazansky
 @m_keywords{Hero Tom Kazansky}
 
 */
@@ -895,7 +895,7 @@ Value of 22  [0x16]. See BWAPI::UnitTypes::Hero_Magellan.
 @ref UpgradeTypes::Terran_Ship_Plating "Terran Ship Plating"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Detector, Hero</td></tr>
 </table>
-@tlHero_Magellan @sccHero_Magellan @wikHero_Magellan
+@tlHero_Magellan @sccHero_Magellan
 @m_keywords{Hero Magellan}
 
 */
@@ -937,7 +937,7 @@ Value of 23  [0x17]. See BWAPI::UnitTypes::Hero_Edmund_Duke_Tank_Mode.
 @ref UpgradeTypes::Terran_Vehicle_Weapons "Terran Vehicle Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Hero</td></tr>
 </table>
-@tlHero_Edmund_Duke_Tank_Mode @sccHero_Edmund_Duke_Tank_Mode @wikHero_Edmund_Duke_Tank_Mode
+@tlHero_Edmund_Duke_Tank_Mode @sccHero_Edmund_Duke_Tank_Mode
 @m_keywords{Hero Edmund Duke Tank Mode}
 
 */
@@ -978,7 +978,7 @@ Value of 25  [0x19]. See BWAPI::UnitTypes::Hero_Edmund_Duke_Siege_Mode.
 @ref UpgradeTypes::Terran_Vehicle_Weapons "Terran Vehicle Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Hero</td></tr>
 </table>
-@tlHero_Edmund_Duke_Siege_Mode @sccHero_Edmund_Duke_Siege_Mode @wikHero_Edmund_Duke_Siege_Mode
+@tlHero_Edmund_Duke_Siege_Mode @sccHero_Edmund_Duke_Siege_Mode
 @m_keywords{Hero Edmund Duke Siege Mode}
 
 */
@@ -1020,7 +1020,7 @@ Value of 27  [0x1b]. See BWAPI::UnitTypes::Hero_Arcturus_Mengsk.
 @ref UpgradeTypes::Terran_Ship_Weapons "Terran Ship Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Hero</td></tr>
 </table>
-@tlHero_Arcturus_Mengsk @sccHero_Arcturus_Mengsk @wikHero_Arcturus_Mengsk
+@tlHero_Arcturus_Mengsk @sccHero_Arcturus_Mengsk
 @m_keywords{Hero Arcturus Mengsk}
 
 */
@@ -1064,7 +1064,7 @@ Value of 28  [0x1c]. See BWAPI::UnitTypes::Hero_Hyperion.
 @ref UpgradeTypes::Terran_Ship_Weapons "Terran Ship Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Hero</td></tr>
 </table>
-@tlHero_Hyperion @sccHero_Hyperion @wikHero_Hyperion
+@tlHero_Hyperion @sccHero_Hyperion
 @m_keywords{Hero Hyperion}
 
 */
@@ -1108,7 +1108,7 @@ Value of 29  [0x1d]. See BWAPI::UnitTypes::Hero_Norad_II.
 @ref UpgradeTypes::Terran_Ship_Weapons "Terran Ship Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Hero</td></tr>
 </table>
-@tlHero_Norad_II @sccHero_Norad_II @wikHero_Norad_II
+@tlHero_Norad_II @sccHero_Norad_II
 @m_keywords{Hero Norad II}
 
 */
@@ -1154,7 +1154,7 @@ Value of 30  [0x1e]. See BWAPI::UnitTypes::Terran_Siege_Tank_Siege_Mode.
 @ref UnitTypes::Terran_Factory "Terran Factory"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical</td></tr>
 </table>
-@tlTerran_Siege_Tank_Siege_Mode @sccTerran_Siege_Tank_Siege_Mode @wikTerran_Siege_Tank_Siege_Mode
+@tlTerran_Siege_Tank_Siege_Mode @sccTerran_Siege_Tank_Siege_Mode
 @m_keywords{Terran Siege Tank Siege Mode}
 
 */
@@ -1202,7 +1202,7 @@ Value of 32  [0x20]. See BWAPI::UnitTypes::Terran_Firebat.
 @ref UnitTypes::Terran_Barracks "Terran Barracks"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic</td></tr>
 </table>
-@tlTerran_Firebat @sccTerran_Firebat @wikTerran_Firebat
+@tlTerran_Firebat @sccTerran_Firebat
 @m_keywords{Terran Firebat}
 
 */
@@ -1231,7 +1231,7 @@ Value of 33  [0x21]. See BWAPI::UnitTypes::Spell_Scanner_Sweep.
 <tr><td><strong>Sight Range</strong></td><td>320</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Detector, Spell</td></tr>
 </table>
-@tlSpell_Scanner_Sweep @sccSpell_Scanner_Sweep @wikSpell_Scanner_Sweep
+@tlSpell_Scanner_Sweep @sccSpell_Scanner_Sweep
 @m_keywords{Spell Scanner Sweep}
 
 */
@@ -1280,7 +1280,7 @@ Value of 34  [0x22]. See BWAPI::UnitTypes::Terran_Medic.
 @ref UnitTypes::Terran_Barracks "Terran Barracks"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic</td></tr>
 </table>
-@tlTerran_Medic @sccTerran_Medic @wikTerran_Medic
+@tlTerran_Medic @sccTerran_Medic
 @m_keywords{Terran Medic}
 
 */
@@ -1320,7 +1320,7 @@ Value of 35  [0x23]. See BWAPI::UnitTypes::Zerg_Larva.
 @ref UnitTypes::Zerg_Hatchery "Zerg Hatchery"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Larva @sccZerg_Larva @wikZerg_Larva
+@tlZerg_Larva @sccZerg_Larva
 @m_keywords{Zerg Larva}
 
 */
@@ -1356,7 +1356,7 @@ Value of 36  [0x24]. See BWAPI::UnitTypes::Zerg_Egg.
 @ref UnitTypes::Zerg_Larva "Zerg Larva"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic</td></tr>
 </table>
-@tlZerg_Egg @sccZerg_Egg @wikZerg_Egg
+@tlZerg_Egg @sccZerg_Egg
 @m_keywords{Zerg Egg}
 
 */
@@ -1406,7 +1406,7 @@ Value of 37  [0x25]. See BWAPI::UnitTypes::Zerg_Zergling.
 @ref UnitTypes::Zerg_Larva "Zerg Larva"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, TwoUnitsInOneEgg, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Zergling @sccZerg_Zergling @wikZerg_Zergling
+@tlZerg_Zergling @sccZerg_Zergling
 @m_keywords{Zerg Zergling}
 
 */
@@ -1458,7 +1458,7 @@ Value of 38  [0x26]. See BWAPI::UnitTypes::Zerg_Hydralisk.
 @ref UnitTypes::Zerg_Larva "Zerg Larva"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Hydralisk @sccZerg_Hydralisk @wikZerg_Hydralisk
+@tlZerg_Hydralisk @sccZerg_Hydralisk
 @m_keywords{Zerg Hydralisk}
 
 */
@@ -1506,7 +1506,7 @@ Value of 39  [0x27]. See BWAPI::UnitTypes::Zerg_Ultralisk.
 @ref UnitTypes::Zerg_Larva "Zerg Larva"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Ultralisk @sccZerg_Ultralisk @wikZerg_Ultralisk
+@tlZerg_Ultralisk @sccZerg_Ultralisk
 @m_keywords{Zerg Ultralisk}
 
 */
@@ -1546,7 +1546,7 @@ Value of 40  [0x28]. See BWAPI::UnitTypes::Zerg_Broodling.
 @ref UpgradeTypes::Zerg_Melee_Attacks "Zerg Melee Attacks"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Broodling @sccZerg_Broodling @wikZerg_Broodling
+@tlZerg_Broodling @sccZerg_Broodling
 @m_keywords{Zerg Broodling}
 
 */
@@ -1592,7 +1592,7 @@ Value of 41  [0x29]. See BWAPI::UnitTypes::Zerg_Drone.
 @ref UnitTypes::Zerg_Larva "Zerg Larva"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Worker, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Drone @sccZerg_Drone @wikZerg_Drone
+@tlZerg_Drone @sccZerg_Drone
 @m_keywords{Zerg Drone}
 
 */
@@ -1638,7 +1638,7 @@ Value of 42  [0x2a]. See BWAPI::UnitTypes::Zerg_Overlord.
 @ref UnitTypes::Zerg_Larva "Zerg Larva"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic, Detector, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Overlord @sccZerg_Overlord @wikZerg_Overlord
+@tlZerg_Overlord @sccZerg_Overlord
 @m_keywords{Zerg Overlord}
 
 */
@@ -1685,7 +1685,7 @@ Value of 43  [0x2b]. See BWAPI::UnitTypes::Zerg_Mutalisk.
 @ref UnitTypes::Zerg_Larva "Zerg Larva"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Mutalisk @sccZerg_Mutalisk @wikZerg_Mutalisk
+@tlZerg_Mutalisk @sccZerg_Mutalisk
 @m_keywords{Zerg Mutalisk}
 
 */
@@ -1730,7 +1730,7 @@ Value of 44  [0x2c]. See BWAPI::UnitTypes::Zerg_Guardian.
 @ref UnitTypes::Zerg_Mutalisk "Zerg Mutalisk"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Guardian @sccZerg_Guardian @wikZerg_Guardian
+@tlZerg_Guardian @sccZerg_Guardian
 @m_keywords{Zerg Guardian}
 
 */
@@ -1779,7 +1779,7 @@ Value of 45  [0x2d]. See BWAPI::UnitTypes::Zerg_Queen.
 @ref UnitTypes::Zerg_Larva "Zerg Larva"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Queen @sccZerg_Queen @wikZerg_Queen
+@tlZerg_Queen @sccZerg_Queen
 @m_keywords{Zerg Queen}
 
 */
@@ -1829,7 +1829,7 @@ Value of 46  [0x2e]. See BWAPI::UnitTypes::Zerg_Defiler.
 @ref UnitTypes::Zerg_Larva "Zerg Larva"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Defiler @sccZerg_Defiler @wikZerg_Defiler
+@tlZerg_Defiler @sccZerg_Defiler
 @m_keywords{Zerg Defiler}
 
 */
@@ -1873,7 +1873,7 @@ Value of 47  [0x2f]. See BWAPI::UnitTypes::Zerg_Scourge.
 @ref UnitTypes::Zerg_Larva "Zerg Larva"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic, TwoUnitsInOneEgg, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Scourge @sccZerg_Scourge @wikZerg_Scourge
+@tlZerg_Scourge @sccZerg_Scourge
 @m_keywords{Zerg Scourge}
 
 */
@@ -1913,7 +1913,7 @@ Value of 48  [0x30]. See BWAPI::UnitTypes::Hero_Torrasque.
 @ref UpgradeTypes::Zerg_Melee_Attacks "Zerg Melee Attacks"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero, RegeneratesHP</td></tr>
 </table>
-@tlHero_Torrasque @sccHero_Torrasque @wikHero_Torrasque
+@tlHero_Torrasque @sccHero_Torrasque
 @m_keywords{Hero Torrasque}
 
 */
@@ -1955,7 +1955,7 @@ Value of 49  [0x31]. See BWAPI::UnitTypes::Hero_Matriarch.
 @ref UpgradeTypes::Zerg_Flyer_Carapace "Zerg Flyer Carapace"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic, Hero, RegeneratesHP</td></tr>
 </table>
-@tlHero_Matriarch @sccHero_Matriarch @wikHero_Matriarch
+@tlHero_Matriarch @sccHero_Matriarch
 @m_keywords{Hero Matriarch}
 
 */
@@ -2001,7 +2001,7 @@ Value of 50  [0x32]. See BWAPI::UnitTypes::Zerg_Infested_Terran.
 @ref UnitTypes::Zerg_Infested_Command_Center "Zerg Infested Command Center"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Infested_Terran @sccZerg_Infested_Terran @wikZerg_Infested_Terran
+@tlZerg_Infested_Terran @sccZerg_Infested_Terran
 @m_keywords{Zerg Infested Terran}
 
 */
@@ -2047,7 +2047,7 @@ Value of 51  [0x33]. See BWAPI::UnitTypes::Hero_Infested_Kerrigan.
 @ref UpgradeTypes::Zerg_Melee_Attacks "Zerg Melee Attacks"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero, RegeneratesHP</td></tr>
 </table>
-@tlHero_Infested_Kerrigan @sccHero_Infested_Kerrigan @wikHero_Infested_Kerrigan
+@tlHero_Infested_Kerrigan @sccHero_Infested_Kerrigan
 @m_keywords{Hero Infested Kerrigan}
 
 */
@@ -2076,7 +2076,7 @@ Value of 52  [0x34]. See BWAPI::UnitTypes::Hero_Unclean_One.
 <tr><td><strong>Acceleration</strong></td><td>1</td></tr>
 <tr><td><strong>Halt Distance</strong></td><td>1</td></tr>
 <tr><td><strong>Turn Radius</strong></td><td>27</td></tr>
-<tr><td><strong>Size</strong></td><td>27x25 px; 1x1 tiles</td></tr>
+<tr><td><strong>Size</strong></td><td>29x29 px; 1x1 tiles</td></tr>
 <tr><td><strong>SizeType</strong></td><td>@ref UnitSizeTypes::Medium "Medium"</td></tr>
 <tr><td><strong>Space Required</strong></td><td>2</td></tr>
 <tr><td><strong>Seek Range</strong></td><td>0</td></tr>
@@ -2090,7 +2090,7 @@ Value of 52  [0x34]. See BWAPI::UnitTypes::Hero_Unclean_One.
 @ref UpgradeTypes::Zerg_Carapace "Zerg Carapace"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero, RegeneratesHP</td></tr>
 </table>
-@tlHero_Unclean_One @sccHero_Unclean_One @wikHero_Unclean_One
+@tlHero_Unclean_One @sccHero_Unclean_One
 @m_keywords{Hero Unclean One}
 
 */
@@ -2134,7 +2134,7 @@ Value of 53  [0x35]. See BWAPI::UnitTypes::Hero_Hunter_Killer.
 @ref UpgradeTypes::Zerg_Missile_Attacks "Zerg Missile Attacks"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero, RegeneratesHP</td></tr>
 </table>
-@tlHero_Hunter_Killer @sccHero_Hunter_Killer @wikHero_Hunter_Killer
+@tlHero_Hunter_Killer @sccHero_Hunter_Killer
 @m_keywords{Hero Hunter Killer}
 
 */
@@ -2176,7 +2176,7 @@ Value of 54  [0x36]. See BWAPI::UnitTypes::Hero_Devouring_One.
 @ref UpgradeTypes::Zerg_Melee_Attacks "Zerg Melee Attacks"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, TwoUnitsInOneEgg, Hero, RegeneratesHP</td></tr>
 </table>
-@tlHero_Devouring_One @sccHero_Devouring_One @wikHero_Devouring_One
+@tlHero_Devouring_One @sccHero_Devouring_One
 @m_keywords{Hero Devouring One}
 
 */
@@ -2217,7 +2217,7 @@ Value of 55  [0x37]. See BWAPI::UnitTypes::Hero_Kukulza_Mutalisk.
 @ref UpgradeTypes::Zerg_Flyer_Attacks "Zerg Flyer Attacks"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic, Hero, RegeneratesHP</td></tr>
 </table>
-@tlHero_Kukulza_Mutalisk @sccHero_Kukulza_Mutalisk @wikHero_Kukulza_Mutalisk
+@tlHero_Kukulza_Mutalisk @sccHero_Kukulza_Mutalisk
 @m_keywords{Hero Kukulza Mutalisk}
 
 */
@@ -2256,7 +2256,7 @@ Value of 56  [0x38]. See BWAPI::UnitTypes::Hero_Kukulza_Guardian.
 @ref UpgradeTypes::Zerg_Flyer_Attacks "Zerg Flyer Attacks"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic, Hero, RegeneratesHP</td></tr>
 </table>
-@tlHero_Kukulza_Guardian @sccHero_Kukulza_Guardian @wikHero_Kukulza_Guardian
+@tlHero_Kukulza_Guardian @sccHero_Kukulza_Guardian
 @m_keywords{Hero Kukulza Guardian}
 
 */
@@ -2294,7 +2294,7 @@ Value of 57  [0x39]. See BWAPI::UnitTypes::Hero_Yggdrasill.
 @ref UpgradeTypes::Zerg_Flyer_Carapace "Zerg Flyer Carapace"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic, Detector, Hero, RegeneratesHP</td></tr>
 </table>
-@tlHero_Yggdrasill @sccHero_Yggdrasill @wikHero_Yggdrasill
+@tlHero_Yggdrasill @sccHero_Yggdrasill
 @m_keywords{Hero Yggdrasill}
 
 */
@@ -2340,7 +2340,7 @@ Value of 58  [0x3a]. See BWAPI::UnitTypes::Terran_Valkyrie.
 @ref UnitTypes::Terran_Starport "Terran Starport"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical</td></tr>
 </table>
-@tlTerran_Valkyrie @sccTerran_Valkyrie @wikTerran_Valkyrie
+@tlTerran_Valkyrie @sccTerran_Valkyrie
 @m_keywords{Terran Valkyrie}
 
 */
@@ -2377,7 +2377,7 @@ Value of 59  [0x3b]. See BWAPI::UnitTypes::Zerg_Cocoon.
 @ref UnitTypes::Zerg_Mutalisk "Zerg Mutalisk"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic</td></tr>
 </table>
-@tlZerg_Cocoon @sccZerg_Cocoon @wikZerg_Cocoon
+@tlZerg_Cocoon @sccZerg_Cocoon
 @m_keywords{Zerg Cocoon}
 
 */
@@ -2427,7 +2427,7 @@ Value of 60  [0x3c]. See BWAPI::UnitTypes::Protoss_Corsair.
 @ref UnitTypes::Protoss_Stargate "Protoss Stargate"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical</td></tr>
 </table>
-@tlProtoss_Corsair @sccProtoss_Corsair @wikProtoss_Corsair
+@tlProtoss_Corsair @sccProtoss_Corsair
 @m_keywords{Protoss Corsair}
 
 */
@@ -2477,7 +2477,7 @@ Value of 61  [0x3d]. See BWAPI::UnitTypes::Protoss_Dark_Templar.
 @ref UnitTypes::Protoss_Gateway "Protoss Gateway"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, PermanentCloak</td></tr>
 </table>
-@tlProtoss_Dark_Templar @sccProtoss_Dark_Templar @wikProtoss_Dark_Templar
+@tlProtoss_Dark_Templar @sccProtoss_Dark_Templar
 @m_keywords{Protoss Dark Templar}
 
 */
@@ -2522,7 +2522,7 @@ Value of 62  [0x3e]. See BWAPI::UnitTypes::Zerg_Devourer.
 @ref UnitTypes::Zerg_Mutalisk "Zerg Mutalisk"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Devourer @sccZerg_Devourer @wikZerg_Devourer
+@tlZerg_Devourer @sccZerg_Devourer
 @m_keywords{Zerg Devourer}
 
 */
@@ -2573,7 +2573,7 @@ Value of 63  [0x3f]. See BWAPI::UnitTypes::Protoss_Dark_Archon.
 @ref UnitTypes::Protoss_Dark_Templar "Protoss Dark Templar"</td></tr>
 <tr><td><strong>Attributes</strong></td><td></td></tr>
 </table>
-@tlProtoss_Dark_Archon @sccProtoss_Dark_Archon @wikProtoss_Dark_Archon
+@tlProtoss_Dark_Archon @sccProtoss_Dark_Archon
 @m_keywords{Protoss Dark Archon}
 
 */
@@ -2619,7 +2619,7 @@ Value of 64  [0x40]. See BWAPI::UnitTypes::Protoss_Probe.
 @ref UnitTypes::Protoss_Nexus "Protoss Nexus"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Robotic, Worker</td></tr>
 </table>
-@tlProtoss_Probe @sccProtoss_Probe @wikProtoss_Probe
+@tlProtoss_Probe @sccProtoss_Probe
 @m_keywords{Protoss Probe}
 
 */
@@ -2667,7 +2667,7 @@ Value of 65  [0x41]. See BWAPI::UnitTypes::Protoss_Zealot.
 @ref UnitTypes::Protoss_Gateway "Protoss Gateway"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic</td></tr>
 </table>
-@tlProtoss_Zealot @sccProtoss_Zealot @wikProtoss_Zealot
+@tlProtoss_Zealot @sccProtoss_Zealot
 @m_keywords{Protoss Zealot}
 
 */
@@ -2718,7 +2718,7 @@ Value of 66  [0x42]. See BWAPI::UnitTypes::Protoss_Dragoon.
 @ref UnitTypes::Protoss_Gateway "Protoss Gateway"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical</td></tr>
 </table>
-@tlProtoss_Dragoon @sccProtoss_Dragoon @wikProtoss_Dragoon
+@tlProtoss_Dragoon @sccProtoss_Dragoon
 @m_keywords{Protoss Dragoon}
 
 */
@@ -2769,7 +2769,7 @@ Value of 67  [0x43]. See BWAPI::UnitTypes::Protoss_High_Templar.
 @ref UnitTypes::Protoss_Gateway "Protoss Gateway"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic</td></tr>
 </table>
-@tlProtoss_High_Templar @sccProtoss_High_Templar @wikProtoss_High_Templar
+@tlProtoss_High_Templar @sccProtoss_High_Templar
 @m_keywords{Protoss High Templar}
 
 */
@@ -2818,7 +2818,7 @@ Value of 68  [0x44]. See BWAPI::UnitTypes::Protoss_Archon.
 @ref UnitTypes::Protoss_High_Templar "Protoss High Templar"</td></tr>
 <tr><td><strong>Attributes</strong></td><td></td></tr>
 </table>
-@tlProtoss_Archon @sccProtoss_Archon @wikProtoss_Archon
+@tlProtoss_Archon @sccProtoss_Archon
 @m_keywords{Protoss Archon}
 
 */
@@ -2863,7 +2863,7 @@ Value of 69  [0x45]. See BWAPI::UnitTypes::Protoss_Shuttle.
 @ref UnitTypes::Protoss_Robotics_Facility "Protoss Robotics Facility"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Robotic</td></tr>
 </table>
-@tlProtoss_Shuttle @sccProtoss_Shuttle @wikProtoss_Shuttle
+@tlProtoss_Shuttle @sccProtoss_Shuttle
 @m_keywords{Protoss Shuttle}
 
 */
@@ -2913,7 +2913,7 @@ Value of 70  [0x46]. See BWAPI::UnitTypes::Protoss_Scout.
 @ref UnitTypes::Protoss_Stargate "Protoss Stargate"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical</td></tr>
 </table>
-@tlProtoss_Scout @sccProtoss_Scout @wikProtoss_Scout
+@tlProtoss_Scout @sccProtoss_Scout
 @m_keywords{Protoss Scout}
 
 */
@@ -2967,7 +2967,7 @@ Value of 71  [0x47]. See BWAPI::UnitTypes::Protoss_Arbiter.
 @ref UnitTypes::Protoss_Stargate "Protoss Stargate"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical</td></tr>
 </table>
-@tlProtoss_Arbiter @sccProtoss_Arbiter @wikProtoss_Arbiter
+@tlProtoss_Arbiter @sccProtoss_Arbiter
 @m_keywords{Protoss Arbiter}
 
 */
@@ -3013,7 +3013,7 @@ Value of 72  [0x48]. See BWAPI::UnitTypes::Protoss_Carrier.
 @ref UnitTypes::Protoss_Stargate "Protoss Stargate"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical</td></tr>
 </table>
-@tlProtoss_Carrier @sccProtoss_Carrier @wikProtoss_Carrier
+@tlProtoss_Carrier @sccProtoss_Carrier
 @m_keywords{Protoss Carrier}
 
 */
@@ -3061,7 +3061,7 @@ Value of 73  [0x49]. See BWAPI::UnitTypes::Protoss_Interceptor.
 @ref UnitTypes::Protoss_Carrier "Protoss Carrier"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical</td></tr>
 </table>
-@tlProtoss_Interceptor @sccProtoss_Interceptor @wikProtoss_Interceptor
+@tlProtoss_Interceptor @sccProtoss_Interceptor
 @m_keywords{Protoss Interceptor}
 
 */
@@ -3103,7 +3103,7 @@ Value of 74  [0x4a]. See BWAPI::UnitTypes::Hero_Dark_Templar.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero, PermanentCloak</td></tr>
 </table>
-@tlHero_Dark_Templar @sccHero_Dark_Templar @wikHero_Dark_Templar
+@tlHero_Dark_Templar @sccHero_Dark_Templar
 @m_keywords{Hero Dark Templar}
 
 */
@@ -3145,7 +3145,7 @@ Value of 75  [0x4b]. See BWAPI::UnitTypes::Hero_Zeratul.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero, PermanentCloak</td></tr>
 </table>
-@tlHero_Zeratul @sccHero_Zeratul @wikHero_Zeratul
+@tlHero_Zeratul @sccHero_Zeratul
 @m_keywords{Hero Zeratul}
 
 */
@@ -3189,7 +3189,7 @@ Value of 76  [0x4c]. See BWAPI::UnitTypes::Hero_Tassadar_Zeratul_Archon.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Hero</td></tr>
 </table>
-@tlHero_Tassadar_Zeratul_Archon @sccHero_Tassadar_Zeratul_Archon @wikHero_Tassadar_Zeratul_Archon
+@tlHero_Tassadar_Zeratul_Archon @sccHero_Tassadar_Zeratul_Archon
 @m_keywords{Hero Tassadar Zeratul Archon}
 
 */
@@ -3231,7 +3231,7 @@ Value of 77  [0x4d]. See BWAPI::UnitTypes::Hero_Fenix_Zealot.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero</td></tr>
 </table>
-@tlHero_Fenix_Zealot @sccHero_Fenix_Zealot @wikHero_Fenix_Zealot
+@tlHero_Fenix_Zealot @sccHero_Fenix_Zealot
 @m_keywords{Hero Fenix Zealot}
 
 */
@@ -3275,7 +3275,7 @@ Value of 78  [0x4e]. See BWAPI::UnitTypes::Hero_Fenix_Dragoon.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Hero</td></tr>
 </table>
-@tlHero_Fenix_Dragoon @sccHero_Fenix_Dragoon @wikHero_Fenix_Dragoon
+@tlHero_Fenix_Dragoon @sccHero_Fenix_Dragoon
 @m_keywords{Hero Fenix Dragoon}
 
 */
@@ -3321,7 +3321,7 @@ Value of 79  [0x4f]. See BWAPI::UnitTypes::Hero_Tassadar.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero</td></tr>
 </table>
-@tlHero_Tassadar @sccHero_Tassadar @wikHero_Tassadar
+@tlHero_Tassadar @sccHero_Tassadar
 @m_keywords{Hero Tassadar}
 
 */
@@ -3364,7 +3364,7 @@ Value of 80  [0x50]. See BWAPI::UnitTypes::Hero_Mojo.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Hero</td></tr>
 </table>
-@tlHero_Mojo @sccHero_Mojo @wikHero_Mojo
+@tlHero_Mojo @sccHero_Mojo
 @m_keywords{Hero Mojo}
 
 */
@@ -3406,7 +3406,7 @@ Value of 81  [0x51]. See BWAPI::UnitTypes::Hero_Warbringer.
 @ref UpgradeTypes::Reaver_Capacity "Reaver Capacity"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Robotic, Hero</td></tr>
 </table>
-@tlHero_Warbringer @sccHero_Warbringer @wikHero_Warbringer
+@tlHero_Warbringer @sccHero_Warbringer
 @m_keywords{Hero Warbringer}
 
 */
@@ -3445,7 +3445,7 @@ Value of 82  [0x52]. See BWAPI::UnitTypes::Hero_Gantrithor.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Hero</td></tr>
 </table>
-@tlHero_Gantrithor @sccHero_Gantrithor @wikHero_Gantrithor
+@tlHero_Gantrithor @sccHero_Gantrithor
 @m_keywords{Hero Gantrithor}
 
 */
@@ -3493,7 +3493,7 @@ Value of 83  [0x53]. See BWAPI::UnitTypes::Protoss_Reaver.
 @ref UnitTypes::Protoss_Robotics_Facility "Protoss Robotics Facility"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Robotic</td></tr>
 </table>
-@tlProtoss_Reaver @sccProtoss_Reaver @wikProtoss_Reaver
+@tlProtoss_Reaver @sccProtoss_Reaver
 @m_keywords{Protoss Reaver}
 
 */
@@ -3539,7 +3539,7 @@ Value of 84  [0x54]. See BWAPI::UnitTypes::Protoss_Observer.
 @ref UnitTypes::Protoss_Robotics_Facility "Protoss Robotics Facility"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Robotic, Detector, PermanentCloak</td></tr>
 </table>
-@tlProtoss_Observer @sccProtoss_Observer @wikProtoss_Observer
+@tlProtoss_Observer @sccProtoss_Observer
 @m_keywords{Protoss Observer}
 
 */
@@ -3583,7 +3583,7 @@ Value of 85  [0x55]. See BWAPI::UnitTypes::Protoss_Scarab.
 @ref UnitTypes::Protoss_Reaver "Protoss Reaver"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Mechanical</td></tr>
 </table>
-@tlProtoss_Scarab @sccProtoss_Scarab @wikProtoss_Scarab
+@tlProtoss_Scarab @sccProtoss_Scarab
 @m_keywords{Protoss Scarab}
 
 */
@@ -3630,7 +3630,7 @@ Value of 86  [0x56]. See BWAPI::UnitTypes::Hero_Danimoth.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Hero</td></tr>
 </table>
-@tlHero_Danimoth @sccHero_Danimoth @wikHero_Danimoth
+@tlHero_Danimoth @sccHero_Danimoth
 @m_keywords{Hero Danimoth}
 
 */
@@ -3662,7 +3662,7 @@ Value of 87  [0x57]. See BWAPI::UnitTypes::Hero_Aldaris.
 <tr><td><strong>Turn Radius</strong></td><td>40</td></tr>
 <tr><td><strong>Ground Weapon</strong></td><td>@m_span{cmdbtn cmdbtn-icon355}@m_endspan
 @ref WeaponTypes::Psi_Assault "Psi Assault"</td></tr>
-<tr><td><strong>Size</strong></td><td>24x24 px; 1x1 tiles</td></tr>
+<tr><td><strong>Size</strong></td><td>24x28 px; 1x1 tiles</td></tr>
 <tr><td><strong>SizeType</strong></td><td>@ref UnitSizeTypes::Small "Small"</td></tr>
 <tr><td><strong>Space Required</strong></td><td>2</td></tr>
 <tr><td><strong>Seek Range</strong></td><td>96</td></tr>
@@ -3673,7 +3673,7 @@ Value of 87  [0x57]. See BWAPI::UnitTypes::Hero_Aldaris.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero</td></tr>
 </table>
-@tlHero_Aldaris @sccHero_Aldaris @wikHero_Aldaris
+@tlHero_Aldaris @sccHero_Aldaris
 @m_keywords{Hero Aldaris}
 
 */
@@ -3716,7 +3716,7 @@ Value of 88  [0x58]. See BWAPI::UnitTypes::Hero_Artanis.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Hero</td></tr>
 </table>
-@tlHero_Artanis @sccHero_Artanis @wikHero_Artanis
+@tlHero_Artanis @sccHero_Artanis
 @m_keywords{Hero Artanis}
 
 */
@@ -3750,7 +3750,7 @@ Value of 89  [0x59]. See BWAPI::UnitTypes::Critter_Rhynadon.
 <tr><td><strong>Sight Range</strong></td><td>224</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Neutral, Critter</td></tr>
 </table>
-@tlCritter_Rhynadon @sccCritter_Rhynadon @wikCritter_Rhynadon
+@tlCritter_Rhynadon @sccCritter_Rhynadon
 @m_keywords{Critter Rhynadon}
 
 */
@@ -3784,7 +3784,7 @@ Value of 90  [0x5a]. See BWAPI::UnitTypes::Critter_Bengalaas.
 <tr><td><strong>Sight Range</strong></td><td>224</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Neutral, Critter</td></tr>
 </table>
-@tlCritter_Bengalaas @sccCritter_Bengalaas @wikCritter_Bengalaas
+@tlCritter_Bengalaas @sccCritter_Bengalaas
 @m_keywords{Critter Bengalaas}
 
 */
@@ -3813,7 +3813,7 @@ Value of 91  [0x5b]. See BWAPI::UnitTypes::Special_Cargo_Ship.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td></td></tr>
 </table>
-@tlSpecial_Cargo_Ship @sccSpecial_Cargo_Ship @wikSpecial_Cargo_Ship
+@tlSpecial_Cargo_Ship @sccSpecial_Cargo_Ship
 @m_keywords{Special Cargo Ship}
 
 */
@@ -3842,7 +3842,7 @@ Value of 92  [0x5c]. See BWAPI::UnitTypes::Special_Mercenary_Gunship.
 <tr><td><strong>Sight Range</strong></td><td>224</td></tr>
 <tr><td><strong>Attributes</strong></td><td></td></tr>
 </table>
-@tlSpecial_Mercenary_Gunship @sccSpecial_Mercenary_Gunship @wikSpecial_Mercenary_Gunship
+@tlSpecial_Mercenary_Gunship @sccSpecial_Mercenary_Gunship
 @m_keywords{Special Mercenary Gunship}
 
 */
@@ -3876,7 +3876,7 @@ Value of 93  [0x5d]. See BWAPI::UnitTypes::Critter_Scantid.
 <tr><td><strong>Sight Range</strong></td><td>224</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Neutral, Critter</td></tr>
 </table>
-@tlCritter_Scantid @sccCritter_Scantid @wikCritter_Scantid
+@tlCritter_Scantid @sccCritter_Scantid
 @m_keywords{Critter Scantid}
 
 */
@@ -3910,7 +3910,7 @@ Value of 94  [0x5e]. See BWAPI::UnitTypes::Critter_Kakaru.
 <tr><td><strong>Sight Range</strong></td><td>224</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Organic, Neutral, Critter</td></tr>
 </table>
-@tlCritter_Kakaru @sccCritter_Kakaru @wikCritter_Kakaru
+@tlCritter_Kakaru @sccCritter_Kakaru
 @m_keywords{Critter Kakaru}
 
 */
@@ -3944,7 +3944,7 @@ Value of 95  [0x5f]. See BWAPI::UnitTypes::Critter_Ragnasaur.
 <tr><td><strong>Sight Range</strong></td><td>224</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Neutral, Critter</td></tr>
 </table>
-@tlCritter_Ragnasaur @sccCritter_Ragnasaur @wikCritter_Ragnasaur
+@tlCritter_Ragnasaur @sccCritter_Ragnasaur
 @m_keywords{Critter Ragnasaur}
 
 */
@@ -3978,7 +3978,7 @@ Value of 96  [0x60]. See BWAPI::UnitTypes::Critter_Ursadon.
 <tr><td><strong>Sight Range</strong></td><td>224</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Neutral, Critter</td></tr>
 </table>
-@tlCritter_Ursadon @sccCritter_Ursadon @wikCritter_Ursadon
+@tlCritter_Ursadon @sccCritter_Ursadon
 @m_keywords{Critter Ursadon}
 
 */
@@ -4016,7 +4016,7 @@ Value of 97  [0x61]. See BWAPI::UnitTypes::Zerg_Lurker_Egg.
 @ref UnitTypes::Zerg_Hydralisk "Zerg Hydralisk"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic</td></tr>
 </table>
-@tlZerg_Lurker_Egg @sccZerg_Lurker_Egg @wikZerg_Lurker_Egg
+@tlZerg_Lurker_Egg @sccZerg_Lurker_Egg
 @m_keywords{Zerg Lurker Egg}
 
 */
@@ -4048,7 +4048,7 @@ Value of 98  [0x62]. See BWAPI::UnitTypes::Hero_Raszagal.
 <tr><td><strong>Turn Radius</strong></td><td>30</td></tr>
 <tr><td><strong>Air Weapon</strong></td><td>@m_span{cmdbtn cmdbtn-icon332}@m_endspan
 @ref WeaponTypes::Neutron_Flare "Neutron Flare"</td></tr>
-<tr><td><strong>Size</strong></td><td>36x32 px; 1x1 tiles</td></tr>
+<tr><td><strong>Size</strong></td><td>49x37 px; 1x1 tiles</td></tr>
 <tr><td><strong>SizeType</strong></td><td>@ref UnitSizeTypes::Medium "Medium"</td></tr>
 <tr><td><strong>Seek Range</strong></td><td>288</td></tr>
 <tr><td><strong>Sight Range</strong></td><td>288</td></tr>
@@ -4060,7 +4060,7 @@ Value of 98  [0x62]. See BWAPI::UnitTypes::Hero_Raszagal.
 @ref UpgradeTypes::Protoss_Plasma_Shields "Protoss Plasma Shields"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Hero</td></tr>
 </table>
-@tlHero_Raszagal @sccHero_Raszagal @wikHero_Raszagal
+@tlHero_Raszagal @sccHero_Raszagal
 @m_keywords{Hero Raszagal}
 
 */
@@ -4106,7 +4106,7 @@ Value of 99  [0x63]. See BWAPI::UnitTypes::Hero_Samir_Duran.
 @ref UpgradeTypes::Terran_Infantry_Weapons "Terran Infantry Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero</td></tr>
 </table>
-@tlHero_Samir_Duran @sccHero_Samir_Duran @wikHero_Samir_Duran
+@tlHero_Samir_Duran @sccHero_Samir_Duran
 @m_keywords{Hero Samir Duran}
 
 */
@@ -4152,7 +4152,7 @@ Value of 100  [0x64]. See BWAPI::UnitTypes::Hero_Alexei_Stukov.
 @ref UpgradeTypes::Terran_Infantry_Weapons "Terran Infantry Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero</td></tr>
 </table>
-@tlHero_Alexei_Stukov @sccHero_Alexei_Stukov @wikHero_Alexei_Stukov
+@tlHero_Alexei_Stukov @sccHero_Alexei_Stukov
 @m_keywords{Hero Alexei Stukov}
 
 */
@@ -4181,7 +4181,7 @@ Value of 101  [0x65]. See BWAPI::UnitTypes::Special_Map_Revealer.
 <tr><td><strong>Sight Range</strong></td><td>320</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer</td></tr>
 </table>
-@tlSpecial_Map_Revealer @sccSpecial_Map_Revealer @wikSpecial_Map_Revealer
+@tlSpecial_Map_Revealer @sccSpecial_Map_Revealer
 @m_keywords{Special Map Revealer}
 
 */
@@ -4225,7 +4225,7 @@ Value of 102  [0x66]. See BWAPI::UnitTypes::Hero_Gerard_DuGalle.
 @ref UpgradeTypes::Terran_Ship_Weapons "Terran Ship Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Flyer, Mechanical, Hero</td></tr>
 </table>
-@tlHero_Gerard_DuGalle @sccHero_Gerard_DuGalle @wikHero_Gerard_DuGalle
+@tlHero_Gerard_DuGalle @sccHero_Gerard_DuGalle
 @m_keywords{Hero Gerard DuGalle}
 
 */
@@ -4274,7 +4274,7 @@ Value of 103  [0x67]. See BWAPI::UnitTypes::Zerg_Lurker.
 @ref UnitTypes::Zerg_Hydralisk "Zerg Hydralisk"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Lurker @sccZerg_Lurker @wikZerg_Lurker
+@tlZerg_Lurker @sccZerg_Lurker
 @m_keywords{Zerg Lurker}
 
 */
@@ -4321,7 +4321,7 @@ Value of 104  [0x68]. See BWAPI::UnitTypes::Hero_Infested_Duran.
 @ref UpgradeTypes::Terran_Infantry_Weapons "Terran Infantry Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Hero, RegeneratesHP</td></tr>
 </table>
-@tlHero_Infested_Duran @sccHero_Infested_Duran @wikHero_Infested_Duran
+@tlHero_Infested_Duran @sccHero_Infested_Duran
 @m_keywords{Hero Infested Duran}
 
 */
@@ -4350,7 +4350,7 @@ Value of 105  [0x69]. See BWAPI::UnitTypes::Spell_Disruption_Web.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Neutral, Spell</td></tr>
 </table>
-@tlSpell_Disruption_Web @sccSpell_Disruption_Web @wikSpell_Disruption_Web
+@tlSpell_Disruption_Web @sccSpell_Disruption_Web
 @m_keywords{Spell Disruption Web}
 
 */
@@ -4390,7 +4390,7 @@ Value of 106  [0x6a]. See BWAPI::UnitTypes::Terran_Command_Center.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, ResourceDepot, FlyingBuilding, Building</td></tr>
 </table>
-@tlTerran_Command_Center @sccTerran_Command_Center @wikTerran_Command_Center
+@tlTerran_Command_Center @sccTerran_Command_Center
 @m_keywords{Terran Command Center}
 
 */
@@ -4429,7 +4429,7 @@ Value of 107  [0x6b]. See BWAPI::UnitTypes::Terran_Comsat_Station.
 @ref UnitTypes::Terran_Command_Center "Terran Command Center"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Addon, Building</td></tr>
 </table>
-@tlTerran_Comsat_Station @sccTerran_Comsat_Station @wikTerran_Comsat_Station
+@tlTerran_Comsat_Station @sccTerran_Comsat_Station
 @m_keywords{Terran Comsat Station}
 
 */
@@ -4466,7 +4466,7 @@ Value of 108  [0x6c]. See BWAPI::UnitTypes::Terran_Nuclear_Silo.
 @ref UnitTypes::Terran_Command_Center "Terran Command Center"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Addon, Building</td></tr>
 </table>
-@tlTerran_Nuclear_Silo @sccTerran_Nuclear_Silo @wikTerran_Nuclear_Silo
+@tlTerran_Nuclear_Silo @sccTerran_Nuclear_Silo
 @m_keywords{Terran Nuclear Silo}
 
 */
@@ -4502,7 +4502,7 @@ Value of 109  [0x6d]. See BWAPI::UnitTypes::Terran_Supply_Depot.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building</td></tr>
 </table>
-@tlTerran_Supply_Depot @sccTerran_Supply_Depot @wikTerran_Supply_Depot
+@tlTerran_Supply_Depot @sccTerran_Supply_Depot
 @m_keywords{Terran Supply Depot}
 
 */
@@ -4541,7 +4541,7 @@ Value of 110  [0x6e]. See BWAPI::UnitTypes::Terran_Refinery.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, ResourceContainer, Refinery, Building</td></tr>
 </table>
-@tlTerran_Refinery @sccTerran_Refinery @wikTerran_Refinery
+@tlTerran_Refinery @sccTerran_Refinery
 @m_keywords{Terran Refinery}
 
 */
@@ -4581,7 +4581,7 @@ Value of 111  [0x6f]. See BWAPI::UnitTypes::Terran_Barracks.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, FlyingBuilding, Building</td></tr>
 </table>
-@tlTerran_Barracks @sccTerran_Barracks @wikTerran_Barracks
+@tlTerran_Barracks @sccTerran_Barracks
 @m_keywords{Terran Barracks}
 
 */
@@ -4617,7 +4617,7 @@ Value of 112  [0x70]. See BWAPI::UnitTypes::Terran_Academy.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building</td></tr>
 </table>
-@tlTerran_Academy @sccTerran_Academy @wikTerran_Academy
+@tlTerran_Academy @sccTerran_Academy
 @m_keywords{Terran Academy}
 
 */
@@ -4657,7 +4657,7 @@ Value of 113  [0x71]. See BWAPI::UnitTypes::Terran_Factory.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, FlyingBuilding, Building</td></tr>
 </table>
-@tlTerran_Factory @sccTerran_Factory @wikTerran_Factory
+@tlTerran_Factory @sccTerran_Factory
 @m_keywords{Terran Factory}
 
 */
@@ -4697,7 +4697,7 @@ Value of 114  [0x72]. See BWAPI::UnitTypes::Terran_Starport.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, FlyingBuilding, Building</td></tr>
 </table>
-@tlTerran_Starport @sccTerran_Starport @wikTerran_Starport
+@tlTerran_Starport @sccTerran_Starport
 @m_keywords{Terran Starport}
 
 */
@@ -4732,7 +4732,7 @@ Value of 115  [0x73]. See BWAPI::UnitTypes::Terran_Control_Tower.
 @ref UnitTypes::Terran_Starport "Terran Starport"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Addon, Building</td></tr>
 </table>
-@tlTerran_Control_Tower @sccTerran_Control_Tower @wikTerran_Control_Tower
+@tlTerran_Control_Tower @sccTerran_Control_Tower
 @m_keywords{Terran Control Tower}
 
 */
@@ -4772,7 +4772,7 @@ Value of 116  [0x74]. See BWAPI::UnitTypes::Terran_Science_Facility.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, FlyingBuilding, Building</td></tr>
 </table>
-@tlTerran_Science_Facility @sccTerran_Science_Facility @wikTerran_Science_Facility
+@tlTerran_Science_Facility @sccTerran_Science_Facility
 @m_keywords{Terran Science Facility}
 
 */
@@ -4807,7 +4807,7 @@ Value of 117  [0x75]. See BWAPI::UnitTypes::Terran_Covert_Ops.
 @ref UnitTypes::Terran_Science_Facility "Terran Science Facility"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Addon, Building</td></tr>
 </table>
-@tlTerran_Covert_Ops @sccTerran_Covert_Ops @wikTerran_Covert_Ops
+@tlTerran_Covert_Ops @sccTerran_Covert_Ops
 @m_keywords{Terran Covert Ops}
 
 */
@@ -4842,7 +4842,7 @@ Value of 118  [0x76]. See BWAPI::UnitTypes::Terran_Physics_Lab.
 @ref UnitTypes::Terran_Science_Facility "Terran Science Facility"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Addon, Building</td></tr>
 </table>
-@tlTerran_Physics_Lab @sccTerran_Physics_Lab @wikTerran_Physics_Lab
+@tlTerran_Physics_Lab @sccTerran_Physics_Lab
 @m_keywords{Terran Physics Lab}
 
 */
@@ -4877,7 +4877,7 @@ Value of 120  [0x78]. See BWAPI::UnitTypes::Terran_Machine_Shop.
 @ref UnitTypes::Terran_Factory "Terran Factory"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Addon, Building</td></tr>
 </table>
-@tlTerran_Machine_Shop @sccTerran_Machine_Shop @wikTerran_Machine_Shop
+@tlTerran_Machine_Shop @sccTerran_Machine_Shop
 @m_keywords{Terran Machine Shop}
 
 */
@@ -4917,7 +4917,7 @@ Value of 122  [0x7a]. See BWAPI::UnitTypes::Terran_Engineering_Bay.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, FlyingBuilding, Building</td></tr>
 </table>
-@tlTerran_Engineering_Bay @sccTerran_Engineering_Bay @wikTerran_Engineering_Bay
+@tlTerran_Engineering_Bay @sccTerran_Engineering_Bay
 @m_keywords{Terran Engineering Bay}
 
 */
@@ -4953,7 +4953,7 @@ Value of 123  [0x7b]. See BWAPI::UnitTypes::Terran_Armory.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building</td></tr>
 </table>
-@tlTerran_Armory @sccTerran_Armory @wikTerran_Armory
+@tlTerran_Armory @sccTerran_Armory
 @m_keywords{Terran Armory}
 
 */
@@ -4992,7 +4992,7 @@ Value of 124  [0x7c]. See BWAPI::UnitTypes::Terran_Missile_Turret.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Detector, Building</td></tr>
 </table>
-@tlTerran_Missile_Turret @sccTerran_Missile_Turret @wikTerran_Missile_Turret
+@tlTerran_Missile_Turret @sccTerran_Missile_Turret
 @m_keywords{Terran Missile Turret}
 
 */
@@ -5033,7 +5033,7 @@ Value of 125  [0x7d]. See BWAPI::UnitTypes::Terran_Bunker.
 @ref UnitTypes::Terran_SCV "Terran SCV"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building</td></tr>
 </table>
-@tlTerran_Bunker @sccTerran_Bunker @wikTerran_Bunker
+@tlTerran_Bunker @sccTerran_Bunker
 @m_keywords{Terran Bunker}
 
 */
@@ -5063,7 +5063,7 @@ Value of 126  [0x7e]. See BWAPI::UnitTypes::Special_Crashed_Norad_II.
 <tr><td><strong>Sight Range</strong></td><td>320</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Crashed_Norad_II @sccSpecial_Crashed_Norad_II @wikSpecial_Crashed_Norad_II
+@tlSpecial_Crashed_Norad_II @sccSpecial_Crashed_Norad_II
 @m_keywords{Special Crashed Norad II}
 
 */
@@ -5093,7 +5093,7 @@ Value of 127  [0x7f]. See BWAPI::UnitTypes::Special_Ion_Cannon.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Ion_Cannon @sccSpecial_Ion_Cannon @wikSpecial_Ion_Cannon
+@tlSpecial_Ion_Cannon @sccSpecial_Ion_Cannon
 @m_keywords{Special Ion Cannon}
 
 */
@@ -5122,7 +5122,7 @@ Value of 128  [0x80]. See BWAPI::UnitTypes::Powerup_Uraj_Crystal.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Powerup</td></tr>
 </table>
-@tlPowerup_Uraj_Crystal @sccPowerup_Uraj_Crystal @wikPowerup_Uraj_Crystal
+@tlPowerup_Uraj_Crystal @sccPowerup_Uraj_Crystal
 @m_keywords{Powerup Uraj Crystal}
 
 */
@@ -5151,7 +5151,7 @@ Value of 129  [0x81]. See BWAPI::UnitTypes::Powerup_Khalis_Crystal.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Powerup</td></tr>
 </table>
-@tlPowerup_Khalis_Crystal @sccPowerup_Khalis_Crystal @wikPowerup_Khalis_Crystal
+@tlPowerup_Khalis_Crystal @sccPowerup_Khalis_Crystal
 @m_keywords{Powerup Khalis Crystal}
 
 */
@@ -5186,7 +5186,7 @@ Value of 130  [0x82]. See BWAPI::UnitTypes::Zerg_Infested_Command_Center.
 <tr><td><strong>Sight Range</strong></td><td>320</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, FlyingBuilding, Building, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Infested_Command_Center @sccZerg_Infested_Command_Center @wikZerg_Infested_Command_Center
+@tlZerg_Infested_Command_Center @sccZerg_Infested_Command_Center
 @m_keywords{Zerg Infested Command Center}
 
 */
@@ -5222,7 +5222,7 @@ Value of 131  [0x83]. See BWAPI::UnitTypes::Zerg_Hatchery.
 @ref UnitTypes::Zerg_Drone "Zerg Drone"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, ResourceDepot, Building, ProducesLarva, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Hatchery @sccZerg_Hatchery @wikZerg_Hatchery
+@tlZerg_Hatchery @sccZerg_Hatchery
 @m_keywords{Zerg Hatchery}
 
 */
@@ -5259,7 +5259,7 @@ Value of 132  [0x84]. See BWAPI::UnitTypes::Zerg_Lair.
 @ref UnitTypes::Zerg_Hatchery "Zerg Hatchery"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, ResourceDepot, Building, ProducesLarva, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Lair @sccZerg_Lair @wikZerg_Lair
+@tlZerg_Lair @sccZerg_Lair
 @m_keywords{Zerg Lair}
 
 */
@@ -5296,7 +5296,7 @@ Value of 133  [0x85]. See BWAPI::UnitTypes::Zerg_Hive.
 @ref UnitTypes::Zerg_Lair "Zerg Lair"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, ResourceDepot, Building, ProducesLarva, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Hive @sccZerg_Hive @wikZerg_Hive
+@tlZerg_Hive @sccZerg_Hive
 @m_keywords{Zerg Hive}
 
 */
@@ -5332,7 +5332,7 @@ Value of 134  [0x86]. See BWAPI::UnitTypes::Zerg_Nydus_Canal.
 @ref UnitTypes::Zerg_Drone "Zerg Drone"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Nydus_Canal @sccZerg_Nydus_Canal @wikZerg_Nydus_Canal
+@tlZerg_Nydus_Canal @sccZerg_Nydus_Canal
 @m_keywords{Zerg Nydus Canal}
 
 */
@@ -5368,7 +5368,7 @@ Value of 135  [0x87]. See BWAPI::UnitTypes::Zerg_Hydralisk_Den.
 @ref UnitTypes::Zerg_Drone "Zerg Drone"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Hydralisk_Den @sccZerg_Hydralisk_Den @wikZerg_Hydralisk_Den
+@tlZerg_Hydralisk_Den @sccZerg_Hydralisk_Den
 @m_keywords{Zerg Hydralisk Den}
 
 */
@@ -5404,7 +5404,7 @@ Value of 136  [0x88]. See BWAPI::UnitTypes::Zerg_Defiler_Mound.
 @ref UnitTypes::Zerg_Drone "Zerg Drone"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Defiler_Mound @sccZerg_Defiler_Mound @wikZerg_Defiler_Mound
+@tlZerg_Defiler_Mound @sccZerg_Defiler_Mound
 @m_keywords{Zerg Defiler Mound}
 
 */
@@ -5440,7 +5440,7 @@ Value of 137  [0x89]. See BWAPI::UnitTypes::Zerg_Greater_Spire.
 @ref UnitTypes::Zerg_Spire "Zerg Spire"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Greater_Spire @sccZerg_Greater_Spire @wikZerg_Greater_Spire
+@tlZerg_Greater_Spire @sccZerg_Greater_Spire
 @m_keywords{Zerg Greater Spire}
 
 */
@@ -5476,7 +5476,7 @@ Value of 138  [0x8a]. See BWAPI::UnitTypes::Zerg_Queens_Nest.
 @ref UnitTypes::Zerg_Drone "Zerg Drone"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Queens_Nest @sccZerg_Queens_Nest @wikZerg_Queens_Nest
+@tlZerg_Queens_Nest @sccZerg_Queens_Nest
 @m_keywords{Zerg Queens Nest}
 
 */
@@ -5512,7 +5512,7 @@ Value of 139  [0x8b]. See BWAPI::UnitTypes::Zerg_Evolution_Chamber.
 @ref UnitTypes::Zerg_Drone "Zerg Drone"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Evolution_Chamber @sccZerg_Evolution_Chamber @wikZerg_Evolution_Chamber
+@tlZerg_Evolution_Chamber @sccZerg_Evolution_Chamber
 @m_keywords{Zerg Evolution Chamber}
 
 */
@@ -5548,7 +5548,7 @@ Value of 140  [0x8c]. See BWAPI::UnitTypes::Zerg_Ultralisk_Cavern.
 @ref UnitTypes::Zerg_Drone "Zerg Drone"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Ultralisk_Cavern @sccZerg_Ultralisk_Cavern @wikZerg_Ultralisk_Cavern
+@tlZerg_Ultralisk_Cavern @sccZerg_Ultralisk_Cavern
 @m_keywords{Zerg Ultralisk Cavern}
 
 */
@@ -5584,7 +5584,7 @@ Value of 141  [0x8d]. See BWAPI::UnitTypes::Zerg_Spire.
 @ref UnitTypes::Zerg_Drone "Zerg Drone"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Spire @sccZerg_Spire @wikZerg_Spire
+@tlZerg_Spire @sccZerg_Spire
 @m_keywords{Zerg Spire}
 
 */
@@ -5620,7 +5620,7 @@ Value of 142  [0x8e]. See BWAPI::UnitTypes::Zerg_Spawning_Pool.
 @ref UnitTypes::Zerg_Drone "Zerg Drone"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Spawning_Pool @sccZerg_Spawning_Pool @wikZerg_Spawning_Pool
+@tlZerg_Spawning_Pool @sccZerg_Spawning_Pool
 @m_keywords{Zerg Spawning Pool}
 
 */
@@ -5655,7 +5655,7 @@ Value of 143  [0x8f]. See BWAPI::UnitTypes::Zerg_Creep_Colony.
 @ref UnitTypes::Zerg_Drone "Zerg Drone"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Creep_Colony @sccZerg_Creep_Colony @wikZerg_Creep_Colony
+@tlZerg_Creep_Colony @sccZerg_Creep_Colony
 @m_keywords{Zerg Creep Colony}
 
 */
@@ -5693,7 +5693,7 @@ Value of 144  [0x90]. See BWAPI::UnitTypes::Zerg_Spore_Colony.
 @ref UnitTypes::Zerg_Creep_Colony "Zerg Creep Colony"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Detector, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Spore_Colony @sccZerg_Spore_Colony @wikZerg_Spore_Colony
+@tlZerg_Spore_Colony @sccZerg_Spore_Colony
 @m_keywords{Zerg Spore Colony}
 
 */
@@ -5731,7 +5731,7 @@ Value of 146  [0x92]. See BWAPI::UnitTypes::Zerg_Sunken_Colony.
 @ref UnitTypes::Zerg_Creep_Colony "Zerg Creep Colony"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Sunken_Colony @sccZerg_Sunken_Colony @wikZerg_Sunken_Colony
+@tlZerg_Sunken_Colony @sccZerg_Sunken_Colony
 @m_keywords{Zerg Sunken Colony}
 
 */
@@ -5761,7 +5761,7 @@ Value of 147  [0x93]. See BWAPI::UnitTypes::Special_Overmind_With_Shell.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Detector, Building, SpecialBuilding, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlSpecial_Overmind_With_Shell @sccSpecial_Overmind_With_Shell @wikSpecial_Overmind_With_Shell
+@tlSpecial_Overmind_With_Shell @sccSpecial_Overmind_With_Shell
 @m_keywords{Special Overmind With Shell}
 
 */
@@ -5791,7 +5791,7 @@ Value of 148  [0x94]. See BWAPI::UnitTypes::Special_Overmind.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Detector, Building, SpecialBuilding, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlSpecial_Overmind @sccSpecial_Overmind @wikSpecial_Overmind
+@tlSpecial_Overmind @sccSpecial_Overmind
 @m_keywords{Special Overmind}
 
 */
@@ -5826,7 +5826,7 @@ Value of 149  [0x95]. See BWAPI::UnitTypes::Zerg_Extractor.
 @ref UnitTypes::Zerg_Drone "Zerg Drone"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, ResourceContainer, Refinery, Building, RegeneratesHP</td></tr>
 </table>
-@tlZerg_Extractor @sccZerg_Extractor @wikZerg_Extractor
+@tlZerg_Extractor @sccZerg_Extractor
 @m_keywords{Zerg Extractor}
 
 */
@@ -5856,7 +5856,7 @@ Value of 150  [0x96]. See BWAPI::UnitTypes::Special_Mature_Chrysalis.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Building, SpecialBuilding, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlSpecial_Mature_Chrysalis @sccSpecial_Mature_Chrysalis @wikSpecial_Mature_Chrysalis
+@tlSpecial_Mature_Chrysalis @sccSpecial_Mature_Chrysalis
 @m_keywords{Special Mature Chrysalis}
 
 */
@@ -5886,7 +5886,7 @@ Value of 151  [0x97]. See BWAPI::UnitTypes::Special_Cerebrate.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Detector, Building, SpecialBuilding, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlSpecial_Cerebrate @sccSpecial_Cerebrate @wikSpecial_Cerebrate
+@tlSpecial_Cerebrate @sccSpecial_Cerebrate
 @m_keywords{Special Cerebrate}
 
 */
@@ -5916,7 +5916,7 @@ Value of 152  [0x98]. See BWAPI::UnitTypes::Special_Cerebrate_Daggoth.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Detector, Building, SpecialBuilding, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlSpecial_Cerebrate_Daggoth @sccSpecial_Cerebrate_Daggoth @wikSpecial_Cerebrate_Daggoth
+@tlSpecial_Cerebrate_Daggoth @sccSpecial_Cerebrate_Daggoth
 @m_keywords{Special Cerebrate Daggoth}
 
 */
@@ -5955,7 +5955,7 @@ Value of 154  [0x9a]. See BWAPI::UnitTypes::Protoss_Nexus.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, ResourceDepot, Building</td></tr>
 </table>
-@tlProtoss_Nexus @sccProtoss_Nexus @wikProtoss_Nexus
+@tlProtoss_Nexus @sccProtoss_Nexus
 @m_keywords{Protoss Nexus}
 
 */
@@ -5994,7 +5994,7 @@ Value of 155  [0x9b]. See BWAPI::UnitTypes::Protoss_Robotics_Facility.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Robotics_Facility @sccProtoss_Robotics_Facility @wikProtoss_Robotics_Facility
+@tlProtoss_Robotics_Facility @sccProtoss_Robotics_Facility
 @m_keywords{Protoss Robotics Facility}
 
 */
@@ -6033,7 +6033,7 @@ Value of 156  [0x9c]. See BWAPI::UnitTypes::Protoss_Pylon.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building</td></tr>
 </table>
-@tlProtoss_Pylon @sccProtoss_Pylon @wikProtoss_Pylon
+@tlProtoss_Pylon @sccProtoss_Pylon
 @m_keywords{Protoss Pylon}
 
 */
@@ -6071,7 +6071,7 @@ Value of 157  [0x9d]. See BWAPI::UnitTypes::Protoss_Assimilator.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, ResourceContainer, Refinery, Building</td></tr>
 </table>
-@tlProtoss_Assimilator @sccProtoss_Assimilator @wikProtoss_Assimilator
+@tlProtoss_Assimilator @sccProtoss_Assimilator
 @m_keywords{Protoss Assimilator}
 
 */
@@ -6110,7 +6110,7 @@ Value of 159  [0x9f]. See BWAPI::UnitTypes::Protoss_Observatory.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Observatory @sccProtoss_Observatory @wikProtoss_Observatory
+@tlProtoss_Observatory @sccProtoss_Observatory
 @m_keywords{Protoss Observatory}
 
 */
@@ -6149,7 +6149,7 @@ Value of 160  [0xa0]. See BWAPI::UnitTypes::Protoss_Gateway.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Gateway @sccProtoss_Gateway @wikProtoss_Gateway
+@tlProtoss_Gateway @sccProtoss_Gateway
 @m_keywords{Protoss Gateway}
 
 */
@@ -6192,7 +6192,7 @@ Value of 162  [0xa2]. See BWAPI::UnitTypes::Protoss_Photon_Cannon.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Detector, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Photon_Cannon @sccProtoss_Photon_Cannon @wikProtoss_Photon_Cannon
+@tlProtoss_Photon_Cannon @sccProtoss_Photon_Cannon
 @m_keywords{Protoss Photon Cannon}
 
 */
@@ -6231,7 +6231,7 @@ Value of 163  [0xa3]. See BWAPI::UnitTypes::Protoss_Citadel_of_Adun.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Citadel_of_Adun @sccProtoss_Citadel_of_Adun @wikProtoss_Citadel_of_Adun
+@tlProtoss_Citadel_of_Adun @sccProtoss_Citadel_of_Adun
 @m_keywords{Protoss Citadel of Adun}
 
 */
@@ -6270,7 +6270,7 @@ Value of 164  [0xa4]. See BWAPI::UnitTypes::Protoss_Cybernetics_Core.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Cybernetics_Core @sccProtoss_Cybernetics_Core @wikProtoss_Cybernetics_Core
+@tlProtoss_Cybernetics_Core @sccProtoss_Cybernetics_Core
 @m_keywords{Protoss Cybernetics Core}
 
 */
@@ -6309,7 +6309,7 @@ Value of 165  [0xa5]. See BWAPI::UnitTypes::Protoss_Templar_Archives.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Templar_Archives @sccProtoss_Templar_Archives @wikProtoss_Templar_Archives
+@tlProtoss_Templar_Archives @sccProtoss_Templar_Archives
 @m_keywords{Protoss Templar Archives}
 
 */
@@ -6348,7 +6348,7 @@ Value of 166  [0xa6]. See BWAPI::UnitTypes::Protoss_Forge.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Forge @sccProtoss_Forge @wikProtoss_Forge
+@tlProtoss_Forge @sccProtoss_Forge
 @m_keywords{Protoss Forge}
 
 */
@@ -6387,7 +6387,7 @@ Value of 167  [0xa7]. See BWAPI::UnitTypes::Protoss_Stargate.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Stargate @sccProtoss_Stargate @wikProtoss_Stargate
+@tlProtoss_Stargate @sccProtoss_Stargate
 @m_keywords{Protoss Stargate}
 
 */
@@ -6417,7 +6417,7 @@ Value of 168  [0xa8]. See BWAPI::UnitTypes::Special_Stasis_Cell_Prison.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Stasis_Cell_Prison @sccSpecial_Stasis_Cell_Prison @wikSpecial_Stasis_Cell_Prison
+@tlSpecial_Stasis_Cell_Prison @sccSpecial_Stasis_Cell_Prison
 @m_keywords{Special Stasis Cell Prison}
 
 */
@@ -6456,7 +6456,7 @@ Value of 169  [0xa9]. See BWAPI::UnitTypes::Protoss_Fleet_Beacon.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Fleet_Beacon @sccProtoss_Fleet_Beacon @wikProtoss_Fleet_Beacon
+@tlProtoss_Fleet_Beacon @sccProtoss_Fleet_Beacon
 @m_keywords{Protoss Fleet Beacon}
 
 */
@@ -6496,7 +6496,7 @@ Value of 170  [0xaa]. See BWAPI::UnitTypes::Protoss_Arbiter_Tribunal.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Arbiter_Tribunal @sccProtoss_Arbiter_Tribunal @wikProtoss_Arbiter_Tribunal
+@tlProtoss_Arbiter_Tribunal @sccProtoss_Arbiter_Tribunal
 @m_keywords{Protoss Arbiter Tribunal}
 
 */
@@ -6535,7 +6535,7 @@ Value of 171  [0xab]. See BWAPI::UnitTypes::Protoss_Robotics_Support_Bay.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Robotics_Support_Bay @sccProtoss_Robotics_Support_Bay @wikProtoss_Robotics_Support_Bay
+@tlProtoss_Robotics_Support_Bay @sccProtoss_Robotics_Support_Bay
 @m_keywords{Protoss Robotics Support Bay}
 
 */
@@ -6575,7 +6575,7 @@ Value of 172  [0xac]. See BWAPI::UnitTypes::Protoss_Shield_Battery.
 @ref UnitTypes::Protoss_Probe "Protoss Probe"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, RequiresPsi</td></tr>
 </table>
-@tlProtoss_Shield_Battery @sccProtoss_Shield_Battery @wikProtoss_Shield_Battery
+@tlProtoss_Shield_Battery @sccProtoss_Shield_Battery
 @m_keywords{Protoss Shield Battery}
 
 */
@@ -6605,7 +6605,7 @@ Value of 173  [0xad]. See BWAPI::UnitTypes::Special_Khaydarin_Crystal_Form.
 <tr><td><strong>Sight Range</strong></td><td>320</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Building, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Khaydarin_Crystal_Form @sccSpecial_Khaydarin_Crystal_Form @wikSpecial_Khaydarin_Crystal_Form
+@tlSpecial_Khaydarin_Crystal_Form @sccSpecial_Khaydarin_Crystal_Form
 @m_keywords{Special Khaydarin Crystal Form}
 
 */
@@ -6635,7 +6635,7 @@ Value of 174  [0xae]. See BWAPI::UnitTypes::Special_Protoss_Temple.
 <tr><td><strong>Sight Range</strong></td><td>320</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Building, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Protoss_Temple @sccSpecial_Protoss_Temple @wikSpecial_Protoss_Temple
+@tlSpecial_Protoss_Temple @sccSpecial_Protoss_Temple
 @m_keywords{Special Protoss Temple}
 
 */
@@ -6665,7 +6665,7 @@ Value of 175  [0xaf]. See BWAPI::UnitTypes::Special_XelNaga_Temple.
 <tr><td><strong>Sight Range</strong></td><td>320</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Building, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_XelNaga_Temple @sccSpecial_XelNaga_Temple @wikSpecial_XelNaga_Temple
+@tlSpecial_XelNaga_Temple @sccSpecial_XelNaga_Temple
 @m_keywords{Special XelNaga Temple}
 
 */
@@ -6696,7 +6696,7 @@ Value of 176  [0xb0]. See BWAPI::UnitTypes::Resource_Mineral_Field.
 <tr><td><strong>Sight Range</strong></td><td>288</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, ResourceContainer, Building, Neutral, SpecialBuilding, MineralField</td></tr>
 </table>
-@tlResource_Mineral_Field @sccResource_Mineral_Field @wikResource_Mineral_Field
+@tlResource_Mineral_Field @sccResource_Mineral_Field
 @m_keywords{Resource Mineral Field}
 
 */
@@ -6727,7 +6727,7 @@ Value of 177  [0xb1]. See BWAPI::UnitTypes::Resource_Mineral_Field_Type_2.
 <tr><td><strong>Sight Range</strong></td><td>288</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, ResourceContainer, Building, Neutral, SpecialBuilding, MineralField</td></tr>
 </table>
-@tlResource_Mineral_Field_Type_2 @sccResource_Mineral_Field_Type_2 @wikResource_Mineral_Field_Type_2
+@tlResource_Mineral_Field_Type_2 @sccResource_Mineral_Field_Type_2
 @m_keywords{Resource Mineral Field Type 2}
 
 */
@@ -6758,7 +6758,7 @@ Value of 178  [0xb2]. See BWAPI::UnitTypes::Resource_Mineral_Field_Type_3.
 <tr><td><strong>Sight Range</strong></td><td>288</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, ResourceContainer, Building, Neutral, SpecialBuilding, MineralField</td></tr>
 </table>
-@tlResource_Mineral_Field_Type_3 @sccResource_Mineral_Field_Type_3 @wikResource_Mineral_Field_Type_3
+@tlResource_Mineral_Field_Type_3 @sccResource_Mineral_Field_Type_3
 @m_keywords{Resource Mineral Field Type 3}
 
 */
@@ -6791,7 +6791,7 @@ Value of 184  [0xb8]. See BWAPI::UnitTypes::Special_Independant_Starport.
 <tr><td><strong>Sight Range</strong></td><td>288</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Independant_Starport @sccSpecial_Independant_Starport @wikSpecial_Independant_Starport
+@tlSpecial_Independant_Starport @sccSpecial_Independant_Starport
 @m_keywords{Special Independant Starport}
 
 */
@@ -6822,7 +6822,7 @@ Value of 188  [0xbc]. See BWAPI::UnitTypes::Resource_Vespene_Geyser.
 <tr><td><strong>Sight Range</strong></td><td>288</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, ResourceContainer, Building, Neutral, SpecialBuilding</td></tr>
 </table>
-@tlResource_Vespene_Geyser @sccResource_Vespene_Geyser @wikResource_Vespene_Geyser
+@tlResource_Vespene_Geyser @sccResource_Vespene_Geyser
 @m_keywords{Resource Vespene Geyser}
 
 */
@@ -6852,7 +6852,7 @@ Value of 189  [0xbd]. See BWAPI::UnitTypes::Special_Warp_Gate.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Warp_Gate @sccSpecial_Warp_Gate @wikSpecial_Warp_Gate
+@tlSpecial_Warp_Gate @sccSpecial_Warp_Gate
 @m_keywords{Special Warp Gate}
 
 */
@@ -6882,7 +6882,7 @@ Value of 190  [0xbe]. See BWAPI::UnitTypes::Special_Psi_Disrupter.
 <tr><td><strong>Sight Range</strong></td><td>320</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Psi_Disrupter @sccSpecial_Psi_Disrupter @wikSpecial_Psi_Disrupter
+@tlSpecial_Psi_Disrupter @sccSpecial_Psi_Disrupter
 @m_keywords{Special Psi Disrupter}
 
 */
@@ -6911,7 +6911,7 @@ Value of 194  [0xc2]. See BWAPI::UnitTypes::Special_Zerg_Beacon.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Building, Beacon, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Zerg_Beacon @sccSpecial_Zerg_Beacon @wikSpecial_Zerg_Beacon
+@tlSpecial_Zerg_Beacon @sccSpecial_Zerg_Beacon
 @m_keywords{Special Zerg Beacon}
 
 */
@@ -6940,7 +6940,7 @@ Value of 195  [0xc3]. See BWAPI::UnitTypes::Special_Terran_Beacon.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Building, Beacon, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Terran_Beacon @sccSpecial_Terran_Beacon @wikSpecial_Terran_Beacon
+@tlSpecial_Terran_Beacon @sccSpecial_Terran_Beacon
 @m_keywords{Special Terran Beacon}
 
 */
@@ -6969,7 +6969,7 @@ Value of 196  [0xc4]. See BWAPI::UnitTypes::Special_Protoss_Beacon.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Building, Beacon, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Protoss_Beacon @sccSpecial_Protoss_Beacon @wikSpecial_Protoss_Beacon
+@tlSpecial_Protoss_Beacon @sccSpecial_Protoss_Beacon
 @m_keywords{Special Protoss Beacon}
 
 */
@@ -6998,7 +6998,7 @@ Value of 197  [0xc5]. See BWAPI::UnitTypes::Special_Zerg_Flag_Beacon.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Building, FlagBeacon, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Zerg_Flag_Beacon @sccSpecial_Zerg_Flag_Beacon @wikSpecial_Zerg_Flag_Beacon
+@tlSpecial_Zerg_Flag_Beacon @sccSpecial_Zerg_Flag_Beacon
 @m_keywords{Special Zerg Flag Beacon}
 
 */
@@ -7027,7 +7027,7 @@ Value of 198  [0xc6]. See BWAPI::UnitTypes::Special_Terran_Flag_Beacon.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Building, FlagBeacon, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Terran_Flag_Beacon @sccSpecial_Terran_Flag_Beacon @wikSpecial_Terran_Flag_Beacon
+@tlSpecial_Terran_Flag_Beacon @sccSpecial_Terran_Flag_Beacon
 @m_keywords{Special Terran Flag Beacon}
 
 */
@@ -7056,7 +7056,7 @@ Value of 199  [0xc7]. See BWAPI::UnitTypes::Special_Protoss_Flag_Beacon.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Building, FlagBeacon, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Protoss_Flag_Beacon @sccSpecial_Protoss_Flag_Beacon @wikSpecial_Protoss_Flag_Beacon
+@tlSpecial_Protoss_Flag_Beacon @sccSpecial_Protoss_Flag_Beacon
 @m_keywords{Special Protoss Flag Beacon}
 
 */
@@ -7086,7 +7086,7 @@ Value of 200  [0xc8]. See BWAPI::UnitTypes::Special_Power_Generator.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Building, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Power_Generator @sccSpecial_Power_Generator @wikSpecial_Power_Generator
+@tlSpecial_Power_Generator @sccSpecial_Power_Generator
 @m_keywords{Special Power Generator}
 
 */
@@ -7116,7 +7116,7 @@ Value of 201  [0xc9]. See BWAPI::UnitTypes::Special_Overmind_Cocoon.
 <tr><td><strong>Sight Range</strong></td><td>320</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Organic, Detector, Building, SpecialBuilding, RequiresCreep, RegeneratesHP</td></tr>
 </table>
-@tlSpecial_Overmind_Cocoon @sccSpecial_Overmind_Cocoon @wikSpecial_Overmind_Cocoon
+@tlSpecial_Overmind_Cocoon @sccSpecial_Overmind_Cocoon
 @m_keywords{Special Overmind Cocoon}
 
 */
@@ -7145,7 +7145,7 @@ Value of 202  [0xca]. See BWAPI::UnitTypes::Spell_Dark_Swarm.
 <tr><td><strong>Sight Range</strong></td><td>256</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Neutral, Spell</td></tr>
 </table>
-@tlSpell_Dark_Swarm @sccSpell_Dark_Swarm @wikSpell_Dark_Swarm
+@tlSpell_Dark_Swarm @sccSpell_Dark_Swarm
 @m_keywords{Spell Dark Swarm}
 
 */
@@ -7180,7 +7180,7 @@ Value of 203  [0xcb]. See BWAPI::UnitTypes::Special_Floor_Missile_Trap.
 @ref UpgradeTypes::Terran_Vehicle_Weapons "Terran Vehicle Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Detector</td></tr>
 </table>
-@tlSpecial_Floor_Missile_Trap @sccSpecial_Floor_Missile_Trap @wikSpecial_Floor_Missile_Trap
+@tlSpecial_Floor_Missile_Trap @sccSpecial_Floor_Missile_Trap
 @m_keywords{Special Floor Missile Trap}
 
 */
@@ -7210,7 +7210,7 @@ Value of 204  [0xcc]. See BWAPI::UnitTypes::Special_Floor_Hatch.
 <tr><td><strong>Sight Range</strong></td><td>224</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible</td></tr>
 </table>
-@tlSpecial_Floor_Hatch @sccSpecial_Floor_Hatch @wikSpecial_Floor_Hatch
+@tlSpecial_Floor_Hatch @sccSpecial_Floor_Hatch
 @m_keywords{Special Floor Hatch}
 
 */
@@ -7240,7 +7240,7 @@ Value of 205  [0xcd]. See BWAPI::UnitTypes::Special_Upper_Level_Door.
 <tr><td><strong>Sight Range</strong></td><td>32</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible</td></tr>
 </table>
-@tlSpecial_Upper_Level_Door @sccSpecial_Upper_Level_Door @wikSpecial_Upper_Level_Door
+@tlSpecial_Upper_Level_Door @sccSpecial_Upper_Level_Door
 @m_keywords{Special Upper Level Door}
 
 */
@@ -7270,7 +7270,7 @@ Value of 206  [0xce]. See BWAPI::UnitTypes::Special_Right_Upper_Level_Door.
 <tr><td><strong>Sight Range</strong></td><td>32</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible</td></tr>
 </table>
-@tlSpecial_Right_Upper_Level_Door @sccSpecial_Right_Upper_Level_Door @wikSpecial_Right_Upper_Level_Door
+@tlSpecial_Right_Upper_Level_Door @sccSpecial_Right_Upper_Level_Door
 @m_keywords{Special Right Upper Level Door}
 
 */
@@ -7300,7 +7300,7 @@ Value of 207  [0xcf]. See BWAPI::UnitTypes::Special_Pit_Door.
 <tr><td><strong>Sight Range</strong></td><td>32</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible</td></tr>
 </table>
-@tlSpecial_Pit_Door @sccSpecial_Pit_Door @wikSpecial_Pit_Door
+@tlSpecial_Pit_Door @sccSpecial_Pit_Door
 @m_keywords{Special Pit Door}
 
 */
@@ -7330,7 +7330,7 @@ Value of 208  [0xd0]. See BWAPI::UnitTypes::Special_Right_Pit_Door.
 <tr><td><strong>Sight Range</strong></td><td>32</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible</td></tr>
 </table>
-@tlSpecial_Right_Pit_Door @sccSpecial_Right_Pit_Door @wikSpecial_Right_Pit_Door
+@tlSpecial_Right_Pit_Door @sccSpecial_Right_Pit_Door
 @m_keywords{Special Right Pit Door}
 
 */
@@ -7365,7 +7365,7 @@ Value of 209  [0xd1]. See BWAPI::UnitTypes::Special_Floor_Gun_Trap.
 @ref UpgradeTypes::Terran_Vehicle_Weapons "Terran Vehicle Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Detector</td></tr>
 </table>
-@tlSpecial_Floor_Gun_Trap @sccSpecial_Floor_Gun_Trap @wikSpecial_Floor_Gun_Trap
+@tlSpecial_Floor_Gun_Trap @sccSpecial_Floor_Gun_Trap
 @m_keywords{Special Floor Gun Trap}
 
 */
@@ -7399,7 +7399,7 @@ Value of 210  [0xd2]. See BWAPI::UnitTypes::Special_Wall_Missile_Trap.
 @ref UpgradeTypes::Terran_Vehicle_Weapons "Terran Vehicle Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Detector</td></tr>
 </table>
-@tlSpecial_Wall_Missile_Trap @sccSpecial_Wall_Missile_Trap @wikSpecial_Wall_Missile_Trap
+@tlSpecial_Wall_Missile_Trap @sccSpecial_Wall_Missile_Trap
 @m_keywords{Special Wall Missile Trap}
 
 */
@@ -7433,7 +7433,7 @@ Value of 211  [0xd3]. See BWAPI::UnitTypes::Special_Wall_Flame_Trap.
 @ref UpgradeTypes::Terran_Infantry_Weapons "Terran Infantry Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Detector</td></tr>
 </table>
-@tlSpecial_Wall_Flame_Trap @sccSpecial_Wall_Flame_Trap @wikSpecial_Wall_Flame_Trap
+@tlSpecial_Wall_Flame_Trap @sccSpecial_Wall_Flame_Trap
 @m_keywords{Special Wall Flame Trap}
 
 */
@@ -7467,7 +7467,7 @@ Value of 212  [0xd4]. See BWAPI::UnitTypes::Special_Right_Wall_Missile_Trap.
 @ref UpgradeTypes::Terran_Vehicle_Weapons "Terran Vehicle Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Detector</td></tr>
 </table>
-@tlSpecial_Right_Wall_Missile_Trap @sccSpecial_Right_Wall_Missile_Trap @wikSpecial_Right_Wall_Missile_Trap
+@tlSpecial_Right_Wall_Missile_Trap @sccSpecial_Right_Wall_Missile_Trap
 @m_keywords{Special Right Wall Missile Trap}
 
 */
@@ -7501,7 +7501,7 @@ Value of 213  [0xd5]. See BWAPI::UnitTypes::Special_Right_Wall_Flame_Trap.
 @ref UpgradeTypes::Terran_Infantry_Weapons "Terran Infantry Weapons"</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Mechanical, Detector</td></tr>
 </table>
-@tlSpecial_Right_Wall_Flame_Trap @sccSpecial_Right_Wall_Flame_Trap @wikSpecial_Right_Wall_Flame_Trap
+@tlSpecial_Right_Wall_Flame_Trap @sccSpecial_Right_Wall_Flame_Trap
 @m_keywords{Special Right Wall Flame Trap}
 
 */
@@ -7530,7 +7530,7 @@ Value of 214  [0xd6]. See BWAPI::UnitTypes::Special_Start_Location.
 <tr><td><strong>Sight Range</strong></td><td>32</td></tr>
 <tr><td><strong>Attributes</strong></td><td>ResourceDepot, Building, SpecialBuilding</td></tr>
 </table>
-@tlSpecial_Start_Location @sccSpecial_Start_Location @wikSpecial_Start_Location
+@tlSpecial_Start_Location @sccSpecial_Start_Location
 @m_keywords{Special Start Location}
 
 */
@@ -7559,7 +7559,7 @@ Value of 215  [0xd7]. See BWAPI::UnitTypes::Powerup_Flag.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Powerup</td></tr>
 </table>
-@tlPowerup_Flag @sccPowerup_Flag @wikPowerup_Flag
+@tlPowerup_Flag @sccPowerup_Flag
 @m_keywords{Powerup Flag}
 
 */
@@ -7588,7 +7588,7 @@ Value of 216  [0xd8]. See BWAPI::UnitTypes::Powerup_Young_Chrysalis.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Powerup</td></tr>
 </table>
-@tlPowerup_Young_Chrysalis @sccPowerup_Young_Chrysalis @wikPowerup_Young_Chrysalis
+@tlPowerup_Young_Chrysalis @sccPowerup_Young_Chrysalis
 @m_keywords{Powerup Young Chrysalis}
 
 */
@@ -7617,7 +7617,7 @@ Value of 217  [0xd9]. See BWAPI::UnitTypes::Powerup_Psi_Emitter.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Powerup</td></tr>
 </table>
-@tlPowerup_Psi_Emitter @sccPowerup_Psi_Emitter @wikPowerup_Psi_Emitter
+@tlPowerup_Psi_Emitter @sccPowerup_Psi_Emitter
 @m_keywords{Powerup Psi Emitter}
 
 */
@@ -7646,7 +7646,7 @@ Value of 218  [0xda]. See BWAPI::UnitTypes::Powerup_Data_Disk.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Powerup</td></tr>
 </table>
-@tlPowerup_Data_Disk @sccPowerup_Data_Disk @wikPowerup_Data_Disk
+@tlPowerup_Data_Disk @sccPowerup_Data_Disk
 @m_keywords{Powerup Data Disk}
 
 */
@@ -7675,7 +7675,7 @@ Value of 219  [0xdb]. See BWAPI::UnitTypes::Powerup_Khaydarin_Crystal.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Invincible, Powerup</td></tr>
 </table>
-@tlPowerup_Khaydarin_Crystal @sccPowerup_Khaydarin_Crystal @wikPowerup_Khaydarin_Crystal
+@tlPowerup_Khaydarin_Crystal @sccPowerup_Khaydarin_Crystal
 @m_keywords{Powerup Khaydarin Crystal}
 
 */
@@ -7704,7 +7704,7 @@ Value of 220  [0xdc]. See BWAPI::UnitTypes::Powerup_Mineral_Cluster_Type_1.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Powerup</td></tr>
 </table>
-@tlPowerup_Mineral_Cluster_Type_1 @sccPowerup_Mineral_Cluster_Type_1 @wikPowerup_Mineral_Cluster_Type_1
+@tlPowerup_Mineral_Cluster_Type_1 @sccPowerup_Mineral_Cluster_Type_1
 @m_keywords{Powerup Mineral Cluster Type 1}
 
 */
@@ -7733,7 +7733,7 @@ Value of 221  [0xdd]. See BWAPI::UnitTypes::Powerup_Mineral_Cluster_Type_2.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Powerup</td></tr>
 </table>
-@tlPowerup_Mineral_Cluster_Type_2 @sccPowerup_Mineral_Cluster_Type_2 @wikPowerup_Mineral_Cluster_Type_2
+@tlPowerup_Mineral_Cluster_Type_2 @sccPowerup_Mineral_Cluster_Type_2
 @m_keywords{Powerup Mineral Cluster Type 2}
 
 */
@@ -7762,7 +7762,7 @@ Value of 222  [0xde]. See BWAPI::UnitTypes::Powerup_Protoss_Gas_Orb_Type_1.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Powerup</td></tr>
 </table>
-@tlPowerup_Protoss_Gas_Orb_Type_1 @sccPowerup_Protoss_Gas_Orb_Type_1 @wikPowerup_Protoss_Gas_Orb_Type_1
+@tlPowerup_Protoss_Gas_Orb_Type_1 @sccPowerup_Protoss_Gas_Orb_Type_1
 @m_keywords{Powerup Protoss Gas Orb Type 1}
 
 */
@@ -7791,7 +7791,7 @@ Value of 223  [0xdf]. See BWAPI::UnitTypes::Powerup_Protoss_Gas_Orb_Type_2.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Powerup</td></tr>
 </table>
-@tlPowerup_Protoss_Gas_Orb_Type_2 @sccPowerup_Protoss_Gas_Orb_Type_2 @wikPowerup_Protoss_Gas_Orb_Type_2
+@tlPowerup_Protoss_Gas_Orb_Type_2 @sccPowerup_Protoss_Gas_Orb_Type_2
 @m_keywords{Powerup Protoss Gas Orb Type 2}
 
 */
@@ -7820,7 +7820,7 @@ Value of 224  [0xe0]. See BWAPI::UnitTypes::Powerup_Zerg_Gas_Sac_Type_1.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Powerup</td></tr>
 </table>
-@tlPowerup_Zerg_Gas_Sac_Type_1 @sccPowerup_Zerg_Gas_Sac_Type_1 @wikPowerup_Zerg_Gas_Sac_Type_1
+@tlPowerup_Zerg_Gas_Sac_Type_1 @sccPowerup_Zerg_Gas_Sac_Type_1
 @m_keywords{Powerup Zerg Gas Sac Type 1}
 
 */
@@ -7849,7 +7849,7 @@ Value of 225  [0xe1]. See BWAPI::UnitTypes::Powerup_Zerg_Gas_Sac_Type_2.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Powerup</td></tr>
 </table>
-@tlPowerup_Zerg_Gas_Sac_Type_2 @sccPowerup_Zerg_Gas_Sac_Type_2 @wikPowerup_Zerg_Gas_Sac_Type_2
+@tlPowerup_Zerg_Gas_Sac_Type_2 @sccPowerup_Zerg_Gas_Sac_Type_2
 @m_keywords{Powerup Zerg Gas Sac Type 2}
 
 */
@@ -7878,7 +7878,7 @@ Value of 226  [0xe2]. See BWAPI::UnitTypes::Powerup_Terran_Gas_Tank_Type_1.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Powerup</td></tr>
 </table>
-@tlPowerup_Terran_Gas_Tank_Type_1 @sccPowerup_Terran_Gas_Tank_Type_1 @wikPowerup_Terran_Gas_Tank_Type_1
+@tlPowerup_Terran_Gas_Tank_Type_1 @sccPowerup_Terran_Gas_Tank_Type_1
 @m_keywords{Powerup Terran Gas Tank Type 1}
 
 */
@@ -7907,7 +7907,7 @@ Value of 227  [0xe3]. See BWAPI::UnitTypes::Powerup_Terran_Gas_Tank_Type_2.
 <tr><td><strong>Sight Range</strong></td><td>160</td></tr>
 <tr><td><strong>Attributes</strong></td><td>Powerup</td></tr>
 </table>
-@tlPowerup_Terran_Gas_Tank_Type_2 @sccPowerup_Terran_Gas_Tank_Type_2 @wikPowerup_Terran_Gas_Tank_Type_2
+@tlPowerup_Terran_Gas_Tank_Type_2 @sccPowerup_Terran_Gas_Tank_Type_2
 @m_keywords{Powerup Terran Gas Tank Type 2}
 
 */

@@ -147,7 +147,7 @@ void writeUnitInfo()
 
     // References
     std::string const & name = t.getName();
-    of << "@tl" << name << " @scc" << name << " @wik" << name << "\n";
+    of << "@tl" << name << " @scc" << name << "\n";
 
     of << makekeywords(t);
 

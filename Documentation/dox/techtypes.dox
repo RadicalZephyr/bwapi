@@ -20,7 +20,7 @@ Value of 0  [0x0]. See BWAPI::TechTypes::Stim_Packs.
 @ref UnitTypes::Hero_Jim_Raynor_Marine "Hero Jim Raynor Marine" @m_span{cmdbtn cmdbtn-icon32}@m_endspan
 @ref UnitTypes::Terran_Firebat "Terran Firebat"</td></tr>
 </table>
-@tlStim_Packs @sccStim_Packs @wikStim_Packs
+@tlStim_Packs @sccStim_Packs
 @m_keywords{Stim Packs}
 
 */
@@ -54,7 +54,7 @@ Value of 1  [0x1]. See BWAPI::TechTypes::Lockdown.
 @ref UnitTypes::Hero_Alexei_Stukov "Hero Alexei Stukov" @m_span{cmdbtn cmdbtn-icon104}@m_endspan
 @ref UnitTypes::Hero_Infested_Duran "Hero Infested Duran"</td></tr>
 </table>
-@tlLockdown @sccLockdown @wikLockdown
+@tlLockdown @sccLockdown
 @m_keywords{Lockdown}
 
 */
@@ -85,7 +85,7 @@ Value of 2  [0x2]. See BWAPI::TechTypes::EMP_Shockwave.
 @ref UnitTypes::Terran_Science_Vessel "Terran Science Vessel" @m_span{cmdbtn cmdbtn-icon22}@m_endspan
 @ref UnitTypes::Hero_Magellan "Hero Magellan"</td></tr>
 </table>
-@tlEMP_Shockwave @sccEMP_Shockwave @wikEMP_Shockwave
+@tlEMP_Shockwave @sccEMP_Shockwave
 @m_keywords{EMP Shockwave}
 
 */
@@ -113,7 +113,7 @@ Value of 3  [0x3]. See BWAPI::TechTypes::Spider_Mines.
 @ref UnitTypes::Terran_Vulture "Terran Vulture" @m_span{cmdbtn cmdbtn-icon19}@m_endspan
 @ref UnitTypes::Hero_Jim_Raynor_Vulture "Hero Jim Raynor Vulture"</td></tr>
 </table>
-@tlSpider_Mines @sccSpider_Mines @wikSpider_Mines
+@tlSpider_Mines @sccSpider_Mines
 @m_keywords{Spider Mines}
 
 */
@@ -134,7 +134,7 @@ Value of 4  [0x4]. See BWAPI::TechTypes::Scanner_Sweep.
 <tr><td><strong>Used by</strong></td><td>@m_span{cmdbtn cmdbtn-icon107}@m_endspan
 @ref UnitTypes::Terran_Comsat_Station "Terran Comsat Station"</td></tr>
 </table>
-@tlScanner_Sweep @sccScanner_Sweep @wikScanner_Sweep
+@tlScanner_Sweep @sccScanner_Sweep
 @m_keywords{Scanner Sweep}
 
 */
@@ -160,7 +160,7 @@ Value of 5  [0x5]. See BWAPI::TechTypes::Tank_Siege_Mode.
 @ref UnitTypes::Hero_Edmund_Duke_Siege_Mode "Hero Edmund Duke Siege Mode" @m_span{cmdbtn cmdbtn-icon30}@m_endspan
 @ref UnitTypes::Terran_Siege_Tank_Siege_Mode "Terran Siege Tank Siege Mode"</td></tr>
 </table>
-@tlTank_Siege_Mode @sccTank_Siege_Mode @wikTank_Siege_Mode
+@tlTank_Siege_Mode @sccTank_Siege_Mode
 @m_keywords{Tank Siege Mode}
 
 */
@@ -183,7 +183,7 @@ Value of 6  [0x6]. See BWAPI::TechTypes::Defensive_Matrix.
 @ref UnitTypes::Terran_Science_Vessel "Terran Science Vessel" @m_span{cmdbtn cmdbtn-icon22}@m_endspan
 @ref UnitTypes::Hero_Magellan "Hero Magellan"</td></tr>
 </table>
-@tlDefensive_Matrix @sccDefensive_Matrix @wikDefensive_Matrix
+@tlDefensive_Matrix @sccDefensive_Matrix
 @m_keywords{Defensive Matrix}
 
 */
@@ -213,7 +213,7 @@ Value of 7  [0x7]. See BWAPI::TechTypes::Irradiate.
 @ref UnitTypes::Terran_Science_Vessel "Terran Science Vessel" @m_span{cmdbtn cmdbtn-icon22}@m_endspan
 @ref UnitTypes::Hero_Magellan "Hero Magellan"</td></tr>
 </table>
-@tlIrradiate @sccIrradiate @wikIrradiate
+@tlIrradiate @sccIrradiate
 @m_keywords{Irradiate}
 
 */
@@ -246,7 +246,7 @@ Value of 8  [0x8]. See BWAPI::TechTypes::Yamato_Gun.
 @ref UnitTypes::Hero_Norad_II "Hero Norad II" @m_span{cmdbtn cmdbtn-icon102}@m_endspan
 @ref UnitTypes::Hero_Gerard_DuGalle "Hero Gerard DuGalle"</td></tr>
 </table>
-@tlYamato_Gun @sccYamato_Gun @wikYamato_Gun
+@tlYamato_Gun @sccYamato_Gun
 @m_keywords{Yamato Gun}
 
 */
@@ -272,7 +272,7 @@ Value of 9  [0x9]. See BWAPI::TechTypes::Cloaking_Field.
 @ref UnitTypes::Terran_Wraith "Terran Wraith" @m_span{cmdbtn cmdbtn-icon21}@m_endspan
 @ref UnitTypes::Hero_Tom_Kazansky "Hero Tom Kazansky"</td></tr>
 </table>
-@tlCloaking_Field @sccCloaking_Field @wikCloaking_Field
+@tlCloaking_Field @sccCloaking_Field
 @m_keywords{Cloaking Field}
 
 */
@@ -302,7 +302,7 @@ Value of 10  [0xa]. See BWAPI::TechTypes::Personnel_Cloaking.
 @ref UnitTypes::Hero_Alexei_Stukov "Hero Alexei Stukov" @m_span{cmdbtn cmdbtn-icon104}@m_endspan
 @ref UnitTypes::Hero_Infested_Duran "Hero Infested Duran"</td></tr>
 </table>
-@tlPersonnel_Cloaking @sccPersonnel_Cloaking @wikPersonnel_Cloaking
+@tlPersonnel_Cloaking @sccPersonnel_Cloaking
 @m_keywords{Personnel Cloaking}
 
 */
@@ -333,7 +333,7 @@ Value of 11  [0xb]. See BWAPI::TechTypes::Burrowing.
 @ref UnitTypes::Hero_Devouring_One "Hero Devouring One" @m_span{cmdbtn cmdbtn-icon103}@m_endspan
 @ref UnitTypes::Zerg_Lurker "Zerg Lurker"</td></tr>
 </table>
-@tlBurrowing @sccBurrowing @wikBurrowing
+@tlBurrowing @sccBurrowing
 @m_keywords{Burrowing}
 
 */
@@ -354,7 +354,7 @@ Value of 12  [0xc]. See BWAPI::TechTypes::Infestation.
 @ref UnitTypes::Zerg_Queen "Zerg Queen" @m_span{cmdbtn cmdbtn-icon49}@m_endspan
 @ref UnitTypes::Hero_Matriarch "Hero Matriarch"</td></tr>
 </table>
-@tlInfestation @sccInfestation @wikInfestation
+@tlInfestation @sccInfestation
 @m_keywords{Infestation}
 
 */
@@ -385,7 +385,7 @@ Value of 13  [0xd]. See BWAPI::TechTypes::Spawn_Broodlings.
 @ref UnitTypes::Zerg_Queen "Zerg Queen" @m_span{cmdbtn cmdbtn-icon49}@m_endspan
 @ref UnitTypes::Hero_Matriarch "Hero Matriarch"</td></tr>
 </table>
-@tlSpawn_Broodlings @sccSpawn_Broodlings @wikSpawn_Broodlings
+@tlSpawn_Broodlings @sccSpawn_Broodlings
 @m_keywords{Spawn Broodlings}
 
 */
@@ -409,7 +409,7 @@ Value of 14  [0xe]. See BWAPI::TechTypes::Dark_Swarm.
 @ref UnitTypes::Zerg_Defiler "Zerg Defiler" @m_span{cmdbtn cmdbtn-icon52}@m_endspan
 @ref UnitTypes::Hero_Unclean_One "Hero Unclean One"</td></tr>
 </table>
-@tlDark_Swarm @sccDark_Swarm @wikDark_Swarm
+@tlDark_Swarm @sccDark_Swarm
 @m_keywords{Dark Swarm}
 
 */
@@ -439,7 +439,7 @@ Value of 15  [0xf]. See BWAPI::TechTypes::Plague.
 @ref UnitTypes::Zerg_Defiler "Zerg Defiler" @m_span{cmdbtn cmdbtn-icon52}@m_endspan
 @ref UnitTypes::Hero_Unclean_One "Hero Unclean One"</td></tr>
 </table>
-@tlPlague @sccPlague @wikPlague
+@tlPlague @sccPlague
 @m_keywords{Plague}
 
 */
@@ -469,7 +469,7 @@ Value of 16  [0x10]. See BWAPI::TechTypes::Consume.
 @ref UnitTypes::Hero_Unclean_One "Hero Unclean One" @m_span{cmdbtn cmdbtn-icon104}@m_endspan
 @ref UnitTypes::Hero_Infested_Duran "Hero Infested Duran"</td></tr>
 </table>
-@tlConsume @sccConsume @wikConsume
+@tlConsume @sccConsume
 @m_keywords{Consume}
 
 */
@@ -500,7 +500,7 @@ Value of 17  [0x11]. See BWAPI::TechTypes::Ensnare.
 @ref UnitTypes::Hero_Matriarch "Hero Matriarch" @m_span{cmdbtn cmdbtn-icon51}@m_endspan
 @ref UnitTypes::Hero_Infested_Kerrigan "Hero Infested Kerrigan"</td></tr>
 </table>
-@tlEnsnare @sccEnsnare @wikEnsnare
+@tlEnsnare @sccEnsnare
 @m_keywords{Ensnare}
 
 */
@@ -525,7 +525,7 @@ Value of 18  [0x12]. See BWAPI::TechTypes::Parasite.
 @ref UnitTypes::Zerg_Queen "Zerg Queen" @m_span{cmdbtn cmdbtn-icon49}@m_endspan
 @ref UnitTypes::Hero_Matriarch "Hero Matriarch"</td></tr>
 </table>
-@tlParasite @sccParasite @wikParasite
+@tlParasite @sccParasite
 @m_keywords{Parasite}
 
 */
@@ -556,7 +556,7 @@ Value of 19  [0x13]. See BWAPI::TechTypes::Psionic_Storm.
 @ref UnitTypes::Protoss_High_Templar "Protoss High Templar" @m_span{cmdbtn cmdbtn-icon79}@m_endspan
 @ref UnitTypes::Hero_Tassadar "Hero Tassadar"</td></tr>
 </table>
-@tlPsionic_Storm @sccPsionic_Storm @wikPsionic_Storm
+@tlPsionic_Storm @sccPsionic_Storm
 @m_keywords{Psionic Storm}
 
 */
@@ -585,7 +585,7 @@ Value of 20  [0x14]. See BWAPI::TechTypes::Hallucination.
 @ref UnitTypes::Protoss_High_Templar "Protoss High Templar" @m_span{cmdbtn cmdbtn-icon79}@m_endspan
 @ref UnitTypes::Hero_Tassadar "Hero Tassadar"</td></tr>
 </table>
-@tlHallucination @sccHallucination @wikHallucination
+@tlHallucination @sccHallucination
 @m_keywords{Hallucination}
 
 */
@@ -613,7 +613,7 @@ Value of 21  [0x15]. See BWAPI::TechTypes::Recall.
 @ref UnitTypes::Protoss_Arbiter "Protoss Arbiter" @m_span{cmdbtn cmdbtn-icon86}@m_endspan
 @ref UnitTypes::Hero_Danimoth "Hero Danimoth"</td></tr>
 </table>
-@tlRecall @sccRecall @wikRecall
+@tlRecall @sccRecall
 @m_keywords{Recall}
 
 */
@@ -643,7 +643,7 @@ Value of 22  [0x16]. See BWAPI::TechTypes::Stasis_Field.
 @ref UnitTypes::Protoss_Arbiter "Protoss Arbiter" @m_span{cmdbtn cmdbtn-icon86}@m_endspan
 @ref UnitTypes::Hero_Danimoth "Hero Danimoth"</td></tr>
 </table>
-@tlStasis_Field @sccStasis_Field @wikStasis_Field
+@tlStasis_Field @sccStasis_Field
 @m_keywords{Stasis Field}
 
 */
@@ -661,7 +661,7 @@ Value of 23  [0x17]. See BWAPI::TechTypes::Archon_Warp.
 <tr><td><strong>Used by</strong></td><td>@m_span{cmdbtn cmdbtn-icon67}@m_endspan
 @ref UnitTypes::Protoss_High_Templar "Protoss High Templar"</td></tr>
 </table>
-@tlArchon_Warp @sccArchon_Warp @wikArchon_Warp
+@tlArchon_Warp @sccArchon_Warp
 @m_keywords{Archon Warp}
 
 */
@@ -691,7 +691,7 @@ Value of 24  [0x18]. See BWAPI::TechTypes::Restoration.
 <tr><td><strong>Used by</strong></td><td>@m_span{cmdbtn cmdbtn-icon34}@m_endspan
 @ref UnitTypes::Terran_Medic "Terran Medic"</td></tr>
 </table>
-@tlRestoration @sccRestoration @wikRestoration
+@tlRestoration @sccRestoration
 @m_keywords{Restoration}
 
 */
@@ -722,7 +722,7 @@ Value of 25  [0x19]. See BWAPI::TechTypes::Disruption_Web.
 @ref UnitTypes::Protoss_Corsair "Protoss Corsair" @m_span{cmdbtn cmdbtn-icon98}@m_endspan
 @ref UnitTypes::Hero_Raszagal "Hero Raszagal"</td></tr>
 </table>
-@tlDisruption_Web @sccDisruption_Web @wikDisruption_Web
+@tlDisruption_Web @sccDisruption_Web
 @m_keywords{Disruption Web}
 
 */
@@ -752,7 +752,7 @@ Value of 27  [0x1b]. See BWAPI::TechTypes::Mind_Control.
 <tr><td><strong>Used by</strong></td><td>@m_span{cmdbtn cmdbtn-icon63}@m_endspan
 @ref UnitTypes::Protoss_Dark_Archon "Protoss Dark Archon"</td></tr>
 </table>
-@tlMind_Control @sccMind_Control @wikMind_Control
+@tlMind_Control @sccMind_Control
 @m_keywords{Mind Control}
 
 */
@@ -770,7 +770,7 @@ Value of 28  [0x1c]. See BWAPI::TechTypes::Dark_Archon_Meld.
 <tr><td><strong>Used by</strong></td><td>@m_span{cmdbtn cmdbtn-icon61}@m_endspan
 @ref UnitTypes::Protoss_Dark_Templar "Protoss Dark Templar"</td></tr>
 </table>
-@tlDark_Archon_Meld @sccDark_Archon_Meld @wikDark_Archon_Meld
+@tlDark_Archon_Meld @sccDark_Archon_Meld
 @m_keywords{Dark Archon Meld}
 
 */
@@ -798,7 +798,7 @@ Value of 29  [0x1d]. See BWAPI::TechTypes::Feedback.
 <tr><td><strong>Used by</strong></td><td>@m_span{cmdbtn cmdbtn-icon63}@m_endspan
 @ref UnitTypes::Protoss_Dark_Archon "Protoss Dark Archon"</td></tr>
 </table>
-@tlFeedback @sccFeedback @wikFeedback
+@tlFeedback @sccFeedback
 @m_keywords{Feedback}
 
 */
@@ -828,7 +828,7 @@ Value of 30  [0x1e]. See BWAPI::TechTypes::Optical_Flare.
 <tr><td><strong>Used by</strong></td><td>@m_span{cmdbtn cmdbtn-icon34}@m_endspan
 @ref UnitTypes::Terran_Medic "Terran Medic"</td></tr>
 </table>
-@tlOptical_Flare @sccOptical_Flare @wikOptical_Flare
+@tlOptical_Flare @sccOptical_Flare
 @m_keywords{Optical Flare}
 
 */
@@ -858,7 +858,7 @@ Value of 31  [0x1f]. See BWAPI::TechTypes::Maelstrom.
 <tr><td><strong>Used by</strong></td><td>@m_span{cmdbtn cmdbtn-icon63}@m_endspan
 @ref UnitTypes::Protoss_Dark_Archon "Protoss Dark Archon"</td></tr>
 </table>
-@tlMaelstrom @sccMaelstrom @wikMaelstrom
+@tlMaelstrom @sccMaelstrom
 @m_keywords{Maelstrom}
 
 */
@@ -883,7 +883,7 @@ Value of 32  [0x20]. See BWAPI::TechTypes::Lurker_Aspect.
 <tr><td><strong>Used by</strong></td><td>@m_span{cmdbtn cmdbtn-icon38}@m_endspan
 @ref UnitTypes::Zerg_Hydralisk "Zerg Hydralisk"</td></tr>
 </table>
-@tlLurker_Aspect @sccLurker_Aspect @wikLurker_Aspect
+@tlLurker_Aspect @sccLurker_Aspect
 @m_keywords{Lurker Aspect}
 
 */
@@ -905,7 +905,7 @@ Value of 34  [0x22]. See BWAPI::TechTypes::Healing.
 <tr><td><strong>Used by</strong></td><td>@m_span{cmdbtn cmdbtn-icon34}@m_endspan
 @ref UnitTypes::Terran_Medic "Terran Medic"</td></tr>
 </table>
-@tlHealing @sccHealing @wikHealing
+@tlHealing @sccHealing
 @m_keywords{Healing}
 
 */
@@ -927,7 +927,7 @@ Value of 45  [0x2d]. See BWAPI::TechTypes::Nuclear_Strike.
 <tr><td><strong>Used by</strong></td><td>@m_span{cmdbtn cmdbtn-icon1}@m_endspan
 @ref UnitTypes::Terran_Ghost "Terran Ghost"</td></tr>
 </table>
-@tlNuclear_Strike @sccNuclear_Strike @wikNuclear_Strike
+@tlNuclear_Strike @sccNuclear_Strike
 @m_keywords{Nuclear Strike}
 
 */
