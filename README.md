@@ -99,7 +99,7 @@ You may experience issues when working with BWAPI. Here are some steps you may w
 
 ### Getting Help
 - [Github Q&A Board](https://github.com/bwapi/bwapi/discussions/categories/q-a)
-- [SSCAIT Discord](https://discordapp.com/invite/w9wRRrF)
+- [Brood War AI Discord](https://discordapp.com/invite/w9wRRrF) (formerly SSCAIT)
 
 ## BWAPI Developers Getting Started
 Want to help improve BWAPI? Fork the [develop branch](https://github.com/bwapi/bwapi/tree/develop) and read the [contributing guide](CONTRIBUTING.md).
