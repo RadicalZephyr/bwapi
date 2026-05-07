@@ -1,6 +1,6 @@
 include(FetchContent)
 
-set(PROTOBUF_VERSION 3.14.0)
+set(PROTOBUF_VERSION 34.1)
 
 # Disable all other protobuf projects
 set(protobuf_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -26,17 +26,32 @@ set(PROTOC_URL_PREFIX "https://github.com/protocolbuffers/protobuf/releases/down
 
 if(CMAKE_HOST_WIN32 OR CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
   if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86")
-    FetchContent_Declare(protoc URL "${PROTOC_URL_PREFIX}-win32.zip")
+    FetchContent_Declare(protoc
+      URL "${PROTOC_URL_PREFIX}-win32.zip"
+      DOWNLOAD_EXTRACT_TIMESTAMP ON
+    )
   else()
-    FetchContent_Declare(protoc URL "${PROTOC_URL_PREFIX}-win64.zip")
+    FetchContent_Declare(protoc
+      URL "${PROTOC_URL_PREFIX}-win64.zip"
+      DOWNLOAD_EXTRACT_TIMESTAMP ON
+    )
   endif()
 elseif(CMAKE_HOST_APPLE)
-  FetchContent_Declare(protoc URL "${PROTOC_URL_PREFIX}-osx-x86_64.zip")
+  FetchContent_Declare(protoc
+    URL "${PROTOC_URL_PREFIX}-osx-x86_64.zip"
+    DOWNLOAD_EXTRACT_TIMESTAMP ON
+  )
 elseif(CMAKE_HOST_LINUX OR CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
   if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86")
-    FetchContent_Declare(protoc URL "${PROTOC_URL_PREFIX}-linux-x86_32.zip")
+    FetchContent_Declare(protoc
+      URL "${PROTOC_URL_PREFIX}-linux-x86_32.zip"
+      DOWNLOAD_EXTRACT_TIMESTAMP ON
+    )
   else()
-    FetchContent_Declare(protoc URL "${PROTOC_URL_PREFIX}-linux-x86_64.zip")
+    FetchContent_Declare(protoc
+      URL "${PROTOC_URL_PREFIX}-linux-x86_64.zip"
+      DOWNLOAD_EXTRACT_TIMESTAMP ON
+    )
   endif()
 else()
   message(FATAL_ERROR "Unable to determine the host operating system for protoc.")
@@ -48,8 +63,7 @@ FetchContent_GetProperties(protobuf)
 if(NOT protobuf_POPULATED)
   FetchContent_Populate(protobuf)
 
-  add_subdirectory(${protobuf_SOURCE_DIR}/cmake
-                   ${protobuf_BINARY_DIR})
+  add_subdirectory(${protobuf_SOURCE_DIR} ${protobuf_BINARY_DIR})
 endif()
 
 # Set the protoc error format (to be passed to protoc CLI)
