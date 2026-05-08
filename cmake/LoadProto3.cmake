@@ -28,29 +28,24 @@ if(CMAKE_HOST_WIN32 OR CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
   if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86")
     FetchContent_Declare(protoc
       URL "${PROTOC_URL_PREFIX}-win32.zip"
-      DOWNLOAD_EXTRACT_TIMESTAMP ON
     )
   else()
     FetchContent_Declare(protoc
       URL "${PROTOC_URL_PREFIX}-win64.zip"
-      DOWNLOAD_EXTRACT_TIMESTAMP ON
     )
   endif()
 elseif(CMAKE_HOST_APPLE)
   FetchContent_Declare(protoc
     URL "${PROTOC_URL_PREFIX}-osx-x86_64.zip"
-    DOWNLOAD_EXTRACT_TIMESTAMP ON
   )
 elseif(CMAKE_HOST_LINUX OR CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
   if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86")
     FetchContent_Declare(protoc
       URL "${PROTOC_URL_PREFIX}-linux-x86_32.zip"
-      DOWNLOAD_EXTRACT_TIMESTAMP ON
     )
   else()
     FetchContent_Declare(protoc
       URL "${PROTOC_URL_PREFIX}-linux-x86_64.zip"
-      DOWNLOAD_EXTRACT_TIMESTAMP ON
     )
   endif()
 else()

@@ -38,7 +38,7 @@ if(MSVC)
   string(REGEX REPLACE "/W[0-9]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   # /Za /permissive- /Zc:rvalueCast    <-- Enforces conformance with the C++ standard (as best as VS can manage)
   # /MP                 <-- Enable multi-processor compilation
-  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /Za /permissive- /Zc:rvalueCast /MP)
+  target_compile_options(${PROJECT_NAME} PRIVATE /W4 /permissive- /Zc:rvalueCast /MP)
 elseif(CMAKE_COMPILER_IS_GNUCXX)
   target_compile_options(${PROJECT_NAME} PRIVATE -Wpedantic)
 
