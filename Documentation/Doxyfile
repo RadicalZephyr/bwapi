@@ -1642,6 +1642,7 @@ WARN_LOGFILE           =
 
 INPUT                  = ../include/ \
                          ../README.md \
+                         ../CONTRIBUTING.md \
                          ./dox/
 
 # This tag can be used to specify the character encoding of the source files
