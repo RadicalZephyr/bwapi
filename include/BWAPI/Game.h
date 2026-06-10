@@ -1446,16 +1446,16 @@ namespace BWAPI
     /// @see setLatCom
     bool isLatComEnabled() const;
 
-    /// <summary>Changes the state of latency compensation.</summary> Latency compensation
-    /// modifies the state of BWAPI's representation of units to reflect the implications of
-    /// issuing a command immediately after the command was performed, instead of waiting
-    /// consecutive frames for the results. Latency compensation is enabled by default.
-    ///
-    /// <param name="isEnabled">
-    ///   Set whether the latency compensation feature will be enabled (true) or disabled (false).
-    /// </param>
-    ///
-    /// @see isLatComEnabled.
+    // <summary>Changes the state of latency compensation.</summary> Latency compensation
+    // modifies the state of BWAPI's representation of units to reflect the implications of
+    // issuing a command immediately after the command was performed, instead of waiting
+    // consecutive frames for the results. Latency compensation is enabled by default.
+    //
+    // <param name="isEnabled">
+    //   Set whether the latency compensation feature will be enabled (true) or disabled (false).
+    // </param>
+    //
+    // @see isLatComEnabled.
     //void setLatCom(bool isEnabled);
 
     /// <summary>Checks if the GUI is enabled.</summary> The GUI includes all drawing functions of
