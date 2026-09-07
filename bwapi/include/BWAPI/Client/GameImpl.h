@@ -196,6 +196,8 @@ namespace BWAPI
       virtual const Regionset &getAllRegions() const override;
       virtual BWAPI::Region getRegionAt(int x, int y) const override;
       virtual int getLastEventTime() const override;
+      virtual long long getLastFrameDurationMicros() const override;
+      virtual long long getLastIpcDurationMicros() const override;
       virtual bool setRevealAll(bool reveal = true) override;
       virtual unsigned getRandomSeed() const override;
   };

@@ -1633,13 +1633,42 @@ namespace BWAPI
     /// @overload
     BWAPI::Region getRegionAt(BWAPI::Position position) const;
 
-    /// <summary>Retrieves the amount of time (in milliseconds) that has elapsed when running the last AI
-    /// module callback.</summary> This is used by tournament modules to penalize AI modules that use too
-    /// much processing time.
+    /// <summary>Retrieves the amount of time (in milliseconds) the bot spent on the last frame.
+    /// </summary>
     ///
-    /// @retval 0 When called from an AI module.
-    /// @returns Time in milliseconds spent in last AI module call.
+    /// This is the meter a tournament charges a bot against. It is a rounding of
+    /// getLastFrameDurationMicros and is kept in milliseconds because that is what it has always
+    /// reported; a millisecond is a coarse unit for a budget measured against 42, so prefer the
+    /// microsecond accessor for anything that has to be accurate.
+    ///
+    /// @returns Time in milliseconds spent on the last frame.
+    /// @see getLastFrameDurationMicros
     virtual int getLastEventTime() const = 0;
+
+    /// <summary>Retrieves the time, in microseconds, that this bot was charged for the last
+    /// frame.</summary>
+    ///
+    /// Measured with a monotonic sub-microsecond clock, and measured across the bot's own work
+    /// rather than across the handover: the transport's cost is reported separately by
+    /// getLastIpcDurationMicros and is not charged here.
+    ///
+    /// A bot cannot structure itself against a budget it cannot read, which is why this is
+    /// published rather than kept on the trusted side.
+    ///
+    /// @returns Microseconds spent in the bot on the last frame.
+    /// @see getLastIpcDurationMicros, getLastEventTime
+    virtual long long getLastFrameDurationMicros() const = 0;
+
+    /// <summary>Retrieves the time, in microseconds, that the last frame's handover cost.
+    /// </summary>
+    ///
+    /// The difference between the round trip the server measured and the work the bot reported,
+    /// which is the transport and the scheduler. Recorded so that it is visible rather than
+    /// silently added to whichever side happens to be holding the frame.
+    ///
+    /// @returns Microseconds spent outside the bot on the last frame's handover.
+    /// @see getLastFrameDurationMicros
+    virtual long long getLastIpcDurationMicros() const = 0;
 
     /// <summary>Sets the state of the fog of war when watching a replay.</summary>
     ///

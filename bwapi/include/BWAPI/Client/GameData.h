@@ -76,6 +76,20 @@ namespace BWAPI
     int fps;
     double averageFPS;
 
+    // The per-frame meter (ADR 0001 section 2, defects 2.5 and 2.6).
+    //
+    // The first two are written by the client each frame and are the reason a bot is not billed
+    // for the transport: the server can only see when it handed the frame over and when it got
+    // it back, which includes two pipe round trips it caused itself. Only differences between
+    // these two are ever taken, so they do not need to share an epoch with the server's clock.
+    long long clientWakeMicros;
+    long long clientReplyMicros;
+
+    // Written by the server, and readable by the bot - upstream returns a hard-coded zero from
+    // Game::getLastEventTime in client mode, so a bot could not read what it was charged.
+    long long lastFrameDurationMicros;
+    long long lastIpcDurationMicros;
+
     // user input
     int mouseX;
     int mouseY;

@@ -1,4 +1,5 @@
 #include <BWAPI/Client/Client.h>
+#include "MonotonicClock.h"
 #include <windows.h>
 #include <sstream>
 #include <iostream>
@@ -172,6 +173,11 @@ namespace BWAPI
   }
   void Client::update()
   {
+    // The bot's own work for the previous frame ends here, on the way back into the server. The
+    // server cannot see this instant - all it can measure is the round trip, which includes two
+    // pipe hops it caused itself - so the client records it and the server subtracts.
+    data->clientReplyMicros = Clock::micros();
+
     DWORD writtenByteCount;
     int code = 1;
     WriteFile(pipeObjectHandle, &code, sizeof(code), &writtenByteCount, NULL);
@@ -189,7 +195,9 @@ namespace BWAPI
         return;
       }
     }
-    //std::cout << "about to enter event loop" << std::endl;
+
+    // And it begins again here, with the new frame in hand.
+    data->clientWakeMicros = Clock::micros();
 
     for(int i = 0; i < data->eventCount; ++i)
     {

@@ -25,6 +25,7 @@ SET(BWAPI_INCL_DIR ${BWAPI_ROOT}/include)
 INCLUDE_DIRECTORIES(
         ${BWAPI_INCL_DIR}
         ${BWAPI_INCL_DIR}/BWAPI/Client
+        ${BWAPI_ROOT}/Shared
         ${BWAPI_ROOT}/Storm
         )
 

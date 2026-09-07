@@ -892,11 +892,20 @@ namespace BWAPI
   }
   int GameImpl::getLastEventTime() const
   {
-    return this->lastEventTime;
+    // Milliseconds, rounded, for the interface that has always spoken milliseconds.
+    return static_cast<int>((this->lastFrameDurationMicros + 500) / 1000);
   }
-  void GameImpl::setLastEventTime(int lastEventTime)
+  long long GameImpl::getLastFrameDurationMicros() const
   {
-    this->lastEventTime = lastEventTime;
+    return this->lastFrameDurationMicros;
+  }
+  long long GameImpl::getLastIpcDurationMicros() const
+  {
+    return this->server.data ? this->server.data->lastIpcDurationMicros : 0;
+  }
+  void GameImpl::setLastFrameDurationMicros(long long micros)
+  {
+    this->lastFrameDurationMicros = micros;
   }
   bool GameImpl::setRevealAll(bool reveal)
   {

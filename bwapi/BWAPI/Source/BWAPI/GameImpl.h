@@ -180,7 +180,9 @@ namespace BWAPI
       virtual BWAPI::Region   getRegionAt(int x, int y) const override;
 
       virtual int getLastEventTime() const override;
-      void setLastEventTime(int lastEventTime);
+      virtual long long getLastFrameDurationMicros() const override;
+      virtual long long getLastIpcDurationMicros() const override;
+      void setLastFrameDurationMicros(long long micros);
 
       virtual bool setRevealAll(bool reveal = true) override;
 
@@ -348,7 +350,7 @@ namespace BWAPI
 
       bool calledMatchEnd = false;
 
-      int lastEventTime = 0;
+      long long lastFrameDurationMicros = 0;
 
     public:
       APMCounter apmCounter;

@@ -958,7 +958,15 @@ namespace BWAPI
   }
   int GameImpl::getLastEventTime() const
   {
-    return 0;
+    return static_cast<int>((data->lastFrameDurationMicros + 500) / 1000);
+  }
+  long long GameImpl::getLastFrameDurationMicros() const
+  {
+    return data->lastFrameDurationMicros;
+  }
+  long long GameImpl::getLastIpcDurationMicros() const
+  {
+    return data->lastIpcDurationMicros;
   }
   bool GameImpl::setRevealAll(bool reveal)
   {

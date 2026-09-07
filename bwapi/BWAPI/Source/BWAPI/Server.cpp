@@ -8,6 +8,7 @@
 #include <AclAPI.h>
 
 #include "ClientInput.h"
+#include "MonotonicClock.h"
 #include "GameImpl.h"
 #include "PlayerImpl.h"
 #include "UnitImpl.h"
@@ -91,7 +92,7 @@ namespace BWAPI
           //We have a game table index now, initialize our row
           gameTable->gameInstances[gameTableIndex].serverProcessID = processID;
           gameTable->gameInstances[gameTableIndex].isConnected = false;
-          gameTable->gameInstances[gameTableIndex].lastKeepAliveTime = GetTickCount();
+          gameTable->gameInstances[gameTableIndex].lastKeepAliveTime = Clock::millis();
         } // if gameTable
       } // if gameTableFileHandle
 
@@ -232,16 +233,16 @@ namespace BWAPI
     data->shapeCount       = 0;
     if (gameTable && gameTableIndex >= 0)
     {
-      gameTable->gameInstances[gameTableIndex].lastKeepAliveTime = GetTickCount();
+      // A client picks the instance with the oldest keep-alive, and GetTickCount resolves
+      // about 16 ms, so two instances launched together used to tie.
+      gameTable->gameInstances[gameTableIndex].lastKeepAliveTime = Clock::millis();
       gameTable->gameInstances[gameTableIndex].isConnected = connected;
     }
     if (connected)
     {
       // Update BWAPI Client
       updateSharedMemory();
-      auto const onFrameStart = GetTickCount();
-      callOnFrame();
-      BroodwarImpl.setLastEventTime(GetTickCount() - onFrameStart);
+      meterFrame();
       processCommands();
     }
     else
@@ -356,6 +357,12 @@ namespace BWAPI
     data->mapHash[0]       = 0;
     data->hasGUI           = true;
     data->hasLatCom        = true;
+    // The localOnly path allocates GameData with new and it has no constructor, so the meter
+    // starts at whatever was on the heap unless it is set here.
+    data->clientWakeMicros        = 0;
+    data->clientReplyMicros       = 0;
+    data->lastFrameDurationMicros = 0;
+    data->lastIpcDurationMicros   = 0;
     clearAll();
   }
   void Server::onMatchStart()
@@ -746,6 +753,39 @@ namespace BWAPI
     if (unitVector.size() <= static_cast<unsigned>(id))
       return nullptr;
     return unitVector[id];
+  }
+
+  // Hand the frame to the client, wait for it, and charge what it cost.
+  //
+  // The server can only see the span from "frame published" to "reply received", and that span
+  // contains two pipe round trips the server itself caused. The client stamps the two instants
+  // that bracket its own work into the plane, so the bot is charged for its own work and the
+  // transport is recorded separately rather than billed to whoever is holding it (ADR 0001
+  // section 2, defect 2.5: "a second timestamp so a bot is not billed for the referee's IPC").
+  //
+  // Only client-to-client and server-to-server differences are taken, so the two clocks never
+  // have to agree on an epoch.
+  void Server::meterFrame()
+  {
+    const long long previousReply = data->clientReplyMicros;
+
+    const long long handoff = Clock::micros();
+    callOnFrame();
+    const long long roundTrip = Clock::micros() - handoff;
+
+    long long botSpan = roundTrip;
+    if (data->clientReplyMicros > data->clientWakeMicros &&
+        data->clientReplyMicros != previousReply)
+    {
+      // The client stamped a complete frame this time round.
+      botSpan = data->clientReplyMicros - data->clientWakeMicros;
+      if (botSpan > roundTrip)
+        botSpan = roundTrip;  // the two clocks disagreed; never charge more than really elapsed
+    }
+
+    data->lastFrameDurationMicros = botSpan;
+    data->lastIpcDurationMicros   = roundTrip - botSpan;
+    BroodwarImpl.setLastFrameDurationMicros(botSpan);
   }
 
   void Server::callOnFrame()

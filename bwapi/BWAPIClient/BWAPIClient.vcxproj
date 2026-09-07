@@ -92,6 +92,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\BulletImpl.cpp" />
+    <ClInclude Include="..\Shared\MonotonicClock.h" />
     <ClCompile Include="..\Shared\BulletShared.cpp" />
     <ClCompile Include="Source\Client.cpp" />
     <ClCompile Include="Source\ForceImpl.cpp" />

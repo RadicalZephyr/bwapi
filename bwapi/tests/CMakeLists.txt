@@ -35,12 +35,14 @@ function(bwapi_add_test name)
   target_include_directories(${name} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../BWAPI/Source/BWAPI
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Shared
     ${CMAKE_CURRENT_SOURCE_DIR}/../include)
   add_test(NAME ${name} COMMAND ${name})
 endfunction()
 
 bwapi_add_test(client_input_test)
 bwapi_add_test(permissions_test)
+bwapi_add_test(monotonic_clock_test)
 
 # A million planes per run under ASan; the default argument keeps it near a second.
 bwapi_add_test(client_input_fuzz)

@@ -47,6 +47,7 @@ namespace BWAPI
     void checkForConnections();
     void initializeSharedMemory();
     void updateSharedMemory();
+    void meterFrame();
     void callOnFrame();
     void processCommands();
     void setWaitForResponse(bool wait);
