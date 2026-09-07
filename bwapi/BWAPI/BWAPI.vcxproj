@@ -352,6 +352,7 @@ popd</Command>
     <ClInclude Include="Source\BWAPI\Map.h" />
     <ClInclude Include="Source\BWAPI\PlayerImpl.h" />
     <ClInclude Include="Source\BWAPI\RegionImpl.h" />
+    <ClInclude Include="Source\BWAPI\ClientInput.h" />
     <ClInclude Include="Source\BWAPI\Server.h" />
     <ClInclude Include="Source\BWAPI\UnitImpl.h" />
     <ClInclude Include="Source\BW\AIController.h" />

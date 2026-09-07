@@ -7,6 +7,7 @@
 #include <sstream>
 #include <AclAPI.h>
 
+#include "ClientInput.h"
 #include "GameImpl.h"
 #include "PlayerImpl.h"
 #include "UnitImpl.h"
@@ -836,13 +837,14 @@ namespace BWAPI
     }
     if ( Broodwar->isInGame() )
     {
+      const int unitCount = static_cast<int>(unitVector.size());
       for ( int i = 0; i < data->unitCommandCount; ++i )
       {
-        if (data->unitCommands[i].unitIndex < 0 || data->unitCommands[i].unitIndex >= (int)unitVector.size())
+        if (!ClientInput::indexInRange(data->unitCommands[i].unitIndex, unitCount))
           continue;
         Unit unit = unitVector[data->unitCommands[i].unitIndex];
         Unit target = nullptr;
-        if (data->unitCommands[i].targetIndex >= 0 && data->unitCommands[i].targetIndex < (int)unitVector.size())
+        if (ClientInput::indexInRange(data->unitCommands[i].targetIndex, unitCount))
           target = unitVector[data->unitCommands[i].targetIndex];
 
         unit->issueCommand(UnitCommand(unit, data->unitCommands[i].type, target, data->unitCommands[i].x, data->unitCommands[i].y, data->unitCommands[i].extra));

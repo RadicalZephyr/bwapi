@@ -1,0 +1,53 @@
+# The host-buildable half of BWAPI's server side.
+#
+# BWAPI.dll is Windows-only and reaches into StarCraft's address space, so the Windows job can
+# only prove it compiles. Everything the trusted side decides *without* touching the game - the
+# validation of client-written shared memory, the handle allocation that decides what a bot may
+# name - is ordinary arithmetic, and this job is where it is actually run, under sanitizers,
+# on every push. See bwapi/tests/.
+
+name: Linux tests
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linux-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Server-side validators (${{ matrix.compiler }}${{ matrix.sanitizers == 'ON' && ' + ASan/UBSan' || '' }})
+    runs-on: ubuntu-24.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - compiler: g++
+            sanitizers: 'OFF'
+          - compiler: clang++
+            sanitizers: 'ON'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        env:
+          CXX: ${{ matrix.compiler }}
+        run: >
+          cmake -B build -S bwapi/tests
+          -DCMAKE_BUILD_TYPE=Debug
+          -DBWAPI_TEST_SANITIZERS=${{ matrix.sanitizers }}
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
