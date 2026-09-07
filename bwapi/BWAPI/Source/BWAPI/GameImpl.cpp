@@ -250,7 +250,7 @@ namespace BWAPI
     }
     
     // check if tournament will allow the call
-    if ( !this->tournamentCheck(Tournament::EnableFlag, &flag) )
+    if ( !this->permissionCheck(Tournament::EnableFlag, &flag) )
       return;
 
     // Modify flag state 
@@ -426,7 +426,7 @@ namespace BWAPI
     char buffer[512];
     VSNPrintf(buffer, format, arg);
 
-    if ( !this->tournamentCheck(Tournament::Printf, buffer) )
+    if ( !this->permissionCheck(Tournament::Printf, buffer) )
       return;
 
     // Dispatch message using existing Storm library function (lobby+game)
@@ -444,7 +444,7 @@ namespace BWAPI
     VSNPrintf(buffer, format, arg);
 
     // Check if tournament module allows sending text
-    if ( !this->tournamentCheck(Tournament::SendText, buffer) )
+    if ( !this->permissionCheck(Tournament::SendText, buffer) )
       return;
 
     if ( buffer[0] == '/' )    // If we expect a battle.net command
@@ -543,7 +543,7 @@ namespace BWAPI
   {
     // Pauses the game 
     this->setLastError();
-    if ( !this->tournamentCheck(Tournament::PauseGame) )
+    if ( !this->permissionCheck(Tournament::PauseGame) )
       return;
     QUEUE_COMMAND(BW::Orders::PauseGame);
   }
@@ -552,7 +552,7 @@ namespace BWAPI
   {
     // Resumes the game 
     this->setLastError();
-    if ( !this->tournamentCheck(Tournament::ResumeGame) )
+    if ( !this->permissionCheck(Tournament::ResumeGame) )
       return;
     QUEUE_COMMAND(BW::Orders::ResumeGame);
   }
@@ -561,7 +561,7 @@ namespace BWAPI
   {
     // Leaves the current game. Moves directly to the post-game score screen 
     this->setLastError();
-    if ( !this->tournamentCheck(Tournament::LeaveGame) )
+    if ( !this->permissionCheck(Tournament::LeaveGame) )
       return;
     BW::BWDATA::GameState      = 0;
     BW::BWDATA::gwNextGameMode = 6;
@@ -632,7 +632,7 @@ namespace BWAPI
   void GameImpl::setLocalSpeed(int speed)
   {
     // Sets the frame rate of the client 
-    if (!this->tournamentCheck(Tournament::SetLocalSpeed, &speed) ||
+    if (!this->permissionCheck(Tournament::SetLocalSpeed, &speed) ||
       this->speedOverride != std::numeric_limits<decltype(this->speedOverride)>::min()) return;
 
     setLocalSpeedDirect(speed);
@@ -661,7 +661,7 @@ namespace BWAPI
   void GameImpl::setFrameSkip(int frameSkip)
   {
     setLastError(Errors::None);
-    if ( !this->tournamentCheck(Tournament::SetFrameSkip, &frameSkip) )
+    if ( !this->permissionCheck(Tournament::SetFrameSkip, &frameSkip) )
       return;
 
     if ( frameSkip > 0 )
@@ -823,7 +823,7 @@ namespace BWAPI
   }
   void GameImpl::setLatCom(bool isEnabled)
   {
-    if ( !this->tournamentCheck(Tournament::SetLatCom, &isEnabled) )
+    if ( !this->permissionCheck(Tournament::SetLatCom, &isEnabled) )
       return;
     data->hasLatCom = isEnabled;
   }
@@ -846,7 +846,7 @@ namespace BWAPI
     if ( !std::ifstream(mapFileName).is_open() )
       return setLastError(Errors::File_Not_Found);
 
-    if ( !this->tournamentCheck(Tournament::SetMap, (void*)mapFileName) )
+    if ( !this->permissionCheck(Tournament::SetMap, (void*)mapFileName) )
       return setLastError(Errors::None);
 
 
@@ -862,7 +862,7 @@ namespace BWAPI
   void GameImpl::setCommandOptimizationLevel(int level)
   {
     level = Util::clamp(level, 0, 4);
-    if ( !this->tournamentCheck(Tournament::SetCommandOptimizationLevel, &level) )
+    if ( !this->permissionCheck(Tournament::SetCommandOptimizationLevel, &level) )
       return;
     this->commandOptimizer.level = level;
   }

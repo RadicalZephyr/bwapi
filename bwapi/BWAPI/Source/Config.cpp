@@ -6,6 +6,7 @@
 #include <Util/StringUtil.h>
 
 #include "Config.h"
+#include "BWAPI/Permissions.h"
 
 #include "WMode.h"
 
@@ -16,6 +17,56 @@ bool showWarn         = true;
 bool serverEnabled    = true;
 
 unsigned gdwProcNum = 1;
+
+//--------------------------------------------- PERMISSIONS --------------------------------------------------
+// The [permissions] section of bwapi.ini, replacing TournamentModule::onAction (ADR 0001 section
+// 2, defect 2.4). One key per Tournament::ActionID, spelled as the action, plus the one integer
+// threshold the reference policy needs. Read once: policy that could be re-read mid-game is
+// policy a bot with a filesystem could rewrite.
+namespace
+{
+  // Indexed by Tournament::ActionID, so the order is the enum's.
+  const char * const permissionKeys[BWAPI::TOURNAMENT_ACTION_COUNT] = {
+    "enable_flag",
+    "pause_game",
+    "resume_game",
+    "leave_game",
+    "set_local_speed",
+    "set_text_size",
+    "set_lat_com",
+    "set_gui",
+    "set_map",
+    "set_frame_skip",
+    "printf",
+    "send_text",
+    "set_command_optimization_level",
+  };
+
+  BWAPI::PermissionTable loadPermissions()
+  {
+    BWAPI::PermissionTable table = BWAPI::PermissionTable::defaults();
+    for (int i = 0; i < BWAPI::TOURNAMENT_ACTION_COUNT; ++i)
+    {
+      // Anything other than ON or OFF leaves the default in place; a typo must not silently
+      // widen what a bot may do.
+      const std::string value = LoadConfigStringUCase("permissions", permissionKeys[i],
+                                                      table.allowed[i] ? "ON" : "OFF");
+      if (value == "ON")
+        table.allowed[i] = true;
+      else if (value == "OFF")
+        table.allowed[i] = false;
+    }
+    table.minCommandOptimization =
+      LoadConfigInt("permissions", "min_command_optimization", table.minCommandOptimization);
+    return table;
+  }
+}
+
+const BWAPI::PermissionTable &BWAPI::permissions()
+{
+  static const BWAPI::PermissionTable table = loadPermissions();
+  return table;
+}
 
 //--------------------------------------------- GET PROC COUNT -----------------------------------------------
 // Found/modified this from some random help board

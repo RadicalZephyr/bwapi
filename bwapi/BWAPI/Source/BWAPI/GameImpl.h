@@ -366,6 +366,10 @@ namespace BWAPI
       CommandOptimizer commandOptimizer;
 
     private:
+      /// May the bot perform \p type? Consults the [permissions] table in bwapi.ini first and
+      /// the tournament module second, so a refusal in the config cannot be overridden by a DLL
+      /// loaded into this process. Every gated call site goes through here.
+      bool permissionCheck(Tournament::ActionID type, void *parameter = nullptr);
       bool tournamentCheck(Tournament::ActionID type, void *parameter = nullptr);
 
       int addShape(const BWAPIC::Shape &s);

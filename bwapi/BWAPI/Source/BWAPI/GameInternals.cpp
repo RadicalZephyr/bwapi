@@ -1,4 +1,5 @@
 #include "GameImpl.h"
+#include "Permissions.h"
 #include <vector>
 #include <string>
 
@@ -269,6 +270,17 @@ namespace BWAPI
   int GameImpl::_currentPlayerId()
   {
     return BW::BWDATA::g_LocalHumanID;
+  }
+  bool GameImpl::permissionCheck(Tournament::ActionID type, void *parameter)
+  {
+    // The config is consulted first and its refusal is final: the tournament module runs inside
+    // the bot's own address space, so it may only narrow what the config already permits.
+    if ( !permissions().permits(type, parameter) )
+    {
+      this->setLastError(Errors::Access_Denied);
+      return false;
+    }
+    return this->tournamentCheck(type, parameter);
   }
   bool GameImpl::tournamentCheck(Tournament::ActionID type, void *parameter)
   {

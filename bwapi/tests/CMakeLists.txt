@@ -34,8 +34,10 @@ function(bwapi_add_test name)
   add_executable(${name} ${name}.cpp)
   target_include_directories(${name} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../BWAPI/Source/BWAPI)
+    ${CMAKE_CURRENT_SOURCE_DIR}/../BWAPI/Source/BWAPI
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include)
   add_test(NAME ${name} COMMAND ${name})
 endfunction()
 
 bwapi_add_test(client_input_test)
+bwapi_add_test(permissions_test)
