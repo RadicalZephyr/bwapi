@@ -152,7 +152,7 @@ namespace BWAPI
                                          PIPE_SYSTEM_BUFFER_SIZE,
                                          PIPE_SYSTEM_BUFFER_SIZE,
                                          PIPE_TIMEOUT,
-                                         &sa);
+                                         NULL);
 
       // Manual-reset, initially unsignalled. One event per outstanding operation, and there is
       // never more than one of each: the connect completes before any frame is exchanged.
