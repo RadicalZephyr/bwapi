@@ -29,6 +29,18 @@ namespace BWAPI
       return index >= 0 && index < count;
     }
 
+    /// A client-supplied count, clamped to what the array behind it can hold.
+    ///
+    /// Returns a value in [0, capacity]: a negative count means the client wrote nonsense and
+    /// there is nothing to read, and a count past the end is truncated rather than trusted.
+    /// Callers use the result as their loop bound instead of the raw field.
+    constexpr int clampCount(int count, int capacity) noexcept
+    {
+      if (count < 0)
+        return 0;
+      return count > capacity ? capacity : count;
+    }
+
     /// Reserve the next slot of a fixed-size array, advancing \p count, or -1 if it is full.
     ///
     /// The shape and string arrays are appended to by both sides and their counts are reset by
@@ -37,8 +49,10 @@ namespace BWAPI
     /// compiles out, leaving a write past the array.
     inline int reserveSlot(int &count, int capacity) noexcept
     {
-      if (count < 0)
-        count = 0;
+      // Normalise first, so the count is inside the array it describes whether or not a slot was
+      // available. Merely refusing would leave whatever the client wrote sitting in a field that
+      // every later reader would have to remember to clamp, and one of them eventually would not.
+      count = clampCount(count, capacity);
       if (count >= capacity)
         return -1;
       return count++;
@@ -58,16 +72,5 @@ namespace BWAPI
       return text;
     }
 
-    /// A client-supplied count, clamped to what the array behind it can hold.
-    ///
-    /// Returns a value in [0, capacity]: a negative count means the client wrote nonsense and
-    /// there is nothing to read, and a count past the end is truncated rather than trusted.
-    /// Callers use the result as their loop bound instead of the raw field.
-    constexpr int clampCount(int count, int capacity) noexcept
-    {
-      if (count < 0)
-        return 0;
-      return count > capacity ? capacity : count;
-    }
   }
 }

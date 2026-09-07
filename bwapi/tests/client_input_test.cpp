@@ -96,10 +96,12 @@ namespace
     CHECK_EQ(reserveSlot(count, 3), -1);
     CHECK_EQ(count, 3);
 
-    // The count is shared with the client and reset every frame, so it can arrive as anything.
+    // The count is shared with the client and reset every frame, so it can arrive as anything -
+    // and it is normalised whether or not a slot was available, so no later reader inherits a
+    // count that is outside the array it describes.
     int hostile = INT_MAX;
     CHECK_EQ(reserveSlot(hostile, 3), -1);
-    CHECK_EQ(hostile, INT_MAX);
+    CHECK_EQ(hostile, 3);
 
     int negative = -5;
     CHECK_EQ(reserveSlot(negative, 3), 0);
@@ -117,6 +119,7 @@ namespace
     for (int i = 0; i < 20; ++i)
     {
       const int slot = reserveSlot(count, capacity);
+      CHECK(count >= 0 && count <= capacity);
       if (slot < 0)
         CHECK(count == capacity);
       else

@@ -41,3 +41,6 @@ endfunction()
 
 bwapi_add_test(client_input_test)
 bwapi_add_test(permissions_test)
+
+# A million planes per run under ASan; the default argument keeps it near a second.
+bwapi_add_test(client_input_fuzz)
