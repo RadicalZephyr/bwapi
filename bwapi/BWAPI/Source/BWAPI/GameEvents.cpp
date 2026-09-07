@@ -309,9 +309,6 @@ namespace BWAPI
   //---------------------------------------------- ON RECV TEXT ----------------------------------------------
   void GameImpl::onReceiveText(int playerId, const std::string &text)
   {
-    if ( !this->bTournamentMessageAppeared && hTournamentModule && text == getTournamentString() )
-      this->bTournamentMessageAppeared = true;
-
     // Do onReceiveText
     int realId = stormIdToPlayerId(playerId);
     if ( realId != -1 &&
@@ -502,31 +499,7 @@ namespace BWAPI
     if ( !client || server.isConnected() )
       return;
     for (Event e : events)
-    {
-      static DWORD dwLastEventTime = 0;
-
-      // Reset event stopwatch
-      if ( tournamentAI )
-      {
-        this->lastEventTime = 0;
-        dwLastEventTime     = GetTickCount();
-      }
-
-      // Send event to the AI Client module
       SendClientEvent(client, e);
-
-      // continue if the tournament is not loaded
-      if ( !tournamentAI )
-        continue;
-
-      // Save the last event time
-      this->lastEventTime = GetTickCount() - dwLastEventTime;
-
-      // Send same event to the Tournament module for post-processing
-      isTournamentCall = true;
-      SendClientEvent(tournamentAI, e);
-      isTournamentCall = false;
-    } // foreach event
   }
 }
 

@@ -123,8 +123,6 @@ LONG WINAPI BWAPIExceptionFilter(EXCEPTION_POINTERS *ep)
       NULLCHECK(BWAPI::BroodwarImpl.neutral());
       if ( BWAPI::BroodwarImpl.hAIModule && !BWAPI::BroodwarImpl.client )
         fprintf(hFile, "\"Broodwar\" pointer was not initialized for AI module.\n");
-      if ( BWAPI::BroodwarImpl.hTournamentModule && !BWAPI::BroodwarImpl.tournamentAI )
-        fprintf(hFile, "\"Broodwar\" pointer was not initialized for Tournament module.\n");
     }
 
     // Print the exception info

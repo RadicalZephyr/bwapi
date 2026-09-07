@@ -249,23 +249,20 @@ namespace BWAPI
       return;
     }
     
-    // check if tournament will allow the call
+    // check if the permission table allows the call
     if ( !this->permissionCheck(Tournament::EnableFlag, &flag) )
       return;
 
     // Modify flag state 
     this->flags[flag] = true;
-    if ( !this->hTournamentModule )
+    switch(flag)
     {
-      switch(flag)
-      {
-      case BWAPI::Flag::CompleteMapInformation:
-        this->sendText("Enabled Flag CompleteMapInformation");
-        break;
-      case BWAPI::Flag::UserInput:
-        this->sendText("Enabled Flag UserInput");
-        break;
-      }
+    case BWAPI::Flag::CompleteMapInformation:
+      this->sendText("Enabled Flag CompleteMapInformation");
+      break;
+    case BWAPI::Flag::UserInput:
+      this->sendText("Enabled Flag UserInput");
+      break;
     }
   }
   //--------------------------------------------- GET UNITS IN RECTANGLE -------------------------------------
@@ -443,7 +440,7 @@ namespace BWAPI
     char buffer[80]; // Use maximum size of 80 since there is a hardcoded limit in Broodwar of 80 characters
     VSNPrintf(buffer, format, arg);
 
-    // Check if tournament module allows sending text
+    // Check if the permission table allows sending text
     if ( !this->permissionCheck(Tournament::SendText, buffer) )
       return;
 

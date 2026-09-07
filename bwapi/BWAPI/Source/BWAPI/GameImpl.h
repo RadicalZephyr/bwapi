@@ -194,7 +194,6 @@ namespace BWAPI
       void update(); // Updates unitArrayCopy according to bw memory
       void updateStatistics();
       void updateOverlays();
-      void initializeTournamentModule();
       void initializeAIModule();
 
       void loadAutoMenuData();
@@ -272,15 +271,12 @@ namespace BWAPI
       bool startedClient;
 
       std::array<UnitImpl*, BW::UNIT_ARRAY_MAX_LENGTH> unitArray;
-      bool isTournamentCall = false;
 
       GameData* data = server.data;
 
       HMODULE hAIModule;
       AIModule* client = nullptr;
 
-      HMODULE hTournamentModule;
-      AIModule* tournamentAI = nullptr;
 
       // NOTE: This MUST be a POD array (NOT std::array) because of the crappy assembly hacks that are being used
       // Until we can get rid of the assembly hacks, this must be treated like a pissed off cat
@@ -329,8 +325,6 @@ namespace BWAPI
       void computeSecondaryUnitSets();
 
       std::array<bool,BWAPI::Flag::Max> flags;
-      TournamentModule* tournamentController = nullptr;
-      bool              bTournamentMessageAppeared = false;
       mutable BWAPI::Error lastError;
       Unitset deadUnits;    // Keeps track of units that were removed from the game, used only to deallocate them
       u32 cheatFlags;
@@ -366,17 +360,14 @@ namespace BWAPI
       CommandOptimizer commandOptimizer;
 
     private:
-      /// May the bot perform \p type? Consults the [permissions] table in bwapi.ini first and
-      /// the tournament module second, so a refusal in the config cannot be overridden by a DLL
-      /// loaded into this process. Every gated call site goes through here.
+      /// May the bot perform \p type? Answered by the [permissions] table in bwapi.ini, which
+      /// the game process reads once at startup. Every gated call site goes through here.
       bool permissionCheck(Tournament::ActionID type, void *parameter = nullptr);
-      bool tournamentCheck(Tournament::ActionID type, void *parameter = nullptr);
 
       int addShape(const BWAPIC::Shape &s);
       int addString(const char* text);
       int addText(BWAPIC::Shape &s, const char* text);
 
-      static std::string getTournamentString();
   };
   /**
    * Broodwar is, and always should be the ONLY instance of the Game class, it is singleton.

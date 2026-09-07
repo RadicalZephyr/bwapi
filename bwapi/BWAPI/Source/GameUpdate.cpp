@@ -20,18 +20,6 @@
 
 using namespace BWAPI;
 
-std::string GameImpl::getTournamentString()
-{
-  static std::string sMemo;
-  if ( sMemo.empty() )
-  {
-    std::stringstream ss;
-    ss << "BWAPI " BWAPI_VER "." << SVN_REV << " Tournament Mode Engaged!";
-    sMemo = ss.str();
-  }
-  return sMemo;
-}
-
 //------------------------------------------------- UPDATE -------------------------------------------------
 void GameImpl::update()
 {
@@ -136,7 +124,6 @@ void GameImpl::update()
   //if not, then we load the AI dll specified in bwapi.ini
   if ( !this->startedClient )
   {
-    this->initializeTournamentModule();
     this->initializeAIModule();
 
     //push the MatchStart event to the front of the queue so that it is the first event in the queue.
@@ -144,17 +131,6 @@ void GameImpl::update()
     this->startedClient = true;
   }
 
-  if ( !this->bTournamentMessageAppeared &&
-        hTournamentModule &&
-        this->frameCount > _currentPlayerId()*8 )
-  {
-    this->bTournamentMessageAppeared = true;
-    this->isTournamentCall = true;
-    sendText("%s", getTournamentString().c_str());
-    if ( this->tournamentController )
-      this->tournamentController->onFirstAdvertisement();
-    this->isTournamentCall = false;
-  }
 
   //each frame we add a MatchFrame event to the queue
   events.push_back(Event::MatchFrame());
@@ -261,65 +237,6 @@ void GameImpl::updateOverlays()
 
 }
 
-//--------------------------------------------- TOURNAMENT MODULE ----------------------------------------------
-void GameImpl::initializeTournamentModule()
-{
-  // Declare typedefs for function pointers
-  typedef void (*PFNGameInit)(Game *);
-  typedef AIModule* (*PFNCreateA1)();
-  typedef TournamentModule* (*PFNCreateTournament)();
-
-  // Initialize Tournament Variables
-#ifndef _DEBUG
-  // Load tournament string and module if string exists
-  std::string TournamentDllPath = LoadConfigString("ai", "tournament");
-  if ( TournamentDllPath.size() > 0 )
-    hTournamentModule = LoadLibrary(TournamentDllPath.c_str());
-
-  // If tournament module exists
-  if ( hTournamentModule )
-  {
-    // Obtain our tournament functions
-    PFNGameInit         newGameInit         = (PFNGameInit)GetProcAddress(hTournamentModule, TEXT("gameInit"));
-    PFNCreateA1         newTournamentAI     = (PFNCreateA1)GetProcAddress(hTournamentModule, TEXT("newTournamentAI"));
-    PFNCreateTournament newTournamentModule = (PFNCreateTournament)GetProcAddress(hTournamentModule, TEXT("newTournamentModule"));
-
-    // Call the tournament functions if they exist
-    if ( newTournamentAI && newTournamentModule && newGameInit )
-    {
-      newGameInit(this);
-      this->tournamentAI         = newTournamentAI();
-      this->tournamentController = newTournamentModule();
-    }
-    else // error when one function is not found
-    {
-      // Free the tournament module
-      FreeLibrary(hTournamentModule);
-      hTournamentModule = NULL;
-
-      // Create our error string
-      std::string missing;
-      if ( !newTournamentAI )
-        missing += "newTournamentAI";
-
-      if ( !newTournamentModule )
-      {
-        if ( !missing.empty() )
-          missing += " and ";
-        missing += "newTournamentModule";
-      }
-      missing += " function";
-
-      // print error message
-      Broodwar << Text::Red << "ERROR: Failed to find the " << missing << " in tournament module." << std::endl;
-    }
-  }
-  this->bTournamentMessageAppeared = false;
-#else
-  this->bTournamentMessageAppeared = true;
-#endif
-}
-
 //--------------------------------------------- AI MODULE ----------------------------------------------
 void GameImpl::initializeAIModule()
 {
@@ -334,9 +251,7 @@ void GameImpl::initializeAIModule()
   {
     // assign a blank AI module to our variable
     this->client = new AIModule();
-    // Hide success strings in tournament mode
-    if ( !hTournamentModule )
-      Broodwar << "BWAPI: Connected to AI Client process" << std::endl;
+    Broodwar << "BWAPI: Connected to AI Client process" << std::endl;
     // Set the module string
     moduleName = "<Client Connection>";
     externalModuleConnected = true;
@@ -394,9 +309,7 @@ void GameImpl::initializeAIModule()
         newGame(this);
         this->client = newAIModule();
 
-        // Hide success strings in tournament mode
-        if ( !hTournamentModule )
-          Broodwar << Text::Green << "Loaded the AI Module: " << dll << std::endl;
+        Broodwar << Text::Green << "Loaded the AI Module: " << dll << std::endl;
         externalModuleConnected = true;
 
         // Strip the path from the module name
@@ -431,7 +344,6 @@ void GameImpl::initializeAIModule()
     }
   }
 
-  if ( !hTournamentModule ) // If tournament mode wasn't initialized
-    sendText("BWAPI %s.%d %s is now live using \"%s\".", BWAPI_VER, SVN_REV, BUILD_STR, moduleName.c_str() );
+  sendText("BWAPI %s.%d %s is now live using \"%s\".", BWAPI_VER, SVN_REV, BUILD_STR, moduleName.c_str() );
 }
 

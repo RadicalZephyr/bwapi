@@ -2,12 +2,15 @@
 
 namespace BWAPI
 {
-  /// <summary>Contains a list of interruptible actions that the tournament module can allow or deny.</summary>
-  /// @see TournamentModule::onAction
+  /// <summary>The actions a bot may be allowed or denied: every call that changes something
+  /// other than the bot's own units.</summary>
+  ///
+  /// Each value names one key in the [permissions] section of bwapi.ini, which the game process
+  /// reads once at startup. The name is historical - these were once vetted by a tournament
+  /// module loaded into the bot's own process, which is why they are enumerated at all.
   namespace Tournament
   {
-    /// <summary>Contains a list of interruptible actions that the tournament module can allow or deny.</summary>
-    /// @see TournamentModule::onAction
+    /// <summary>The actions a bot may be allowed or denied.</summary>
     enum ActionID
     {
       /// @see Game::enableFlag

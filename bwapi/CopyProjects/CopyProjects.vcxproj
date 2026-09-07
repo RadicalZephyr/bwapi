@@ -89,10 +89,6 @@ XCOPY "$(SolutionDir)ExampleAIClient\*.vcxproj" "$(SolutionDir)..\Release_Binary
 XCOPY "$(SolutionDir)ExampleAIClient\*.vcxproj.filters" "$(SolutionDir)..\Release_Binary\ExampleAIClient" /S /C /I /R /Y
 XCOPY "$(SolutionDir)ExampleAIClient\*.cpp" "$(SolutionDir)..\Release_Binary\ExampleAIClient" /S /C /I /R /Y
 XCOPY "$(SolutionDir)ExampleAIClient\*.h" "$(SolutionDir)..\Release_Binary\ExampleAIClient" /S /C /I /R /Y
-XCOPY "$(SolutionDir)ExampleTournamentModule\*.vcxproj" "$(SolutionDir)..\Release_Binary\ExampleTournamentModule" /S /C /I /R /Y
-XCOPY "$(SolutionDir)ExampleTournamentModule\*.vcxproj.filters" "$(SolutionDir)..\Release_Binary\ExampleTournamentModule" /S /C /I /R /Y
-XCOPY "$(SolutionDir)ExampleTournamentModule\*.cpp" "$(SolutionDir)..\Release_Binary\ExampleTournamentModule" /S /C /I /R /Y
-XCOPY "$(SolutionDir)ExampleTournamentModule\*.h" "$(SolutionDir)..\Release_Binary\ExampleTournamentModule" /S /C /I /R /Y
 XCOPY "$(SolutionDir)AIModuleLoader\*.vcxproj" "$(SolutionDir)..\Release_Binary\AIModuleLoader" /S /C /I /R /Y
 XCOPY "$(SolutionDir)AIModuleLoader\*.vcxproj.filters" "$(SolutionDir)..\Release_Binary\AIModuleLoader" /S /C /I /R /Y
 XCOPY "$(SolutionDir)AIModuleLoader\*.cpp" "$(SolutionDir)..\Release_Binary\AIModuleLoader" /S /C /I /R /Y
@@ -132,10 +128,6 @@ XCOPY "$(SolutionDir)ExampleAIClient\*.vcxproj" "$(SolutionDir)..\Release_Binary
 XCOPY "$(SolutionDir)ExampleAIClient\*.vcxproj.filters" "$(SolutionDir)..\Release_Binary\ExampleAIClient" /S /C /I /R /Y
 XCOPY "$(SolutionDir)ExampleAIClient\*.cpp" "$(SolutionDir)..\Release_Binary\ExampleAIClient" /S /C /I /R /Y
 XCOPY "$(SolutionDir)ExampleAIClient\*.h" "$(SolutionDir)..\Release_Binary\ExampleAIClient" /S /C /I /R /Y
-XCOPY "$(SolutionDir)ExampleTournamentModule\*.vcxproj" "$(SolutionDir)..\Release_Binary\ExampleTournamentModule" /S /C /I /R /Y
-XCOPY "$(SolutionDir)ExampleTournamentModule\*.vcxproj.filters" "$(SolutionDir)..\Release_Binary\ExampleTournamentModule" /S /C /I /R /Y
-XCOPY "$(SolutionDir)ExampleTournamentModule\*.cpp" "$(SolutionDir)..\Release_Binary\ExampleTournamentModule" /S /C /I /R /Y
-XCOPY "$(SolutionDir)ExampleTournamentModule\*.h" "$(SolutionDir)..\Release_Binary\ExampleTournamentModule" /S /C /I /R /Y
 XCOPY "$(SolutionDir)AIModuleLoader\*.vcxproj" "$(SolutionDir)..\Release_Binary\AIModuleLoader" /S /C /I /R /Y
 XCOPY "$(SolutionDir)AIModuleLoader\*.vcxproj.filters" "$(SolutionDir)..\Release_Binary\AIModuleLoader" /S /C /I /R /Y
 XCOPY "$(SolutionDir)AIModuleLoader\*.cpp" "$(SolutionDir)..\Release_Binary\AIModuleLoader" /S /C /I /R /Y

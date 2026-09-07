@@ -273,23 +273,10 @@ namespace BWAPI
   }
   bool GameImpl::permissionCheck(Tournament::ActionID type, void *parameter)
   {
-    // The config is consulted first and its refusal is final: the tournament module runs inside
-    // the bot's own address space, so it may only narrow what the config already permits.
     if ( !permissions().permits(type, parameter) )
     {
       this->setLastError(Errors::Access_Denied);
       return false;
-    }
-    return this->tournamentCheck(type, parameter);
-  }
-  bool GameImpl::tournamentCheck(Tournament::ActionID type, void *parameter)
-  {
-    if ( this->tournamentController && !isTournamentCall )
-    {
-      isTournamentCall  = true;
-      bool allow        = this->tournamentController->onAction(type, parameter);
-      isTournamentCall  = false;
-      return allow;
     }
     return true;
   }
@@ -414,29 +401,6 @@ namespace BWAPI
     }
 
     this->startedClient = false;
-
-    // Destroy the Tournament Module controller
-    if ( this->tournamentController )
-    {
-      delete this->tournamentController;
-      this->tournamentController = nullptr;
-    }
-
-    // Destroy the Tournament Module AI
-    if ( this->tournamentAI )
-    {
-      delete this->tournamentAI;
-      this->tournamentAI = nullptr;
-    }
-
-    // Destroy the Tournament Module Library
-    if ( hTournamentModule )
-    {
-      FreeLibrary(hTournamentModule);
-      hTournamentModule = nullptr;
-    }
-
-    this->bTournamentMessageAppeared = false;
   }
 
   void GameImpl::queueSentMessage(std::string const &message)

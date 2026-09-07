@@ -1,4 +1,4 @@
-;This is an INNO Setup script
+﻿;This is an INNO Setup script
 ;You should download INNO Setup and INNO Script Studio v2 to modify and compile it
 
 #define BWAPI_VERSION "4.4.0"
@@ -49,7 +49,6 @@ Source: "..\Release_Binary\MPQdraft\*"; DestDir: "{app}\MPQDraft\"; Flags: ignor
 Source: "..\Release_Binary\AIModuleLoader\*"; DestDir: "{app}\AIModuleLoader\"; Flags: ignoreversion createallsubdirs recursesubdirs; Components: Library\Examples
 Source: "..\Release_Binary\ExampleAIClient\*"; DestDir: "{app}\ExampleAIClient\"; Flags: ignoreversion createallsubdirs recursesubdirs; Components: Library\Examples
 Source: "..\Release_Binary\ExampleAIModule\*"; DestDir: "{app}\ExampleAIModule\"; Flags: ignoreversion createallsubdirs recursesubdirs; Components: Library\Examples
-Source: "..\Release_Binary\ExampleTournamentModule\*"; DestDir: "{app}\ExampleTournamentModule\"; Flags: ignoreversion createallsubdirs recursesubdirs; Components: Library\Examples
 Source: "..\Release_Binary\ExampleProjects.sln"; DestDir: "{app}"; Flags: ignoreversion; Components: Library\Examples
 Source: "..\Release_Binary\documentation\*"; DestDir: "{app}\documentation\"; Flags: ignoreversion createallsubdirs recursesubdirs; Components: Library\Documentation
 Source: "..\Release_Binary\BWAPILIB\*"; DestDir: "{app}\BWAPILIB\"; Flags: ignoreversion createallsubdirs recursesubdirs; Components: Library\Headers
