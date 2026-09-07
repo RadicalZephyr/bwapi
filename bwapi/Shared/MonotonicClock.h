@@ -41,6 +41,32 @@ namespace BWAPI
       return seconds * 1000000LL + (remainder * 1000000LL) / frequency;
     }
 
+    /// The largest value WaitForSingleObject treats as a duration; one more means "forever".
+    constexpr unsigned long WAIT_FOREVER = 0xFFFFFFFFul;
+
+    /// Turn a remaining-microseconds budget into the millisecond argument a Win32 wait takes.
+    ///
+    /// Three things it has to get right, and each of them is a way a deadline goes wrong:
+    ///
+    ///   - It rounds *up*. A budget of 500 us truncates to zero milliseconds, and a wait of zero
+    ///     returns immediately - so a sub-millisecond deadline would expire before the client was
+    ///     ever scheduled, and the meter would be measuring the operating system.
+    ///   - A budget already spent is zero, not a negative number reinterpreted as an enormous
+    ///     unsigned one, which is how a deadline silently becomes no deadline.
+    ///   - A budget past the representable range clamps below WAIT_FOREVER rather than landing on
+    ///     it, for the same reason.
+    constexpr unsigned long waitMillis(long long remainingMicros) noexcept
+    {
+      if (remainingMicros <= 0)
+        return 0;
+      // Clamp before rounding, not after: the `+ 999` is itself an overflow at the top of the
+      // range, and an overflowed budget is a negative one, which is no budget at all.
+      constexpr long long largest = static_cast<long long>(WAIT_FOREVER - 1) * 1000;
+      if (remainingMicros >= largest)
+        return WAIT_FOREVER - 1;
+      return static_cast<unsigned long>((remainingMicros + 999) / 1000);
+    }
+
     /// Microseconds from a monotonic source. The epoch is arbitrary; only differences mean
     /// anything, and they are meaningful across processes because both sources are system-wide.
     ///

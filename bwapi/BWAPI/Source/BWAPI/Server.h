@@ -50,9 +50,22 @@ namespace BWAPI
     void meterFrame();
     void callOnFrame();
     void processCommands();
-    void setWaitForResponse(bool wait);
+    void disconnectClient(const char *reason, long long elapsedMicros);
+
+    /// The outcome of one bounded pipe operation.
+    enum class PipeResult { Ok, TimedOut, Failed };
+
+    /// Blocking write on the overlapped pipe. Four bytes into a 4 KB buffer never really waits.
+    bool pipeWrite(const void *buffer, DWORD size);
+
+    /// Read \p size bytes, giving up after \p timeoutMicros. Zero means wait forever.
+    PipeResult pipeRead(void *buffer, DWORD size, long long timeoutMicros);
 
     HANDLE pipeObjectHandle = nullptr;
+    HANDLE connectEvent = nullptr;
+    HANDLE ioEvent = nullptr;
+    OVERLAPPED connectOverlapped = {};
+    bool connectPending = false;
     HANDLE mapFileHandle = nullptr;
     HANDLE gameTableFileHandle = nullptr;
     GameTable* gameTable = nullptr;

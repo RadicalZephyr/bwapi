@@ -49,4 +49,11 @@ extern std::string screenshotFmt;
 extern bool isCorrectVersion;
 extern bool showWarn;
 extern bool serverEnabled;
+
+/// How long the server waits for the client to finish a frame, in milliseconds.
+///
+/// 0 means wait forever, which is what BWAPI has always done and stays the default: this knob
+/// changes an operator's behaviour, not everybody's. Above zero, a client that does not answer
+/// within the deadline is disconnected and the match plays on (ADR 0001 section 2, defect 2.1).
+extern int frameTimeoutMs;
 extern unsigned gdwProcNum;

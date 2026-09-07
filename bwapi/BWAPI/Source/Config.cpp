@@ -15,6 +15,7 @@ std::string screenshotFmt;
 bool isCorrectVersion = true;
 bool showWarn         = true;
 bool serverEnabled    = true;
+int frameTimeoutMs    = 0;
 
 unsigned gdwProcNum = 1;
 
@@ -152,6 +153,11 @@ void InitPrimaryConfig()
 
   // Check if shared memory should be enabled
   serverEnabled = LoadConfigStringUCase("config", "shared_memory", "ON") == "ON";
+
+  // How long to wait for a client to finish a frame. Negative is meaningless; treat it as off.
+  frameTimeoutMs = LoadConfigInt("game", "frame_timeout_ms", 0);
+  if ( frameTimeoutMs < 0 )
+    frameTimeoutMs = 0;
 
   // Get process count
   gdwProcNum = getProcessCount("StarCraft.exe");

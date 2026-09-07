@@ -111,6 +111,35 @@ namespace
     CHECK(sawSubMillisecondStep);
   }
 
+  // The deadline's unit conversion. Every one of these is a way a bounded wait stops being one.
+  void waitMillisNeverTurnsADeadlineIntoNoDeadline()
+  {
+    using BWAPI::Clock::waitMillis;
+    using BWAPI::Clock::WAIT_FOREVER;
+
+    // Rounds up: a sub-millisecond budget must still wait, or the deadline expires before the
+    // client has been scheduled and the meter measures the scheduler.
+    CHECK_EQ(waitMillis(1), 1u);
+    CHECK_EQ(waitMillis(500), 1u);
+    CHECK_EQ(waitMillis(999), 1u);
+    CHECK_EQ(waitMillis(1000), 1u);
+    CHECK_EQ(waitMillis(1001), 2u);
+    CHECK_EQ(waitMillis(42000), 42u);
+
+    // Spent is zero, not a negative reinterpreted as four billion milliseconds.
+    CHECK_EQ(waitMillis(0), 0u);
+    CHECK_EQ(waitMillis(-1), 0u);
+    CHECK_EQ(waitMillis(-1000000), 0u);
+    CHECK_EQ(waitMillis(LLONG_MIN), 0u);
+
+    // And an absurd budget clamps below "forever" rather than onto it.
+    CHECK(waitMillis(LLONG_MAX) < WAIT_FOREVER);
+    CHECK(waitMillis(LLONG_MAX) > 0);
+    CHECK(waitMillis(1000LL * 1000 * WAIT_FOREVER) < WAIT_FOREVER);
+  }
+
+  static_assert(BWAPI::Clock::waitMillis(500) == 1u, "a sub-millisecond budget still waits");
+  static_assert(BWAPI::Clock::waitMillis(-1) == 0u, "a spent budget does not wrap");
   static_assert(ticksToMicros(10000000LL, 10000000LL) == 1000000LL, "");
   static_assert(ticksToMicros(1, 0) == 0, "");
 }
@@ -122,5 +151,6 @@ int main()
   differencesAreExactAcrossTheOverflowPoint();
   degenerateFrequencyAnswersRatherThanDividesByZero();
   resolvesFarBelowATickAndNeverGoesBackwards();
+  waitMillisNeverTurnsADeadlineIntoNoDeadline();
   TEST_MAIN_EPILOGUE();
 }

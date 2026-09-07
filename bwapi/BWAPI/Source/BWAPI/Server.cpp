@@ -196,20 +196,36 @@ namespace BWAPI
       communicationPipe << "\\\\.\\pipe\\bwapi_pipe_";
       communicationPipe << processID;
       
+      // FILE_FLAG_OVERLAPPED is what makes the wait on the client boundable at all. Without
+      // it a ReadFile on a PIPE_WAIT handle blocks until the client answers or the pipe breaks,
+      // and a bot that hangs wedges the game forever - defect 2.1 in ADR 0001 section 2.
       pipeObjectHandle = CreateNamedPipeA(communicationPipe.str().c_str(),
-                                         PIPE_ACCESS_DUPLEX,
-                                         PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT,
+                                         PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED,
+                                         PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
                                          PIPE_UNLIMITED_INSTANCES,
                                          PIPE_SYSTEM_BUFFER_SIZE,
                                          PIPE_SYSTEM_BUFFER_SIZE,
                                          PIPE_TIMEOUT,
                                          &sa);
+
+      // Manual-reset, initially unsignalled. One event per outstanding operation, and there is
+      // never more than one of each: the connect completes before any frame is exchanged.
+      connectEvent = CreateEventA(nullptr, TRUE, FALSE, nullptr);
+      ioEvent      = CreateEventA(nullptr, TRUE, FALSE, nullptr);
     }
   }
   Server::~Server()
   {
     if ( pipeObjectHandle && pipeObjectHandle != INVALID_HANDLE_VALUE )
+    {
+      CancelIoEx(pipeObjectHandle, nullptr);
       DisconnectNamedPipe(pipeObjectHandle);
+    }
+
+    if ( connectEvent )
+      CloseHandle(connectEvent);
+    if ( ioEvent )
+      CloseHandle(ioEvent);
 
     if ( localOnly && data )
     {
@@ -243,7 +259,10 @@ namespace BWAPI
       // Update BWAPI Client
       updateSharedMemory();
       meterFrame();
-      processCommands();
+      // A client that never handed the frame back left whatever it had written half-finished;
+      // there is nothing there worth applying.
+      if (connected)
+        processCommands();
     }
     else
     {
@@ -317,26 +336,118 @@ namespace BWAPI
     return id;
   }
 
-  void Server::setWaitForResponse(bool wait)
-  {
-    if ( !pipeObjectHandle || pipeObjectHandle == INVALID_HANDLE_VALUE )
-      return;
-
-    DWORD dwMode = PIPE_READMODE_MESSAGE | (wait ? PIPE_WAIT : PIPE_NOWAIT);
-    SetNamedPipeHandleState(pipeObjectHandle, &dwMode, NULL, NULL);
-  }
+  // Poll for a client without blocking the menu.
+  //
+  // The pipe is overlapped now, so ConnectNamedPipe returns immediately with ERROR_IO_PENDING and
+  // completes later; the operation is left outstanding between calls and its event is checked
+  // with a zero timeout, which is the same "look, do not wait" this always had.
   void Server::checkForConnections()
   {
     if (connected || localOnly || !pipeObjectHandle || pipeObjectHandle == INVALID_HANDLE_VALUE )
       return;
-    BOOL success = ConnectNamedPipe(pipeObjectHandle, nullptr);
-    if (!success && GetLastError() != ERROR_PIPE_CONNECTED)
+
+    if (!connectPending)
+    {
+      ResetEvent(connectEvent);
+      connectOverlapped = {};
+      connectOverlapped.hEvent = connectEvent;
+
+      if (ConnectNamedPipe(pipeObjectHandle, &connectOverlapped))
+      {
+        connected = true;   // cannot happen on an overlapped pipe, but the API allows it
+        return;
+      }
+      switch (GetLastError())
+      {
+      case ERROR_PIPE_CONNECTED:  // a client got there between the create and the connect
+        connected = true;
+        return;
+      case ERROR_IO_PENDING:
+        connectPending = true;
+        return;
+      default:
+        return;
+      }
+    }
+
+    if (WaitForSingleObject(connectEvent, 0) != WAIT_OBJECT_0)
       return;
-    if (GetLastError() == ERROR_PIPE_CONNECTED)
+
+    DWORD transferred = 0;
+    if (GetOverlappedResult(pipeObjectHandle, &connectOverlapped, &transferred, FALSE))
+    {
+      connectPending = false;
       connected = true;
-    if (!connected)
-      return;
-    setWaitForResponse(true);
+    }
+  }
+
+  // Write on the overlapped handle. Every operation on it must carry an OVERLAPPED, including
+  // the ones that would never have blocked.
+  bool Server::pipeWrite(const void *buffer, DWORD size)
+  {
+    ResetEvent(ioEvent);
+    OVERLAPPED ov = {};
+    ov.hEvent = ioEvent;
+
+    DWORD written = 0;
+    if (WriteFile(pipeObjectHandle, buffer, size, &written, &ov))
+      return written == size;
+
+    if (GetLastError() != ERROR_IO_PENDING)
+      return false;
+
+    if (!GetOverlappedResult(pipeObjectHandle, &ov, &written, TRUE))
+      return false;
+    return written == size;
+  }
+
+  // Read on the overlapped handle, giving up after timeoutMicros. Zero means wait forever, which
+  // is what BWAPI has always done and remains the default.
+  Server::PipeResult Server::pipeRead(void *buffer, DWORD size, long long timeoutMicros)
+  {
+    ResetEvent(ioEvent);
+    OVERLAPPED ov = {};
+    ov.hEvent = ioEvent;
+
+    DWORD received = 0;
+    if (ReadFile(pipeObjectHandle, buffer, size, &received, &ov))
+      return received == size ? PipeResult::Ok : PipeResult::Failed;
+
+    if (GetLastError() != ERROR_IO_PENDING)
+      return PipeResult::Failed;
+
+    const DWORD waitMs = timeoutMicros > 0 ? Clock::waitMillis(timeoutMicros) : INFINITE;
+
+    const DWORD waited = WaitForSingleObject(ioEvent, waitMs);
+    if (waited == WAIT_TIMEOUT)
+    {
+      // Cancel and reap, so no completion lands in this OVERLAPPED after it goes out of scope.
+      CancelIoEx(pipeObjectHandle, &ov);
+      GetOverlappedResult(pipeObjectHandle, &ov, &received, TRUE);
+      return PipeResult::TimedOut;
+    }
+    if (waited != WAIT_OBJECT_0)
+      return PipeResult::Failed;
+
+    if (!GetOverlappedResult(pipeObjectHandle, &ov, &received, FALSE))
+      return PipeResult::Failed;
+    return received == size ? PipeResult::Ok : PipeResult::Failed;
+  }
+
+  // End the match's connection and say why.
+  //
+  // ADR decision 1: the deadline is a bounded wait, and the adjudication rule belongs to the
+  // referee this library does not contain. So expiry does what a broken pipe has always done -
+  // stop waiting, record the cause - and the match plays on unattended.
+  void Server::disconnectClient(const char *reason, long long elapsedMicros)
+  {
+    CancelIoEx(pipeObjectHandle, nullptr);
+    DisconnectNamedPipe(pipeObjectHandle);
+    connected = false;
+    connectPending = false;
+
+    BWAPIError("Client disconnected: %s after %lld us on frame %d.",
+               reason, elapsedMicros, Broodwar->getFrameCount());
   }
   void Server::initializeSharedMemory()
   {
@@ -788,21 +899,51 @@ namespace BWAPI
     BroodwarImpl.setLastFrameDurationMicros(botSpan);
   }
 
+  // Publish the frame and wait for the client to hand it back.
+  //
+  // The wait is bounded by [game] frame_timeout_ms, which defaults to zero - wait forever, which
+  // is what this has always done. Above zero, a client that does not answer is disconnected and
+  // the match plays on rather than the game hanging on it (ADR 0001 section 2, defect 2.1).
   void Server::callOnFrame()
-  { 
-    DWORD writtenByteCount;
+  {
+    const long long timeoutMicros = static_cast<long long>(frameTimeoutMs) * 1000;
+    const long long started = Clock::micros();
+
     int code = 2;
-    WriteFile(pipeObjectHandle, &code, sizeof(int), &writtenByteCount, NULL);
+    if (!pipeWrite(&code, sizeof(code)))
+    {
+      disconnectClient("the pipe broke while publishing the frame", Clock::micros() - started);
+      return;
+    }
+
     while (code != 1)
     {
-      DWORD receivedByteCount;
-      BOOL success = ReadFile(pipeObjectHandle, &code, sizeof(int), &receivedByteCount,NULL);
-      if (!success)
+      // The deadline is on the whole exchange, not on each read, or a client that answers with
+      // something other than 1 could reset the clock as often as it liked.
+      long long remaining = 0;
+      if (timeoutMicros > 0)
       {
-        DisconnectNamedPipe(pipeObjectHandle);
-        connected = false;
-        setWaitForResponse(false);
+        remaining = timeoutMicros - (Clock::micros() - started);
+        if (remaining <= 0)
+        {
+          disconnectClient("it did not finish the frame within frame_timeout_ms",
+                           Clock::micros() - started);
+          return;
+        }
+      }
+
+      switch (pipeRead(&code, sizeof(code), remaining))
+      {
+      case PipeResult::Ok:
         break;
+      case PipeResult::TimedOut:
+        disconnectClient("it did not finish the frame within frame_timeout_ms",
+                         Clock::micros() - started);
+        return;
+      case PipeResult::Failed:
+        disconnectClient("the pipe broke while waiting for the frame",
+                         Clock::micros() - started);
+        return;
       }
     }
   }
