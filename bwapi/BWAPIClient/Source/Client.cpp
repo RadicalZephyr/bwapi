@@ -1,4 +1,5 @@
 #include <BWAPI/Client/Client.h>
+#include <cstring>
 #include "MonotonicClock.h"
 #include <windows.h>
 #include <sstream>
@@ -175,6 +176,10 @@ namespace BWAPI
     std::cout << "Connection successful" << std::endl;
     assert( BWAPI::BroodwarPtr != nullptr);
 
+    // The first frame's copy, so a bot that reads anything between connect() and the first
+    // update() sees the game rather than a zeroed mirror.
+    refreshMirror();
+
     this->connected = true;
     return true;
   }
@@ -205,6 +210,23 @@ namespace BWAPI
       delete static_cast<GameImpl*>(BWAPI::BroodwarPtr);
     BWAPI::BroodwarPtr = nullptr;
   }
+  void Client::refreshMirror()
+  {
+    if ( !data )
+      return;
+
+    // unitCount is the number of handles the server has issued, so this is proportional to what
+    // this bot has actually seen rather than to the array's ten thousand entries - which is only
+    // true because handles are issued on exposure (defect 2.7).
+    int count = data->unitCount;
+    if ( count < 0 )
+      count = 0;
+    if ( count > GameData::MAX_UNITS )
+      count = GameData::MAX_UNITS;
+
+    std::memcpy(unitMirror, data->units, sizeof(UnitData) * static_cast<size_t>(count));
+    std::memcpy(playerMirror, data->players, sizeof(playerMirror));
+  }
   void Client::update()
   {
     // The bot's own work for the previous frame ends here, on the way back into the server. The
@@ -232,6 +254,10 @@ namespace BWAPI
 
     // And it begins again here, with the new frame in hand.
     commandData->clientWakeMicros = Clock::micros();
+
+    // Take a copy before anything reads it: from here until the next frame the bot is looking
+    // at the mirror, and latency compensation is writing into it.
+    refreshMirror();
 
     for(int i = 0; i < data->eventCount; ++i)
     {

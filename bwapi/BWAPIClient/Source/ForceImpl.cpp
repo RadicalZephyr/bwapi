@@ -18,8 +18,8 @@ namespace BWAPI
   Playerset ForceImpl::getPlayers() const
   {
     Playerset players;
-    for (int i = 0; i < std::extent<decltype(BWAPI::BWAPIClient.data->players)>::value; ++i)
-      if ( BWAPI::BWAPIClient.data->players[i].force == id )
+    for (int i = 0; i < std::extent<decltype(BWAPI::BWAPIClient.playerMirror)>::value; ++i)
+      if ( BWAPI::BWAPIClient.playerMirror[i].force == id )
         players.insert( Broodwar->getPlayer(i) );
     return players;
   }

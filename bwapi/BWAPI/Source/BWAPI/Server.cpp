@@ -566,6 +566,7 @@ namespace BWAPI
         data->units[id] = static_cast<UnitImpl*>(u)->data;
     }
 
+    data->unitCount               = static_cast<int>(unitVector.size());
     data->frameCount              = Broodwar->getFrameCount();
     data->replayFrameCount        = Broodwar->getReplayFrameCount();
     data->fps                     = Broodwar->getFPS();

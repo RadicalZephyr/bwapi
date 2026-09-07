@@ -44,6 +44,10 @@ namespace BWAPI
     //units
     static const int MAX_UNITS = 10000;
 
+    /// How many handles have been issued, and therefore how much of units[] is meaningful.
+    /// The client copies exactly this much into its own mirror each frame.
+    int unitCount;
+
     int initialUnitCount;
     UnitData units[MAX_UNITS];
 
