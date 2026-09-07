@@ -1,3 +1,5 @@
+#include <limits>
+#include <random>
 #include <string>
 #include <windows.h>
 #include <tlhelp32.h>
@@ -18,6 +20,24 @@ bool serverEnabled    = true;
 int frameTimeoutMs    = 0;
 
 unsigned gdwProcNum = 1;
+
+//--------------------------------------------- MATCH SEED ---------------------------------------------------
+unsigned matchSeed()
+{
+  static const unsigned seed = [] () -> unsigned {
+    const int override_ = LoadConfigInt("starcraft", "seed_override",
+                                        std::numeric_limits<int>::max());
+    if ( override_ != std::numeric_limits<int>::max() )
+      return static_cast<unsigned>(override_);
+
+    // No override: draw once, so the value can still be recorded. GetTickCount could not be -
+    // it is not a value anyone chose, it is barely a value at all at 16 ms of resolution, and
+    // two instances launched together got the same one.
+    std::random_device rd;
+    return rd();
+  }();
+  return seed;
+}
 
 //--------------------------------------------- PERMISSIONS --------------------------------------------------
 // The [permissions] section of bwapi.ini, replacing TournamentModule::onAction (ADR 0001 section

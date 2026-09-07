@@ -66,7 +66,6 @@ namespace BWAPI
     bool hasLatCom;
     bool hasGUI;
     int replayFrameCount;
-    unsigned randomSeed;
     int frameCount;
     int elapsedTime;
     int countdownTimer;

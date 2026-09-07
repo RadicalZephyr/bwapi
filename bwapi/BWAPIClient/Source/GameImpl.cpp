@@ -981,7 +981,14 @@ namespace BWAPI
   }
   unsigned GameImpl::getRandomSeed() const
   {
-    return data->randomSeed;
+    // Brood War's own seed is no longer published to the client.
+    //
+    // ADR 0001 section 4.3 lists engine randomness under "no bot access", because draw counts
+    // correlate with events - OpenBW instruments random_counts per call site for exactly that
+    // reason. Handing a bot the seed the engine is drawing from is the same defect as seeding
+    // BWAPI's own generators from the wall clock, one step further along, and fixing the second
+    // while leaving the first would have been hollow.
+    return 0;
   }
 };
 

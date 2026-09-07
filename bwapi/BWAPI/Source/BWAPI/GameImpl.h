@@ -265,6 +265,9 @@ namespace BWAPI
       AutoMenuManager autoMenuManager;
 
       int seedOverride = std::numeric_limits<int>::max();
+      /// How many matches this process has started. Mixed into the per-match seed so successive
+      /// matches differ without anything reading a clock.
+      unsigned matchIndex = 0;
       int speedOverride = std::numeric_limits<int>::min();
       bool wantDropPlayers = true;
 

@@ -56,4 +56,12 @@ extern bool serverEnabled;
 /// changes an operator's behaviour, not everybody's. Above zero, a client that does not answer
 /// within the deadline is disconnected and the match plays on (ADR 0001 section 2, defect 2.1).
 extern int frameTimeoutMs;
+
+/// The one value every generator BWAPI owns is seeded from.
+///
+/// Defect 2.8 in ADR 0001 section 2: srand was seeded from GetTickCount, so nothing BWAPI chose
+/// at random could be reproduced or even reported. This is [starcraft] seed_override when it is
+/// set, and otherwise one draw from the system's entropy source, made once and remembered - so
+/// the value exists to be recorded either way, which is the point.
+unsigned matchSeed();
 extern unsigned gdwProcNum;

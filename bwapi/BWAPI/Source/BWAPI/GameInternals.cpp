@@ -1,5 +1,6 @@
 #include "GameImpl.h"
 #include "Permissions.h"
+#include "../Config.h"
 #include <vector>
 #include <string>
 
@@ -291,8 +292,14 @@ namespace BWAPI
     this->BWAPIPlayer = nullptr;
     this->enemyPlayer = nullptr;
 
-    // Set random seed
-    srand(GetTickCount());
+    // Seed the C runtime generator from the match seed rather than from the wall clock (ADR
+    // 0001 section 2, defect 2.8). Its only consumer is the auto-menu's random race pick, and a
+    // race nobody chose and nobody can reproduce is not a small thing when the point of the
+    // artifact is that a match can be replayed and audited.
+    //
+    // The match index keeps successive matches in one session different from each other, the way
+    // a fresh clock reading used to, while staying a function of the seed.
+    srand(matchSeed() + static_cast<unsigned>(this->matchIndex++));
 
     // clear all sets
     this->aliveUnits.clear();

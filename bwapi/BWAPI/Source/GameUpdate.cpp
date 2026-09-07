@@ -246,5 +246,11 @@ void GameImpl::announceAttachment()
   else
     sendText("BWAPI %s.%d %s is live with no client attached; this match runs unattended.",
              BWAPI_VER, SVN_REV, BUILD_STR);
+
+  // The seed goes into the game's chat log, which is what the replay carries: a value that is
+  // not recorded is not reproducible, whether or not it was chosen deterministically. It goes
+  // there and not into GameData - ADR 0001 section 4.3 puts engine randomness out of the bot's
+  // reach, and publishing BWAPI's seed to the bot would be the same mistake one step over.
+  sendText("BWAPI match seed %u.", matchSeed());
 }
 
