@@ -246,9 +246,9 @@ namespace BWAPI
     }
     else
     {
-      // Update BWAPI DLL
-      BroodwarImpl.processEvents();
-
+      // No client attached: the match runs unattended. Events are produced and dropped, and the
+      // connection window stays open only until the first in-game frame - a client that misses
+      // the menu does not get a second chance.
       BroodwarImpl.events.clear();
       if (!BroodwarImpl.startedClient)
         checkForConnections();

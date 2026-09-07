@@ -120,11 +120,10 @@ void GameImpl::update()
     BroodwarImpl.onSendText(s);
   this->sentMessages.clear();
 
-  //on the first frame we check to see if the client process has connected.
-  //if not, then we load the AI dll specified in bwapi.ini
+  //on the first frame we announce whether a client process connected during the menu window.
   if ( !this->startedClient )
   {
-    this->initializeAIModule();
+    this->announceAttachment();
 
     //push the MatchStart event to the front of the queue so that it is the first event in the queue.
     events.push_front(Event::MatchStart());
@@ -147,7 +146,7 @@ void GameImpl::update()
     static_cast<UnitImpl*>(u)->updateData();
 
   //We also kill the units that are dying on this frame.
-  //We wait until after server.update() and processEvents() to do this so that the AI can
+  //We wait until after server.update() to do this so that the AI can
   //access the last frame of unit data during the onUnitDestroy callback.
   for(Unit ui : dyingUnits)
   {
@@ -237,113 +236,15 @@ void GameImpl::updateOverlays()
 
 }
 
-//--------------------------------------------- AI MODULE ----------------------------------------------
-void GameImpl::initializeAIModule()
+//--------------------------------------------- ATTACHMENT ---------------------------------------------
+// The game process does not load bots. A bot is a separate process that attached to the server
+// during the menu window; if none did, the match runs unattended (ADR 0001 section 2, defect 2.4).
+void GameImpl::announceAttachment()
 {
-  // Declare typedefs for function pointers
-  typedef void (*PFNGameInit)(Game *);
-  typedef AIModule* (*PFNCreateA1)();
-
-  // Connect to external module if it exists
-  externalModuleConnected = false;
-  std::string moduleName("<Nothing>");
-  if ( server.isConnected() ) //check to see if the server is connected to the client
-  {
-    // assign a blank AI module to our variable
-    this->client = new AIModule();
-    Broodwar << "BWAPI: Connected to AI Client process" << std::endl;
-    // Set the module string
-    moduleName = "<Client Connection>";
-    externalModuleConnected = true;
-  }
-  else // if not, load the AI module DLL
-  {
-    // declare/assign variables
-    hAIModule         = nullptr;
-
-    std::string dll;
-    std::string aicfg = LoadConfigString("ai", BUILD_DEBUG ? "ai_dbg" : "ai", "_NULL");
-    if (aicfg == "_NULL")
-    {
-      BWAPIError("Could not find %s under ai in \"%s\".", BUILD_DEBUG ? "ai_dbg" : "ai", configPath().c_str());
-    }
-    else
-    {
-      std::stringstream aiList(aicfg);
-
-      // Get DLL name
-      dll = aicfg.substr(0, aicfg.find_first_of(','));
-
-      // Skip to current intended instance
-      for (int i = 0; i < (int)gdwProcNum && aiList; ++i)
-        std::getline(aiList, dll, ',');
-
-      // trim whitespace outside quotations and then the quotations
-      Util::trim(dll, Util::is_whitespace_or_newline);
-      Util::trim(dll, [](char c) { return c == '"'; });
-
-      hAIModule = LoadLibraryA(dll.c_str());
-    }
-
-    if ( !hAIModule )
-    {
-      //if hAIModule is nullptr, there there was a problem when trying to load the AI Module
-      this->client = new AIModule();
-
-      // enable flags to allow interaction
-      Broodwar->enableFlag(Flag::CompleteMapInformation);
-      Broodwar->enableFlag(Flag::UserInput);
-
-      // print error string
-      Broodwar << Text::Red << "ERROR: Failed to load the AI Module \"" << dll << "\"." << std::endl;
-      externalModuleConnected = false;
-    }
-    else
-    {
-      // Obtain the AI module function
-      PFNGameInit newGame     = (PFNGameInit)GetProcAddress(hAIModule, "gameInit");
-      PFNCreateA1 newAIModule = (PFNCreateA1)GetProcAddress(hAIModule, "newAIModule");
-      if ( newAIModule && newGame )
-      {
-        // Call the AI module function and assign the client variable
-        newGame(this);
-        this->client = newAIModule();
-
-        Broodwar << Text::Green << "Loaded the AI Module: " << dll << std::endl;
-        externalModuleConnected = true;
-
-        // Strip the path from the module name
-        moduleName = Util::Path(dll).filename().string();
-      }
-      else  // If the AIModule function is not found
-      {
-        // Create a dummy AI module
-        this->client = new AIModule();
-
-        // Enable flags to allow interaction
-        Broodwar->enableFlag(Flag::CompleteMapInformation);
-        Broodwar->enableFlag(Flag::UserInput);
-
-        // Create error string
-        std::string missing;
-        if ( !newGame )
-          missing += "gameInit";
-
-        if ( !newAIModule )
-        {
-          if ( !missing.empty() )
-            missing += " and ";
-          missing += "newAIModule";
-        }
-        missing += " function";
-
-        // Print an error message
-        Broodwar << Text::Red << "ERROR: Failed to find the " << missing << " in " << dll << std::endl;
-        externalModuleConnected = false;
-      }
-    }
-  }
-
-  sendText("BWAPI %s.%d %s is now live using \"%s\".", BWAPI_VER, SVN_REV, BUILD_STR, moduleName.c_str() );
+  if ( server.isConnected() )
+    sendText("BWAPI %s.%d %s is now live for a connected client.", BWAPI_VER, SVN_REV, BUILD_STR);
+  else
+    sendText("BWAPI %s.%d %s is live with no client attached; this match runs unattended.",
+             BWAPI_VER, SVN_REV, BUILD_STR);
 }
 

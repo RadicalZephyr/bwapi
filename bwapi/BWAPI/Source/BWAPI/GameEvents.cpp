@@ -297,7 +297,7 @@ namespace BWAPI
 
     if ( !parseText(text) )
     {
-      if ( externalModuleConnected )
+      if ( server.isConnected() )
       {
         events.push_back(Event::SendText());
         events.back().setText(text.c_str());
@@ -430,76 +430,5 @@ namespace BWAPI
     this->autoMenuManager.chooseNewRandomMap();
   }
   //---------------------------------------------- SEND EVENTS TO CLIENT
-  void GameImpl::SendClientEvent(BWAPI::AIModule *module, Event &e)
-  {
-    EventType::Enum et = e.getType();
-    switch (et)
-    {
-    case EventType::MatchStart:
-      module->onStart();
-      break;
-    case EventType::MatchEnd:
-      module->onEnd(e.isWinner());
-      break;
-    case EventType::MatchFrame:
-      module->onFrame();
-      break;
-    case EventType::MenuFrame:
-      break;
-    case EventType::SendText:
-      module->onSendText(e.getText());
-      break;
-    case EventType::ReceiveText:
-      module->onReceiveText(e.getPlayer(), e.getText());
-      break;
-    case EventType::PlayerLeft:
-      module->onPlayerLeft(e.getPlayer());
-      break;
-    case EventType::NukeDetect:
-      module->onNukeDetect(e.getPosition());
-      break;
-    case EventType::UnitDiscover:
-      module->onUnitDiscover(e.getUnit());
-      break;
-    case EventType::UnitEvade:
-      module->onUnitEvade(e.getUnit());
-      break;
-    case EventType::UnitCreate:
-      module->onUnitCreate(e.getUnit());
-      break;
-    case EventType::UnitDestroy:
-      module->onUnitDestroy(e.getUnit());
-      break;
-    case EventType::UnitMorph:
-      module->onUnitMorph(e.getUnit());
-      break;
-    case EventType::UnitShow:
-      module->onUnitShow(e.getUnit());
-      break;
-    case EventType::UnitHide:
-      module->onUnitHide(e.getUnit());
-      break;
-    case EventType::UnitRenegade:
-      module->onUnitRenegade(e.getUnit());
-      break;
-    case EventType::SaveGame:
-      module->onSaveGame(e.getText());
-      break;
-    case EventType::UnitComplete:
-      module->onUnitComplete(e.getUnit());
-      break;
-    default:
-      break;
-    }
-  }
-  //---------------------------------------------- PROCESS EVENTS
-  void GameImpl::processEvents()
-  {
-    //This function translates events into AIModule callbacks
-    if ( !client || server.isConnected() )
-      return;
-    for (Event e : events)
-      SendClientEvent(client, e);
-  }
 }
 

@@ -387,18 +387,8 @@ namespace BWAPI
     // @NOTE: Freeing libraries comes after because of some destructors for functionals in Interface Events
 
     // Destroy the AI Module client
-    if ( this->client )
-    {
-      delete this->client;
-      this->client = nullptr;
-    }
 
     // Unload the AI Module library
-    if ( hAIModule )
-    {
-      FreeLibrary(hAIModule);
-      hAIModule = nullptr;
-    }
 
     this->startedClient = false;
   }

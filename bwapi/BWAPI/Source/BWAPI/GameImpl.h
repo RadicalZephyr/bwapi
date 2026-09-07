@@ -194,7 +194,7 @@ namespace BWAPI
       void update(); // Updates unitArrayCopy according to bw memory
       void updateStatistics();
       void updateOverlays();
-      void initializeAIModule();
+      void announceAttachment();
 
       void loadAutoMenuData();
 
@@ -225,7 +225,6 @@ namespace BWAPI
       void moveToSelectedUnits();
       void executeCommand(UnitCommand command);
 
-      static void SendClientEvent(BWAPI::AIModule *module, Event &e);
 
       void queueSentMessage(std::string const &message);
 
@@ -242,7 +241,6 @@ namespace BWAPI
       void dropPlayers();
 
       int drawShapes();
-      void processEvents();
       Unit _unitFromIndex(int index);
 
     public:
@@ -274,8 +272,6 @@ namespace BWAPI
 
       GameData* data = server.data;
 
-      HMODULE hAIModule;
-      AIModule* client = nullptr;
 
 
       // NOTE: This MUST be a POD array (NOT std::array) because of the crappy assembly hacks that are being used
@@ -350,7 +346,6 @@ namespace BWAPI
       bool grid = false;
       bool showfps = false;
 
-      bool externalModuleConnected = false;
       bool calledMatchEnd = false;
 
       int lastEventTime = 0;
