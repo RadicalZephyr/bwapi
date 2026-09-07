@@ -35,13 +35,15 @@ namespace BWAPI
   }
   int GameImpl::addShape(const BWAPIC::Shape &s)
   {
-    assert(data->shapeCount < GameData::MAX_SHAPES);
+    if ( data->shapeCount >= GameData::MAX_SHAPES )
+      return -1;
     data->shapes[data->shapeCount] = s;
     return data->shapeCount++;
   }
   int GameImpl::addString(const char* text)
   {
-    assert(data->stringCount < GameData::MAX_STRINGS);
+    if ( data->stringCount >= GameData::MAX_STRINGS )
+      return -1;
     StrCopy(data->strings[data->stringCount], text);
     return data->stringCount++;
   }
@@ -52,13 +54,15 @@ namespace BWAPI
   }
   int GameImpl::addCommand(const BWAPIC::Command &c)
   {
-    assert(data->commandCount < GameData::MAX_COMMANDS);
+    if ( data->commandCount >= GameData::MAX_COMMANDS )
+      return -1;
     data->commands[data->commandCount] = c;
     return data->commandCount++;
   }
   int GameImpl::addUnitCommand(BWAPIC::UnitCommand& c)
   {
-    assert(data->unitCommandCount < GameData::MAX_UNIT_COMMANDS);
+    if ( data->unitCommandCount >= GameData::MAX_UNIT_COMMANDS )
+      return -1;
     data->unitCommands[data->unitCommandCount] = c;
     return data->unitCommandCount++;
   }

@@ -746,7 +746,20 @@ namespace BWAPI
   }
   void Server::processCommands()
   {
-    for(int i = 0; i < data->commandCount; ++i)
+    // Every count and index below is written by the untrusted client, so each is clamped or
+    // range-checked here rather than trusted. The only bound the protocol ships is an assert in
+    // the client itself (BWAPIClient/Source/GameImpl.cpp), which NDEBUG compiles out.
+    const int stringCount  = ClientInput::clampCount(data->stringCount, GameData::MAX_STRINGS);
+    const int commandCount = ClientInput::clampCount(data->commandCount, GameData::MAX_COMMANDS);
+
+    // A string a command names, NUL-terminated, or the empty string if the index is out of range.
+    const auto clientString = [&](int index) -> const char * {
+      if (!ClientInput::indexInRange(index, stringCount))
+        return "";
+      return ClientInput::terminate(data->strings[index], sizeof(data->strings[index]));
+    };
+
+    for(int i = 0; i < commandCount; ++i)
     {
       BWAPIC::CommandType::Enum c = data->commands[i].type;
       int v1 = data->commands[i].value1;
@@ -767,11 +780,11 @@ namespace BWAPI
         break;
       case BWAPIC::CommandType::Printf:
         if (Broodwar->isInGame())
-          Broodwar->printf("%s", data->strings[v1]);
+          Broodwar->printf("%s", clientString(v1));
         break;
       case BWAPIC::CommandType::SendText:
         if (Broodwar->isInGame())
-          Broodwar->sendTextEx(v2 != 0, "%s", data->strings[v1]);
+          Broodwar->sendTextEx(v2 != 0, "%s", clientString(v1));
         break;
       case BWAPIC::CommandType::PauseGame:
         if (Broodwar->isInGame())
@@ -804,7 +817,7 @@ namespace BWAPI
           Broodwar->setFrameSkip(v1);
         break;
       case BWAPIC::CommandType::SetMap:
-        Broodwar->setMap(data->strings[v1]);
+        Broodwar->setMap(clientString(v1));
         break;
       case BWAPIC::CommandType::SetAllies:
         if (Broodwar->isInGame())
@@ -829,7 +842,9 @@ namespace BWAPI
     if ( Broodwar->isInGame() )
     {
       const int unitCount = static_cast<int>(unitVector.size());
-      for ( int i = 0; i < data->unitCommandCount; ++i )
+      const int unitCommandCount =
+        ClientInput::clampCount(data->unitCommandCount, GameData::MAX_UNIT_COMMANDS);
+      for ( int i = 0; i < unitCommandCount; ++i )
       {
         if (!ClientInput::indexInRange(data->unitCommands[i].unitIndex, unitCount))
           continue;

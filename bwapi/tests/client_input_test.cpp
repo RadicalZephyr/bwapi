@@ -4,6 +4,7 @@
 #include "check.h"
 
 #include <climits>
+#include <cstring>
 #include <initializer_list>
 
 using namespace BWAPI::ClientInput;
@@ -64,6 +65,65 @@ namespace
     }
   }
 
+  void terminateAlwaysLeavesAReadableString()
+  {
+    // The client can fill every byte of a fixed-size array. Everything on the trusted side then
+    // reads past it: printf, sendTextEx and setMap all take a const char*.
+    char full[8];
+    for (char &c : full)
+      c = 'x';
+    const char *text = terminate(full, sizeof(full));
+    CHECK_EQ(std::strlen(text), 7u);
+
+    // An already-terminated string keeps its content.
+    char normal[8] = "abc";
+    CHECK_EQ(std::strcmp(terminate(normal, sizeof(normal)), "abc"), 0);
+
+    // Degenerate inputs answer rather than fault.
+    CHECK_EQ(std::strcmp(terminate(nullptr, 8), ""), 0);
+    CHECK_EQ(std::strcmp(terminate(normal, 0), ""), 0);
+  }
+
+  void reserveSlotStopsAtCapacity()
+  {
+    int count = 0;
+    CHECK_EQ(reserveSlot(count, 3), 0);
+    CHECK_EQ(reserveSlot(count, 3), 1);
+    CHECK_EQ(reserveSlot(count, 3), 2);
+    CHECK_EQ(count, 3);
+
+    // Full: no slot, and the count does not run past the array.
+    CHECK_EQ(reserveSlot(count, 3), -1);
+    CHECK_EQ(count, 3);
+
+    // The count is shared with the client and reset every frame, so it can arrive as anything.
+    int hostile = INT_MAX;
+    CHECK_EQ(reserveSlot(hostile, 3), -1);
+    CHECK_EQ(hostile, INT_MAX);
+
+    int negative = -5;
+    CHECK_EQ(reserveSlot(negative, 3), 0);
+    CHECK_EQ(negative, 1);
+
+    int zeroCapacity = 0;
+    CHECK_EQ(reserveSlot(zeroCapacity, 0), -1);
+  }
+
+  // Every slot reserveSlot hands out is a slot indexInRange accepts.
+  void reserveAndIndexAgree()
+  {
+    constexpr int capacity = 5;
+    int count = -2;
+    for (int i = 0; i < 20; ++i)
+    {
+      const int slot = reserveSlot(count, capacity);
+      if (slot < 0)
+        CHECK(count == capacity);
+      else
+        CHECK(indexInRange(slot, capacity));
+    }
+  }
+
   // Both are usable in constant expressions, so a bound can be checked at compile time where
   // the capacity is a constant.
   static_assert(indexInRange(0, 1), "");
@@ -77,5 +137,8 @@ int main()
   indexInRangeAcceptsOnlyValidSubscripts();
   clampCountTruncatesRatherThanTrusts();
   clampAndIndexAgree();
+  terminateAlwaysLeavesAReadableString();
+  reserveSlotStopsAtCapacity();
+  reserveAndIndexAgree();
   TEST_MAIN_EPILOGUE();
 }

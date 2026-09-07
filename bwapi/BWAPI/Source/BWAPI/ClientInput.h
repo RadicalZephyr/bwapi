@@ -29,6 +29,35 @@ namespace BWAPI
       return index >= 0 && index < count;
     }
 
+    /// Reserve the next slot of a fixed-size array, advancing \p count, or -1 if it is full.
+    ///
+    /// The shape and string arrays are appended to by both sides and their counts are reset by
+    /// the server each frame, so an append can find a count the client wrote. Upstream guards
+    /// each of these with an assert, which NDEBUG - the configuration every release ships -
+    /// compiles out, leaving a write past the array.
+    inline int reserveSlot(int &count, int capacity) noexcept
+    {
+      if (count < 0)
+        count = 0;
+      if (count >= capacity)
+        return -1;
+      return count++;
+    }
+
+    /// Force a client-written character array to be NUL-terminated, and return it.
+    ///
+    /// GameData's string arrays are fixed-size and the client fills them itself, so it may write
+    /// \p capacity non-zero bytes and leave no terminator. Everything on this side then reads
+    /// past the array - Broodwar::printf, sendTextEx and setMap all take a const char*. Writing
+    /// the last byte unconditionally costs one store and removes the case.
+    inline const char *terminate(char *text, unsigned long long capacity) noexcept
+    {
+      if (!text || capacity == 0)
+        return "";
+      text[capacity - 1] = '\0';
+      return text;
+    }
+
     /// A client-supplied count, clamped to what the array behind it can hold.
     ///
     /// Returns a value in [0, capacity]: a negative count means the client wrote nonsense and

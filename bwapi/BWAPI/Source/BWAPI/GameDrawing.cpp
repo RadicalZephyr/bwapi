@@ -1,3 +1,4 @@
+#include "ClientInput.h"
 #include "GameImpl.h"
 
 #include "../Graphics.h"
@@ -121,15 +122,19 @@ namespace BWAPI
   }
   int GameImpl::addShape(const BWAPIC::Shape &s)
   {
-    assert(data->shapeCount < GameData::MAX_SHAPES);
-    data->shapes[data->shapeCount] = s;
-    return data->shapeCount++;
+    const int slot = ClientInput::reserveSlot(data->shapeCount, GameData::MAX_SHAPES);
+    if ( slot < 0 )
+      return -1;
+    data->shapes[slot] = s;
+    return slot;
   }
   int GameImpl::addString(const char* text)
   {
-    assert(data->stringCount < GameData::MAX_STRINGS);
-    StrCopy(data->strings[data->stringCount], text);
-    return data->stringCount++;
+    const int slot = ClientInput::reserveSlot(data->stringCount, GameData::MAX_STRINGS);
+    if ( slot < 0 )
+      return -1;
+    StrCopy(data->strings[slot], text);
+    return slot;
   }
   int GameImpl::addText(BWAPIC::Shape &s, const char* text)
   {
@@ -211,7 +216,12 @@ namespace BWAPI
   //--------------------------------------------- DRAW SHAPES ------------------------------------------------
   int GameImpl::drawShapes()
   {
-    for ( int i = 0; i < data->shapeCount; i++ )
+    // shapeCount and the string index inside a Text shape are both written by the untrusted
+    // client, and this runs on the trusted side every frame.
+    const int stringCount = ClientInput::clampCount(data->stringCount, GameData::MAX_STRINGS);
+    const int shapeCount  = ClientInput::clampCount(data->shapeCount, GameData::MAX_SHAPES);
+
+    for ( int i = 0; i < shapeCount; i++ )
     {
       BWAPIC::ShapeType::Enum s = data->shapes[i].type;
       int x1 = data->shapes[i].x1;
@@ -225,7 +235,13 @@ namespace BWAPI
       switch ( s )
       {
         case BWAPIC::ShapeType::Text:
-           bwDrawText(x1,y1,data->strings[data->shapes[i].extra1],ctype,(char)data->shapes[i].extra2);
+        {
+           const int stringIndex = data->shapes[i].extra1;
+           const char *text = ClientInput::indexInRange(stringIndex, stringCount)
+             ? ClientInput::terminate(data->strings[stringIndex], sizeof(data->strings[stringIndex]))
+             : "";
+           bwDrawText(x1,y1,text,ctype,(char)data->shapes[i].extra2);
+        }
            break;
         case BWAPIC::ShapeType::Box:
           x2 = data->shapes[i].x2;
