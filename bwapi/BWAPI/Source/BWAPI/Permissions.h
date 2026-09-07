@@ -21,6 +21,14 @@
 // it leaves a bot at level 0, which is the outcome the reference module's floor exists to
 // prevent.
 //
+// The table is asked where a request *arrives* - Server::processCommands for the client's
+// commands, GameImpl::parseText for a command typed into the game - and never inside the GameImpl
+// method that carries the request out. Those methods are also how BWAPI does its own housekeeping:
+// initializeData resets the frame skip and the GUI flag at every match start, setGUI sets the frame
+// skip, and the drawing code changes the text size several times a frame. Asking there denied BWAPI
+// its own resets, silently and by default, which is a defect this file shipped with until the
+// shadow-StarCraft harness caught the frame skip not being reset at match start.
+//
 // Nothing here includes <windows.h> or reads a file: PermissionTable is plain data with a pure
 // decision function, so tests/permissions_test.cpp can ask it every question without a game. The
 // ini reading lives in Config.cpp.

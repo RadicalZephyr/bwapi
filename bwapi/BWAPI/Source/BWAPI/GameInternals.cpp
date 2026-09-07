@@ -154,15 +154,22 @@ namespace BWAPI
 
     ss >> cmd;
 
-    // commands list
+    // These are typed into the game's chat box - _SStrCopy intercepts them - so they are a request
+    // like the client's commands are, and the ones that name a gated action ask the table here. The
+    // methods they call no longer ask on their own behalf: they are also how BWAPI does its own
+    // housekeeping, and a table that denied an action denied BWAPI its own resets along with it.
     if (cmd == "/leave")
     {
+      if (!permissionCheck(Tournament::LeaveGame))
+        return true;
       this->leaveGame();
     }
     else if (cmd == "/speed")
     {
       n = -1;
       ss >> n;
+      if (!permissionCheck(Tournament::SetLocalSpeed, &n))
+        return true;
       setLocalSpeedDirect(n);
       Broodwar << "Changed game speed" << std::endl;
     }
@@ -170,11 +177,15 @@ namespace BWAPI
     {
       n = 1;
       ss >> n;
+      if (!permissionCheck(Tournament::SetFrameSkip, &n))
+        return true;
       setFrameSkip(n);
       Broodwar << "Altered frame skip" << std::endl;
     }
     else if (cmd == "/cheats")
     {
+      if (!permissionCheck(Tournament::SendText, (void*)"power overwhelming"))
+        return true;
       sendText("power overwhelming");
       sendText("operation cwal");
       sendText("the gathering");
@@ -197,7 +208,10 @@ namespace BWAPI
     }
     else if (cmd == "/nogui")
     {
-      setGUI(!data->hasGUI);
+      bool enabled = !data->hasGUI;
+      if (!permissionCheck(Tournament::SetGUI, &enabled))
+        return true;
+      setGUI(enabled);
       Broodwar << "GUI: " << (data->hasGUI ? "enabled" : "disabled") << std::endl;
     }
     else if (cmd == "/wmode")

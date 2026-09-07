@@ -950,27 +950,29 @@ namespace BWAPI
           Broodwar->pingMinimap(v1,v2);
         break;
       case BWAPIC::CommandType::EnableFlag:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::EnableFlag, &v1))
           Broodwar->enableFlag(v1);
         break;
       case BWAPIC::CommandType::Printf:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() &&
+            BroodwarImpl.permissionCheck(Tournament::Printf, (void*)clientString(v1)))
           Broodwar->printf("%s", clientString(v1));
         break;
       case BWAPIC::CommandType::SendText:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() &&
+            BroodwarImpl.permissionCheck(Tournament::SendText, (void*)clientString(v1)))
           Broodwar->sendTextEx(v2 != 0, "%s", clientString(v1));
         break;
       case BWAPIC::CommandType::PauseGame:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::PauseGame))
           Broodwar->pauseGame();
         break;
       case BWAPIC::CommandType::ResumeGame:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::ResumeGame))
           Broodwar->resumeGame();
         break;
       case BWAPIC::CommandType::LeaveGame:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::LeaveGame))
           Broodwar->leaveGame();
         break;
       case BWAPIC::CommandType::RestartGame:
@@ -978,21 +980,30 @@ namespace BWAPI
           Broodwar->restartGame();
         break;
       case BWAPIC::CommandType::SetLocalSpeed:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::SetLocalSpeed, &v1))
           Broodwar->setLocalSpeed(v1);
         break;
       case BWAPIC::CommandType::SetLatCom:
-        Broodwar->setLatCom(v1 == 1);
+      {
+        bool enabled = v1 == 1;
+        if (BroodwarImpl.permissionCheck(Tournament::SetLatCom, &enabled))
+          Broodwar->setLatCom(enabled);
         break;
+      }
       case BWAPIC::CommandType::SetGui:
-        Broodwar->setGUI(v1 == 1);
+      {
+        bool enabled = v1 == 1;
+        if (BroodwarImpl.permissionCheck(Tournament::SetGUI, &enabled))
+          Broodwar->setGUI(enabled);
         break;
+      }
       case BWAPIC::CommandType::SetFrameSkip:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::SetFrameSkip, &v1))
           Broodwar->setFrameSkip(v1);
         break;
       case BWAPIC::CommandType::SetMap:
-        Broodwar->setMap(clientString(v1));
+        if (BroodwarImpl.permissionCheck(Tournament::SetMap, (void*)clientString(v1)))
+          Broodwar->setMap(clientString(v1));
         break;
       case BWAPIC::CommandType::SetAllies:
         if (Broodwar->isInGame())
@@ -1003,7 +1014,8 @@ namespace BWAPI
           Broodwar->setVision(getPlayer(v1), v2 != 0);
         break;
       case BWAPIC::CommandType::SetCommandOptimizerLevel:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() &&
+            BroodwarImpl.permissionCheck(Tournament::SetCommandOptimizationLevel, &v1))
           Broodwar->setCommandOptimizationLevel(v1);
         break;
       case BWAPIC::CommandType::SetRevealAll:

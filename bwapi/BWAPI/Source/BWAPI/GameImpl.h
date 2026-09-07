@@ -363,11 +363,20 @@ namespace BWAPI
       APMCounter apmCounter;
       CommandOptimizer commandOptimizer;
 
-    private:
+    public:
       /// May the bot perform \p type? Answered by the [permissions] table in bwapi.ini, which
-      /// the game process reads once at startup. Every gated call site goes through here.
+      /// the game process reads once at startup.
+      ///
+      /// This is asked where a request *arrives* - Server::processCommands for the client's
+      /// commands, parseText for a command typed into the game - and never inside the method that
+      /// carries the request out. Those methods are also how BWAPI does its own housekeeping:
+      /// initializeData resets the frame skip and the GUI flag at every match start, setGUI sets
+      /// the frame skip, and the drawing code changes the text size several times a frame. Asking
+      /// there denies BWAPI its own resets, silently, which is a defect this arrangement had until
+      /// the shadow-StarCraft harness caught the frame skip not being reset.
       bool permissionCheck(Tournament::ActionID type, void *parameter = nullptr);
 
+    private:
       int addShape(const BWAPIC::Shape &s);
       int addString(const char* text);
       int addText(BWAPIC::Shape &s, const char* text);
