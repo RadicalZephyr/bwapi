@@ -566,7 +566,6 @@ namespace BWAPI
         data->units[id] = static_cast<UnitImpl*>(u)->data;
     }
 
-    data->unitCount               = static_cast<int>(unitVector.size());
     data->frameCount              = Broodwar->getFrameCount();
     data->replayFrameCount        = Broodwar->getReplayFrameCount();
     data->fps                     = Broodwar->getFPS();
@@ -748,6 +747,13 @@ namespace BWAPI
       addEvent(e);
     }
     BroodwarImpl.events.clear();
+
+    // Last, because everything above can issue a handle: the publishing loop for units that
+    // became accessible this frame, and addEvent for the units the events name. The client copies
+    // exactly this much of units[] into its mirror, so a count taken any earlier would leave a
+    // unit discovered this frame out of the copy - present in the plane, named by a
+    // UnitDiscover event, and stale in the only memory the bot actually reads.
+    data->unitCount = static_cast<int>(unitVector.size());
   }
 
   int Server::getForceID(Force force)
