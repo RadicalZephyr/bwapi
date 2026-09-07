@@ -293,7 +293,7 @@ namespace BWAPI
       self->stimTimer           = o->status.stimTimer;        //getStimTimer
       self->order               = o->orderID;          //getOrder
       self->secondaryOrder      = o->secondaryOrderID; //getSecondaryOrder
-      self->buildUnit           = o->currentBuildUnit ? BroodwarImpl.server.getUnitID(UnitImpl::BWUnitToBWAPIUnit(o->currentBuildUnit)) : -1; //getBuildUnit
+      self->buildUnit           = o->currentBuildUnit ? BroodwarImpl.server.lookupUnitID(UnitImpl::BWUnitToBWAPIUnit(o->currentBuildUnit)) : -1; //getBuildUnit
       //------------------------------------------------------------------------------------------------------
       //isTraining
       if (_getType == UnitTypes::Terran_Nuclear_Silo &&
@@ -357,12 +357,12 @@ namespace BWAPI
                        self->order == Orders::Burrowed     ||
                        self->order == Orders::NukeTrain    ||
                        self->order == Orders::Larva;
-      self->target               = BroodwarImpl.server.getUnitID(UnitImpl::BWUnitToBWAPIUnit(o->moveTarget.pUnit)); //getTarget
+      self->target               = BroodwarImpl.server.lookupUnitID(UnitImpl::BWUnitToBWAPIUnit(o->moveTarget.pUnit)); //getTarget
       self->targetPositionX      = o->moveTarget.pt.x;  //getTargetPosition
       self->targetPositionY      = o->moveTarget.pt.y;  //getTargetPosition
       self->orderTargetPositionX = o->orderTarget.pt.x;
       self->orderTargetPositionY = o->orderTarget.pt.y;
-      self->orderTarget          = BroodwarImpl.server.getUnitID(UnitImpl::BWUnitToBWAPIUnit(o->orderTarget.pUnit));  //getOrderTarget
+      self->orderTarget          = BroodwarImpl.server.lookupUnitID(UnitImpl::BWUnitToBWAPIUnit(o->orderTarget.pUnit));  //getOrderTarget
       //------------------------------------------------------------------------------------------------------
       //getAddon
       self->addon = -1;
@@ -370,12 +370,12 @@ namespace BWAPI
       {
         UnitImpl* addon = UnitImpl::BWUnitToBWAPIUnit(o->currentBuildUnit);
         if ( addon && addon->isAlive && addon->getOriginalRawData->type().isAddon() )
-          self->addon = BroodwarImpl.server.getUnitID(addon);
+          self->addon = BroodwarImpl.server.lookupUnitID(addon);
         else
         {
           addon = UnitImpl::BWUnitToBWAPIUnit(o->building.addon);
           if ( addon && addon->isAlive && addon->getOriginalRawData->type().isAddon() )
-            self->addon = BroodwarImpl.server.getUnitID(addon);
+            self->addon = BroodwarImpl.server.lookupUnitID(addon);
         }
       }
       //------------------------------------------------------------------------------------------------------
@@ -385,14 +385,14 @@ namespace BWAPI
       {
         UnitImpl* nydus = UnitImpl::BWUnitToBWAPIUnit(o->nydus.exit);
         if ( nydus && nydus->isAlive && nydus->getOriginalRawData->unitType == UnitTypes::Zerg_Nydus_Canal )
-          self->nydusExit = BroodwarImpl.server.getUnitID(nydus);
+          self->nydusExit = BroodwarImpl.server.lookupUnitID(nydus);
       }
       //------------------------------------------------------------------------------------------------------
       //getPowerUp
       self->powerUp = -1;
       UnitImpl* powerUp = UnitImpl::BWUnitToBWAPIUnit(o->worker.pPowerup);
       if (powerUp && powerUp->isAlive)
-        self->powerUp = BroodwarImpl.server.getUnitID(powerUp);
+        self->powerUp = BroodwarImpl.server.lookupUnitID(powerUp);
 
       self->isAccelerating  = o->movementFlag(BW::MovementFlags::Accelerating);  //isAccelerating
       self->isBeingGathered = _getType.isResourceContainer() && (o->resource.gatherQueueCount || o->resource.nextGatherer);  //isBeingGathered
@@ -431,10 +431,10 @@ namespace BWAPI
         self->interceptorCount = o->carrier.inHangerCount + o->carrier.outHangerCount;
         break;
       case UnitTypes::Enum::Protoss_Interceptor:
-        self->carrier = BroodwarImpl.server.getUnitID(UnitImpl::BWUnitToBWAPIUnit(o->fighter.parent));
+        self->carrier = BroodwarImpl.server.lookupUnitID(UnitImpl::BWUnitToBWAPIUnit(o->fighter.parent));
         break;
       case UnitTypes::Enum::Zerg_Larva:
-        self->hatchery = BroodwarImpl.server.getUnitID(UnitImpl::BWUnitToBWAPIUnit(o->connectedUnit));
+        self->hatchery = BroodwarImpl.server.lookupUnitID(UnitImpl::BWUnitToBWAPIUnit(o->connectedUnit));
         break;
       default:
         break;
@@ -622,9 +622,9 @@ namespace BWAPI
       //------------------------------------------------------------------------------------------------------
       //getRallyUnit
       if ( this->_getType.canProduce() )
-        self->rallyUnit = BroodwarImpl.server.getUnitID(UnitImpl::BWUnitToBWAPIUnit(o->rally.unit));
+        self->rallyUnit = BroodwarImpl.server.lookupUnitID(UnitImpl::BWUnitToBWAPIUnit(o->rally.unit));
 
-      self->transport       = BroodwarImpl.server.getUnitID(_getTransport);   //getTransport
+      self->transport       = BroodwarImpl.server.lookupUnitID(_getTransport);   //getTransport
       self->isHallucination = o->statusFlag(BW::StatusFlags::IsHallucination);  //isHallucination
     }
     else

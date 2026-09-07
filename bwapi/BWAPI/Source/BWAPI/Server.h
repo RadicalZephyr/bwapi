@@ -38,7 +38,21 @@ namespace BWAPI
     int       getPlayerID(Player player);
     Player    getPlayer(int id) const;
     
-    int       getUnitID(Unit unit);
+    /// The handle this bot has for \p unit, issuing one if it does not have it yet.
+    ///
+    /// Called only where the bot is being told the unit exists: the frame it becomes accessible,
+    /// and the loop that publishes the accessible set. Handles are therefore dense in the order
+    /// *this bot* discovered units, which is the whole point - see lookupUnitID.
+    int       issueUnitID(Unit unit);
+
+    /// The handle this bot already has for \p unit, or -1 if it has never been issued one.
+    ///
+    /// Everything that mentions a unit in passing goes through here rather than through
+    /// issueUnitID: a marine's target, an addon, a carrier, a nydus exit. Upstream allocates at
+    /// those sites too, so a bot could be handed a live handle to a unit it has never seen, and
+    /// the handle's value told it how many units the game had created before it.
+    int       lookupUnitID(Unit unit) const;
+
     Unit      getUnit(int id) const;
 
     GameData  *data = nullptr;

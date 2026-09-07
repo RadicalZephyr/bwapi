@@ -27,10 +27,17 @@ namespace BWAPI
     __exists = exists;
   }
   //---------------------------------------------- SAVE EXISTS -----------------------------------------------
+  // A new bullet takes the slot, so it needs a new handle - but it does not get one here.
+  //
+  // Upstream allocated on this transition, from a counter that advanced for every bullet fired
+  // anywhere on the map. So a bullet the bot could see carried a handle that said how many shots
+  // had been fired out of its sight: the same channel as the unit IDs, in the class ADR 0001
+  // section 4.2 names ("bullets, sprites, images and orders leak the same way"). The handle is
+  // issued in updateData instead, at the point the bullet is actually exposed to this bot.
   void BulletImpl::saveExists()
   {
     if ( !lastExists && __exists)
-      id = nextId++;
+      id = -1;
     lastExists = __exists;
   }
   //---------------------------------------------- GET RAW DATA ----------------------------------------------
@@ -79,6 +86,11 @@ namespace BWAPI
       UnitImpl *_getSource = UnitImpl::BWUnitToBWAPIUnit(bwOriginalBullet->sourceUnit);
       UnitImpl *_getTarget = UnitImpl::BWUnitToBWAPIUnit(bwOriginalBullet->attackTarget.pUnit);
       Player   _getPlayer = _getSource ? _getSource->_getPlayer : nullptr;
+
+      // The bullet is exposed to this bot on this frame, so now it gets a handle. Handles are
+      // dense in the order the bot saw bullets, and a shot it never saw consumes none.
+      if ( id < 0 )
+        id = nextId++;
 
       // id, player, type, source
       self->id      = id;

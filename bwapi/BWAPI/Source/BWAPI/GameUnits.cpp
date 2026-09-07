@@ -158,6 +158,12 @@ namespace BWAPI
       UnitImpl *u = static_cast<UnitImpl*>(ui);
       if (u->canAccess())
       {
+        // A handle is issued here and nowhere earlier: this is the first moment the bot can see
+        // the unit at all. Upstream issued in extractUnitData, over every unit alive in the game,
+        // so a handle carried the unit's global creation ordinal (ADR 0001 section 2, defect 2.7).
+        if (u->getID() == -1)
+          u->setID(server.issueUnitID(u));
+
         if ( !u->wasAlive )
           events.push_back(Event::UnitCreate(u));
         if ( !u->wasCompleted && u->_isCompleted )
@@ -225,9 +231,6 @@ namespace BWAPI
       u->connectedUnits.clear();
       u->loadedUnits.clear();
 
-      if (u->getID() == -1)
-        u->setID(server.getUnitID(u));
-
       u->updateData();
 
       if ( u->getOriginalRawData->unitType == UnitTypes::Terran_Ghost)
@@ -266,11 +269,11 @@ namespace BWAPI
       if ( orderTargetUnit && orderTargetUnit->exists() && u->getOrder() == Orders::ConstructingBuilding )
       {
         UnitImpl* j             = orderTargetUnit;
-        u->self->buildUnit      = server.getUnitID(j);
+        u->self->buildUnit      = server.lookupUnitID(j);
         u->self->isConstructing = true;
         u->self->isIdle         = false;
         u->self->buildType      = j->self->type;
-        j->self->buildUnit      = server.getUnitID(u);
+        j->self->buildUnit      = server.lookupUnitID(u);
         j->self->isConstructing = true;
         j->self->isIdle         = false;
         j->self->buildType      = j->self->type;
@@ -278,11 +281,11 @@ namespace BWAPI
       else if ( u->getAddon() && !u->getAddon()->isCompleted() )
       {
         UnitImpl* j             = static_cast<UnitImpl*>(u->getAddon());
-        u->self->buildUnit      = server.getUnitID(j);
+        u->self->buildUnit      = server.lookupUnitID(j);
         u->self->isConstructing = true;
         u->self->isIdle         = false;
         u->self->buildType      = j->self->type;
-        j->self->buildUnit      = server.getUnitID(u);
+        j->self->buildUnit      = server.lookupUnitID(u);
         j->self->isConstructing = true;
         j->self->isIdle         = false;
         j->self->buildType      = j->self->type;
@@ -291,7 +294,7 @@ namespace BWAPI
       {
         // Apply buildUnit symmetry
         UnitImpl* j             = buildUnit;
-        j->self->buildUnit      = server.getUnitID(u);
+        j->self->buildUnit      = server.lookupUnitID(u);
         j->self->isConstructing = true;
         j->self->isIdle         = false;
         j->self->buildType      = j->self->type;

@@ -328,7 +328,7 @@ namespace BWAPI
     case BWAPI::EventType::UnitHide:
     case BWAPI::EventType::UnitRenegade:
     case BWAPI::EventType::UnitComplete:
-      e2->v1 = getUnitID(e.getUnit());
+      e2->v1 = issueUnitID(e.getUnit());
       break;
     default:
       break;
@@ -615,7 +615,7 @@ namespace BWAPI
   {
     for (Unit u : BroodwarImpl.evadeUnits)
     {
-      const int id = getUnitID(u);
+      const int id = lookupUnitID(u);
       if (id >= 0)
         data->units[id] = static_cast<UnitImpl*>(u)->data;
     }
@@ -661,7 +661,7 @@ namespace BWAPI
 
       int idx = 0;
       for(Unit t : Broodwar->getSelectedUnits())
-        data->selectedUnits[idx++] = getUnitID(t);
+        data->selectedUnits[idx++] = lookupUnitID(t);
 
       //dynamic map data
       Map::copyToSharedMemory();
@@ -725,7 +725,7 @@ namespace BWAPI
       //dynamic unit data
       for(Unit i : Broodwar->getAllUnits())
       {
-        const int id = getUnitID(i);
+        const int id = issueUnitID(i);
         if (id >= 0)
           data->units[id] = static_cast<UnitImpl*>(i)->data;
       }
@@ -735,7 +735,7 @@ namespace BWAPI
         Unit u = Broodwar->indexToUnit(i);
         int id = -1;
         if ( u )
-          id = getUnitID(u);
+          id = lookupUnitID(u);
         data->unitArray[i] = id;
       }
 
@@ -753,7 +753,7 @@ namespace BWAPI
           if ( u && u->canAccess() )
           {
             xf->searchValue = bwxf->searchValue;
-            xf->unitIndex = getUnitID(u);
+            xf->unitIndex = lookupUnitID(u);
             xf++;
           }
         } // x index
@@ -764,7 +764,7 @@ namespace BWAPI
           if ( u && u->canAccess() )
           {
             yf->searchValue = bwyf->searchValue;
-            yf->unitIndex = getUnitID(u);
+            yf->unitIndex = lookupUnitID(u);
             yf++;
           }
         } // x index
@@ -839,7 +839,20 @@ namespace BWAPI
     return playerVector[id];
   }
 
-  int Server::getUnitID(Unit unit)
+  // Defect 2.7 in ADR 0001 section 2, and the reason this is two functions rather than one.
+  //
+  // Upstream has a single allocate-on-lookup getUnitID, first called from extractUnitData over
+  // *every unit alive in the game*. So the handle a bot receives for a scouted enemy marine is
+  // that unit's global creation ordinal, and the gap between two of the bot's own consecutive
+  // handles is the number of units everyone else created in between - which is how you recognise
+  // a four-pool without scouting. The nine call sites in UnitUpdate.cpp make it worse: a visible
+  // enemy unit's target field allocated a handle for, and handed the bot, a unit it had never
+  // seen.
+  //
+  // Splitting the function splits the question. Handles are issued where the bot is told a unit
+  // exists, and looked up everywhere else, so they are dense in the order this bot discovered
+  // things and a unit it has not seen has no handle to leak.
+  int Server::issueUnitID(Unit unit)
   {
     if ( !unit )
       return -1;
@@ -848,9 +861,9 @@ namespace BWAPI
       return it->second;
 
     // The handle is the subscript into data->units, so there is no handle to give past the end
-    // of it. Upstream keeps counting, and the two writes below then run off the array. Whether a
-    // match can reach ten thousand handles was never measured, which is exactly the reason not
-    // to leave it to chance.
+    // of it. Upstream keeps counting, and the writes then run off the array. Whether a match can
+    // reach ten thousand handles was never measured, which is exactly the reason not to leave it
+    // to chance - and issuing only on exposure makes it far harder to reach in the first place.
     const int id = static_cast<int>(unitVector.size());
     if (id >= GameData::MAX_UNITS)
       return -1;
@@ -858,6 +871,13 @@ namespace BWAPI
     unitLookup[unit] = id;
     unitVector.push_back(unit);
     return id;
+  }
+  int Server::lookupUnitID(Unit unit) const
+  {
+    if ( !unit )
+      return -1;
+    auto it = unitLookup.find(unit);
+    return it == unitLookup.end() ? -1 : it->second;
   }
   Unit Server::getUnit(int id) const
   {
