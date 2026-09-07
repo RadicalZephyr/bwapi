@@ -45,8 +45,10 @@ namespace BWAPI
     PlayerData players[12];
 
     //units
+    static const int MAX_UNITS = 10000;
+
     int initialUnitCount;
-    UnitData units[10000];
+    UnitData units[MAX_UNITS];
 
     //unit table
     int unitArray[1700];

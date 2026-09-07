@@ -636,6 +636,11 @@ namespace BWAPI
   }
   void GameImpl::setLocalSpeedDirect(int speed)
   {
+    // speed is milliseconds per frame and the alternate speeds are three times it, so a
+    // client-supplied int overflows. Any negative value means "reset", so the low clamp loses
+    // nothing, and a minute per frame is already far past anything a bot could want.
+    speed = Util::clamp(speed, -1, 60000);
+
     if (speed < 0)
     {
       // Reset the speed if it is negative

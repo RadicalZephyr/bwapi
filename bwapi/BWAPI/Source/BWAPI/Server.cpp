@@ -263,14 +263,19 @@ namespace BWAPI
   }
   int Server::addString(const char* text)
   {
-    StrCopy(data->eventStrings[data->eventStringCount], text);
-    return data->eventStringCount++;
+    const int slot = ClientInput::reserveSlot(data->eventStringCount, GameData::MAX_EVENT_STRINGS);
+    if (slot < 0)
+      return -1;
+    StrCopy(data->eventStrings[slot], text);
+    return slot;
   }
   int Server::addEvent(const BWAPI::Event& e)
   {
-    assert(data->eventCount < GameData::MAX_EVENTS);
-    BWAPIC::Event* e2 = &(data->events[data->eventCount++]);
-    int id   = data->eventCount;
+    const int slot = ClientInput::reserveSlot(data->eventCount, GameData::MAX_EVENTS);
+    if (slot < 0)
+      return -1;
+    BWAPIC::Event* e2 = &(data->events[slot]);
+    int id   = slot + 1;
     e2->type = e.getType();
     e2->v1   = 0;
     e2->v2   = 0;
@@ -491,7 +496,11 @@ namespace BWAPI
   void Server::updateSharedMemory()
   {
     for (Unit u : BroodwarImpl.evadeUnits)
-      data->units[getUnitID(u)] = static_cast<UnitImpl*>(u)->data;
+    {
+      const int id = getUnitID(u);
+      if (id >= 0)
+        data->units[id] = static_cast<UnitImpl*>(u)->data;
+    }
 
     data->frameCount              = Broodwar->getFrameCount();
     data->replayFrameCount        = Broodwar->getReplayFrameCount();
@@ -597,7 +606,11 @@ namespace BWAPI
 
       //dynamic unit data
       for(Unit i : Broodwar->getAllUnits())
-        data->units[getUnitID(i)] = static_cast<UnitImpl*>(i)->data;
+      {
+        const int id = getUnitID(i);
+        if (id >= 0)
+          data->units[id] = static_cast<UnitImpl*>(i)->data;
+      }
 
       for(int i = 0; i < BW::UNIT_ARRAY_MAX_LENGTH; ++i)
       {
@@ -712,12 +725,21 @@ namespace BWAPI
   {
     if ( !unit )
       return -1;
-    if (unitLookup.find(unit) == unitLookup.end())
-    {
-      unitLookup[unit] = (int)(unitVector.size());
-      unitVector.push_back(unit);
-    }
-    return unitLookup[unit];
+    auto it = unitLookup.find(unit);
+    if (it != unitLookup.end())
+      return it->second;
+
+    // The handle is the subscript into data->units, so there is no handle to give past the end
+    // of it. Upstream keeps counting, and the two writes below then run off the array. Whether a
+    // match can reach ten thousand handles was never measured, which is exactly the reason not
+    // to leave it to chance.
+    const int id = static_cast<int>(unitVector.size());
+    if (id >= GameData::MAX_UNITS)
+      return -1;
+
+    unitLookup[unit] = id;
+    unitVector.push_back(unit);
+    return id;
   }
   Unit Server::getUnit(int id) const
   {
@@ -848,6 +870,15 @@ namespace BWAPI
       {
         if (!ClientInput::indexInRange(data->unitCommands[i].unitIndex, unitCount))
           continue;
+
+        // The type is an enum id the client wrote, and it is not checked downstream: the switch
+        // in Templates::canIssueCommandType falls through to `return true` for anything it does
+        // not recognise, so an unknown type reaches executeCommand, queues a select order for
+        // the unit and charges APM before doing nothing. Twenty thousand of those fit in one
+        // frame.
+        if (!ClientInput::indexInRange(data->unitCommands[i].type, UnitCommandTypes::Enum::MAX))
+          continue;
+
         Unit unit = unitVector[data->unitCommands[i].unitIndex];
         Unit target = nullptr;
         if (ClientInput::indexInRange(data->unitCommands[i].targetIndex, unitCount))

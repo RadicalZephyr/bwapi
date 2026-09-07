@@ -72,6 +72,14 @@ namespace BWAPI
   }
   Event GameImpl::makeEvent(BWAPIC::Event e)
   {
+    // The server hands out -1 for a string it had no room to store, so the index is checked
+    // before it is used as a subscript.
+    const auto eventString = [&](int index) -> const char * {
+      if (index < 0 || index >= GameData::MAX_EVENT_STRINGS)
+        return "";
+      return data->eventStrings[index];
+    };
+
     Event e2;
     e2.setType(e.type);
     if (e.type == EventType::MatchEnd)
@@ -81,11 +89,11 @@ namespace BWAPI
     if (e.type == EventType::PlayerLeft)
       e2.setPlayer(getPlayer(e.v1));
     if (e.type == EventType::SaveGame || e.type == EventType::SendText)
-      e2.setText(data->eventStrings[e.v1]);
+      e2.setText(eventString(e.v1));
     if (e.type == EventType::ReceiveText)
     {
       e2.setPlayer(getPlayer(e.v1));
-      e2.setText(data->eventStrings[e.v2]);
+      e2.setText(eventString(e.v2));
     }
     if (e.type == EventType::UnitDiscover ||
         e.type == EventType::UnitEvade ||
