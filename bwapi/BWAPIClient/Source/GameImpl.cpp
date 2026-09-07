@@ -17,8 +17,9 @@
 
 namespace BWAPI
 {
-  GameImpl::GameImpl(GameData* _data)
+  GameImpl::GameImpl(GameData* _data, CommandData* _commandData)
     : data(_data)
+    , commandData(_commandData)
   {
     this->clearAll();
     for(int i = 0; i < 5; ++i)
@@ -35,17 +36,17 @@ namespace BWAPI
   }
   int GameImpl::addShape(const BWAPIC::Shape &s)
   {
-    if ( data->shapeCount >= GameData::MAX_SHAPES )
+    if ( commandData->shapeCount >= CommandData::MAX_SHAPES )
       return -1;
-    data->shapes[data->shapeCount] = s;
-    return data->shapeCount++;
+    commandData->shapes[commandData->shapeCount] = s;
+    return commandData->shapeCount++;
   }
   int GameImpl::addString(const char* text)
   {
-    if ( data->stringCount >= GameData::MAX_STRINGS )
+    if ( commandData->stringCount >= CommandData::MAX_STRINGS )
       return -1;
-    StrCopy(data->strings[data->stringCount], text);
-    return data->stringCount++;
+    StrCopy(commandData->strings[commandData->stringCount], text);
+    return commandData->stringCount++;
   }
   int GameImpl::addText(BWAPIC::Shape &s, const char* text)
   {
@@ -54,17 +55,17 @@ namespace BWAPI
   }
   int GameImpl::addCommand(const BWAPIC::Command &c)
   {
-    if ( data->commandCount >= GameData::MAX_COMMANDS )
+    if ( commandData->commandCount >= CommandData::MAX_COMMANDS )
       return -1;
-    data->commands[data->commandCount] = c;
-    return data->commandCount++;
+    commandData->commands[commandData->commandCount] = c;
+    return commandData->commandCount++;
   }
   int GameImpl::addUnitCommand(BWAPIC::UnitCommand& c)
   {
-    if ( data->unitCommandCount >= GameData::MAX_UNIT_COMMANDS )
+    if ( commandData->unitCommandCount >= CommandData::MAX_UNIT_COMMANDS )
       return -1;
-    data->unitCommands[data->unitCommandCount] = c;
-    return data->unitCommandCount++;
+    commandData->unitCommands[commandData->unitCommandCount] = c;
+    return commandData->unitCommandCount++;
   }
   Unit GameImpl::_unitFromIndex(int index)
   {
@@ -869,9 +870,9 @@ namespace BWAPI
   {
     int e=0;
     if (isEnabled) e=1;
-    //update shared memory
-    data->hasLatCom = isEnabled;
-    //queue up command for server so it also applies the change
+    // The state plane is read-only now, so this is a request rather than a fact. The server
+    // applies it and publishes hasLatCom back; until it does, isLatComEnabled reports what is
+    // actually in force rather than what was asked for.
     addCommand(BWAPIC::Command(BWAPIC::CommandType::SetLatCom, e));
   }
   bool GameImpl::isGUIEnabled() const
@@ -882,8 +883,7 @@ namespace BWAPI
   {
     int e=0;
     if (enabled) e=1;
-    data->hasGUI = enabled;
-    //queue up command for server so it also applies the change
+    // As with setLatCom: a request, not a write.
     addCommand(BWAPIC::Command(BWAPIC::CommandType::SetGui, e));
   }
   int GameImpl::getInstanceNumber() const

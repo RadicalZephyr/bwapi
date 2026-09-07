@@ -5,7 +5,6 @@
 #include <Util/Convenience.h>
 #include <cassert>
 #include <sstream>
-#include <AclAPI.h>
 
 #include "ClientInput.h"
 #include "MonotonicClock.h"
@@ -14,6 +13,7 @@
 #include "UnitImpl.h"
 #include "BulletImpl.h"
 #include "RegionImpl.h"
+#include <BWAPI/Client/CommandData.h>
 #include <BWAPI/Client/GameData.h>
 #include <BWAPI/Client/GameTable.h>
 
@@ -101,10 +101,20 @@ namespace BWAPI
       ssShareName << "Local\\bwapi_shared_memory_";
       ssShareName << processID;
 
-      // Create the file mapping and shared memory
+      // Two sections, because they have different owners. The state plane is written here and
+      // read by the client; the command plane is written by the client and read here. The client
+      // maps the first read-only, which is the whole point of the split (defect 2.3).
+      std::stringstream ssCommandName;
+      ssCommandName << "Local\\bwapi_command_memory_";
+      ssCommandName << processID;
+
       mapFileHandle = CreateFileMappingA( INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(GameData), ssShareName.str().c_str() );
       if ( mapFileHandle )
         data = static_cast<GameData*>(MapViewOfFile(mapFileHandle, FILE_MAP_WRITE | FILE_MAP_READ, 0, 0, sizeof(GameData)));
+
+      commandMapFileHandle = CreateFileMappingA( INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(CommandData), ssCommandName.str().c_str() );
+      if ( commandMapFileHandle )
+        commandData = static_cast<CommandData*>(MapViewOfFile(commandMapFileHandle, FILE_MAP_WRITE | FILE_MAP_READ, 0, 0, sizeof(CommandData)));
     } // if serverEnabled
 
     // check if memory was created or if we should create it locally
@@ -113,84 +123,20 @@ namespace BWAPI
       data = new GameData;
       localOnly = true;
     }
+    if ( !commandData )
+      commandData = new CommandData();
     initializeSharedMemory();
 
     if ( serverEnabled )
     {
-	    //--------------------------------------------------------------------------------------------------------
-	    // Security Structure hobbled together from this document:
-	    // http://msdn.microsoft.com/en-us/library/aa446595%28VS.85%29.aspx
-	    //
-
-	    this->pEveryoneSID = NULL;
-	    SID_IDENTIFIER_AUTHORITY SIDAuthWorld = SECURITY_WORLD_SID_AUTHORITY;
-	    
-      // Create a well-known SID for the Everyone group.
-      if( !AllocateAndInitializeSid( &SIDAuthWorld, 
-                                    1,
-                                    SECURITY_WORLD_RID,
-                                    0, 0, 0, 0, 0, 0, 0,
-                                    &this->pEveryoneSID) )
-      {
-        // AllocateAndInitializeSid failed
-        //Util::Logger::globalLog->log("Error: AllocateAndInitializeSid");
-		    //printf("AllocateAndInitializeSid Error %u\n", GetLastError());
-      }
-
-      // Initialize an EXPLICIT_ACCESS structure for an ACE.
-      // The ACE will allow Everyone access.
-      EXPLICIT_ACCESS ea = {};
-      ea.grfAccessPermissions  = GENERIC_ALL;
-	    ea.grfAccessMode         = GRANT_ACCESS;
-      ea.grfInheritance        = NO_INHERITANCE;
-      ea.Trustee.TrusteeForm   = TRUSTEE_IS_SID;
-      ea.Trustee.TrusteeType   = TRUSTEE_IS_WELL_KNOWN_GROUP;
-      ea.Trustee.ptstrName     = (LPTSTR)this->pEveryoneSID;
-
-	    this->pACL = NULL;  //a NULL DACL is assigned to the security descriptor, which allows all access to the object
-
-      // Create a new ACL that contains the new ACEs.
-      DWORD dwRes = SetEntriesInAcl(1, &ea, NULL, &this->pACL);
-      if (ERROR_SUCCESS != dwRes) 
-      {
-        // SetEntriesInAcl failed
-        //Util::Logger::globalLog->log("Error: SetEntriesInAcl");
-		    //printf("SetEntriesInAcl Error %u\n", GetLastError());
-      }
-
-      // Initialize a security descriptor.  
-      this->pSD = (PSECURITY_DESCRIPTOR) LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH); 
-      if ( NULL == this->pSD ) 
-      { 
-        // LocalAlloc failed
-        //Util::Logger::globalLog->log("Error: LocalAlloc");
-		    //printf("LocalAlloc Error %u\n", GetLastError()); 
-      } 
- 
-      if ( !InitializeSecurityDescriptor(this->pSD, SECURITY_DESCRIPTOR_REVISION) ) 
-      {
-        // InitializeSecurityDescriptor failed
-        //Util::Logger::globalLog->log("Error: InitializeSecurityDescriptor");
-		    //printf("InitializeSecurityDescriptor Error %u\n",GetLastError()); 
-      } 
-
-	    // Add the ACL to the security descriptor. 
-      if ( !SetSecurityDescriptorDacl(this->pSD, 
-									                    TRUE,     // bDaclPresent flag   
-									                    this->pACL, 
-									                    FALSE) )   // not a default DACL 
-      {
-        // SetSecurityDescriptorDacl failed
-		    //Util::Logger::globalLog->log("Error: InitializeSecurityDescriptor");
-		    //printf("SetSecurityDescriptorDacl Error %u\n",GetLastError());
-      } 
-
-      // Initialize a security attributes structure.
-      SECURITY_ATTRIBUTES sa = { 0 };
-	    sa.nLength = sizeof(sa);
-      sa.lpSecurityDescriptor = this->pSD;
-      sa.bInheritHandle = FALSE;
-	    //--------------------------------------------------------------------------------------------------------
+      // No security descriptor: the default DACL grants the account this process runs as and
+      // nothing else.
+      //
+      // Upstream built an explicit one granting Everyone GENERIC_ALL, which is wider than the
+      // default it replaced and is the opposite of what a tournament wants. Narrowing it to the
+      // running account is as far as a fork can go: an OS privilege boundary between bot and
+      // game needs separate accounts, which ADR 0001 section 2 lists among the things a fork
+      // cannot reach.
 
       std::stringstream communicationPipe;
       communicationPipe << "\\\\.\\pipe\\bwapi_pipe_";
@@ -233,20 +179,20 @@ namespace BWAPI
       data = nullptr;
     }
 
-    if ( this->pEveryoneSID )
-      FreeSid(this->pEveryoneSID);
-    if ( this->pACL )
-      LocalFree(this->pACL);
-    if ( this->pSD )
-      LocalFree(this->pSD);
+    if ( commandMapFileHandle )
+      CloseHandle(commandMapFileHandle);
+    else
+      delete commandData;
+    commandData = nullptr;
+
   }
   void Server::update()
   {
     // Reset data coming in to server
-    data->stringCount      = 0;
-    data->commandCount     = 0;
-    data->unitCommandCount = 0;
-    data->shapeCount       = 0;
+    commandData->stringCount      = 0;
+    commandData->commandCount     = 0;
+    commandData->unitCommandCount = 0;
+    commandData->shapeCount       = 0;
     if (gameTable && gameTableIndex >= 0)
     {
       // A client picks the instance with the oldest keep-alive, and GetTickCount resolves
@@ -458,10 +404,10 @@ namespace BWAPI
     data->isDebug          = (BUILD_DEBUG == 1);
     data->eventCount       = 0;
     data->eventStringCount = 0;
-    data->commandCount     = 0;
-    data->unitCommandCount = 0;
-    data->shapeCount       = 0;
-    data->stringCount      = 0;
+    commandData->commandCount     = 0;
+    commandData->unitCommandCount = 0;
+    commandData->shapeCount       = 0;
+    commandData->stringCount      = 0;
     data->mapFileName[0]   = 0;
     data->mapPathName[0]   = 0;
     data->mapName[0]       = 0;
@@ -470,8 +416,8 @@ namespace BWAPI
     data->hasLatCom        = true;
     // The localOnly path allocates GameData with new and it has no constructor, so the meter
     // starts at whatever was on the heap unless it is set here.
-    data->clientWakeMicros        = 0;
-    data->clientReplyMicros       = 0;
+    commandData->clientWakeMicros        = 0;
+    commandData->clientReplyMicros       = 0;
     data->lastFrameDurationMicros = 0;
     data->lastIpcDurationMicros   = 0;
     clearAll();
@@ -898,18 +844,18 @@ namespace BWAPI
   // have to agree on an epoch.
   void Server::meterFrame()
   {
-    const long long previousReply = data->clientReplyMicros;
+    const long long previousReply = commandData->clientReplyMicros;
 
     const long long handoff = Clock::micros();
     callOnFrame();
     const long long roundTrip = Clock::micros() - handoff;
 
     long long botSpan = roundTrip;
-    if (data->clientReplyMicros > data->clientWakeMicros &&
-        data->clientReplyMicros != previousReply)
+    if (commandData->clientReplyMicros > commandData->clientWakeMicros &&
+        commandData->clientReplyMicros != previousReply)
     {
       // The client stamped a complete frame this time round.
-      botSpan = data->clientReplyMicros - data->clientWakeMicros;
+      botSpan = commandData->clientReplyMicros - commandData->clientWakeMicros;
       if (botSpan > roundTrip)
         botSpan = roundTrip;  // the two clocks disagreed; never charge more than really elapsed
     }
@@ -972,21 +918,21 @@ namespace BWAPI
     // Every count and index below is written by the untrusted client, so each is clamped or
     // range-checked here rather than trusted. The only bound the protocol ships is an assert in
     // the client itself (BWAPIClient/Source/GameImpl.cpp), which NDEBUG compiles out.
-    const int stringCount  = ClientInput::clampCount(data->stringCount, GameData::MAX_STRINGS);
-    const int commandCount = ClientInput::clampCount(data->commandCount, GameData::MAX_COMMANDS);
+    const int stringCount  = ClientInput::clampCount(commandData->stringCount, CommandData::MAX_STRINGS);
+    const int commandCount = ClientInput::clampCount(commandData->commandCount, CommandData::MAX_COMMANDS);
 
     // A string a command names, NUL-terminated, or the empty string if the index is out of range.
     const auto clientString = [&](int index) -> const char * {
       if (!ClientInput::indexInRange(index, stringCount))
         return "";
-      return ClientInput::terminate(data->strings[index], sizeof(data->strings[index]));
+      return ClientInput::terminate(commandData->strings[index], sizeof(commandData->strings[index]));
     };
 
     for(int i = 0; i < commandCount; ++i)
     {
-      BWAPIC::CommandType::Enum c = data->commands[i].type;
-      int v1 = data->commands[i].value1;
-      int v2 = data->commands[i].value2;
+      BWAPIC::CommandType::Enum c = commandData->commands[i].type;
+      int v1 = commandData->commands[i].value1;
+      int v2 = commandData->commands[i].value2;
       switch (c)
       {
       case BWAPIC::CommandType::SetScreenPosition:
@@ -1066,10 +1012,10 @@ namespace BWAPI
     {
       const int unitCount = static_cast<int>(unitVector.size());
       const int unitCommandCount =
-        ClientInput::clampCount(data->unitCommandCount, GameData::MAX_UNIT_COMMANDS);
+        ClientInput::clampCount(commandData->unitCommandCount, CommandData::MAX_UNIT_COMMANDS);
       for ( int i = 0; i < unitCommandCount; ++i )
       {
-        if (!ClientInput::indexInRange(data->unitCommands[i].unitIndex, unitCount))
+        if (!ClientInput::indexInRange(commandData->unitCommands[i].unitIndex, unitCount))
           continue;
 
         // The type is an enum id the client wrote, and it is not checked downstream: the switch
@@ -1077,15 +1023,15 @@ namespace BWAPI
         // not recognise, so an unknown type reaches executeCommand, queues a select order for
         // the unit and charges APM before doing nothing. Twenty thousand of those fit in one
         // frame.
-        if (!ClientInput::indexInRange(data->unitCommands[i].type, UnitCommandTypes::Enum::MAX))
+        if (!ClientInput::indexInRange(commandData->unitCommands[i].type, UnitCommandTypes::Enum::MAX))
           continue;
 
-        Unit unit = unitVector[data->unitCommands[i].unitIndex];
+        Unit unit = unitVector[commandData->unitCommands[i].unitIndex];
         Unit target = nullptr;
-        if (ClientInput::indexInRange(data->unitCommands[i].targetIndex, unitCount))
-          target = unitVector[data->unitCommands[i].targetIndex];
+        if (ClientInput::indexInRange(commandData->unitCommands[i].targetIndex, unitCount))
+          target = unitVector[commandData->unitCommands[i].targetIndex];
 
-        unit->issueCommand(UnitCommand(unit, data->unitCommands[i].type, target, data->unitCommands[i].x, data->unitCommands[i].y, data->unitCommands[i].extra));
+        unit->issueCommand(UnitCommand(unit, commandData->unitCommands[i].type, target, commandData->unitCommands[i].x, commandData->unitCommands[i].y, commandData->unitCommands[i].extra));
       }
     } // if isInGame
   }

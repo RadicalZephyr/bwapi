@@ -9,6 +9,7 @@
 #include <BWAPI/Game.h>
 #include <BWAPI/Server.h>
 #include <BWAPI/Map.h>
+#include <BWAPI/Client/CommandData.h>
 #include <BWAPI/Client/GameData.h>
 #include <BWAPI/TournamentAction.h>
 #include <BWAPI/CoordinateType.h>
@@ -273,6 +274,9 @@ namespace BWAPI
       std::array<UnitImpl*, BW::UNIT_ARRAY_MAX_LENGTH> unitArray;
 
       GameData* data = server.data;
+      /// The client's half of shared memory. Untrusted; every read of it is clamped or
+      /// range-checked (ClientInput.h).
+      CommandData* commandData = server.commandData;
 
 
 

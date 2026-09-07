@@ -71,7 +71,9 @@ namespace BWAPI
   ///
   /// @note This value is purposely high to avoid collisions with revision values.
   /// @since 4.2.0
-  const int CLIENT_VERSION = 10003;
+  /// Bumped for the split shared memory: the state plane and the command plane are two sections
+  /// now, and a client built against the old single GameData would map the wrong thing.
+  const int CLIENT_VERSION = 10004;
 }
 
 #endif

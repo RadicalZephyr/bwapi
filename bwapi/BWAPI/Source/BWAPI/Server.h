@@ -8,6 +8,7 @@ namespace BWAPI
 {
   // Forwards
   struct GameData;
+  struct CommandData;
   struct GameTable;
   class Event;
   class ForceInterface;
@@ -55,7 +56,10 @@ namespace BWAPI
 
     Unit      getUnit(int id) const;
 
-    GameData  *data = nullptr;
+    GameData     *data = nullptr;
+    /// The client's half of shared memory, which the client maps writable and this side does not
+    /// trust (ADR 0001 section 2, defect 2.3).
+    CommandData  *commandData = nullptr;
   private:
     void onMatchStart();
     void checkForConnections();
@@ -76,6 +80,7 @@ namespace BWAPI
     PipeResult pipeRead(void *buffer, DWORD size, long long timeoutMicros);
 
     HANDLE pipeObjectHandle = nullptr;
+    HANDLE commandMapFileHandle = nullptr;
     HANDLE connectEvent = nullptr;
     HANDLE ioEvent = nullptr;
     OVERLAPPED connectOverlapped = {};
@@ -95,9 +100,5 @@ namespace BWAPI
 
     std::vector<Unit> unitVector;
     std::unordered_map<Unit, int> unitLookup;
-
-    PSID pEveryoneSID = nullptr;
-    PACL pACL = nullptr;
-    PSECURITY_DESCRIPTOR pSD = nullptr;
   };
 }

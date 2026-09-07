@@ -1,14 +1,11 @@
 #pragma once
 
-#include "UnitCommand.h"
 #include "ForceData.h"
 #include "PlayerData.h"
 #include "RegionData.h"
 #include "UnitData.h"
 #include "BulletData.h"
 #include "Event.h"
-#include "Command.h"
-#include "Shape.h"
 namespace BWAPIC
 {
   struct Position
@@ -76,17 +73,10 @@ namespace BWAPI
     int fps;
     double averageFPS;
 
-    // The per-frame meter (ADR 0001 section 2, defects 2.5 and 2.6).
-    //
-    // The first two are written by the client each frame and are the reason a bot is not billed
-    // for the transport: the server can only see when it handed the frame over and when it got
-    // it back, which includes two pipe round trips it caused itself. Only differences between
-    // these two are ever taken, so they do not need to share an epoch with the server's clock.
-    long long clientWakeMicros;
-    long long clientReplyMicros;
-
-    // Written by the server, and readable by the bot - upstream returns a hard-coded zero from
-    // Game::getLastEventTime in client mode, so a bot could not read what it was charged.
+    // The per-frame meter (ADR 0001 section 2, defects 2.5 and 2.6). Written by the server and
+    // readable by the bot - upstream returns a hard-coded zero from Game::getLastEventTime in
+    // client mode, so a bot could not read what it was charged. The two instants these are
+    // derived from are the client's and live in CommandData.
     long long lastFrameDurationMicros;
     long long lastIpcDurationMicros;
 
@@ -147,10 +137,6 @@ namespace BWAPI
 
     static const int MAX_EVENTS         = 10000;
     static const int MAX_EVENT_STRINGS  =  1000;
-    static const int MAX_STRINGS        = 20000;
-    static const int MAX_SHAPES         = 20000;
-    static const int MAX_COMMANDS       = 20000;
-    static const int MAX_UNIT_COMMANDS  = 20000;
 
     //events from server to client
     int eventCount;
@@ -159,20 +145,6 @@ namespace BWAPI
     //strings used in events
     int eventStringCount;
     char eventStrings[MAX_EVENT_STRINGS][256];
-
-    //strings (used in shapes and commands)
-    int stringCount;
-    char strings[MAX_STRINGS][1024];
-
-    //shapes, commands, unitCommands, from client to server
-    int shapeCount;
-    BWAPIC::Shape shapes[MAX_SHAPES];
-
-    int commandCount;
-    BWAPIC::Command commands[MAX_COMMANDS];
-
-    int unitCommandCount;
-    BWAPIC::UnitCommand unitCommands[MAX_UNIT_COMMANDS];
 
     int unitSearchSize;
     unitFinder xUnitSearch[1700*2];
