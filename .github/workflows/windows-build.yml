@@ -67,6 +67,47 @@ jobs:
           /nologo
           /verbosity:minimal
 
+      # Tier 1 of the offsets smoke test. The addresses BWAPI uses are literals and no compiler
+      # can move them; the layouts of the types bound to those addresses are the compiler's, and a
+      # one-byte move there makes every field read land on the wrong bytes of the real game
+      # without anything failing to build. See tests/bw_layout/bw_layout_dump.cpp.
+      - name: Dump BWAPI's view of StarCraft memory
+        working-directory: bwapi
+        run: >
+          msbuild tests/bw_layout/BWLayoutDump.vcxproj
+          /p:Configuration=Release
+          /p:Platform=Win32
+          /nologo
+          /verbosity:minimal
+
+      - name: Compare against the committed baseline
+        working-directory: bwapi
+        shell: pwsh
+        run: |
+          $dump = & ./tests/bw_layout/Release/BWLayoutDump.exe
+          $baseline = 'tests/bw_layout/baseline.txt'
+
+          if (-not (Test-Path $baseline)) {
+            Write-Host "No baseline yet. Commit the following as $baseline :"
+            Write-Host "----------------------------------------------------------------"
+            $dump | ForEach-Object { Write-Host $_ }
+            Write-Host "----------------------------------------------------------------"
+            exit 1
+          }
+
+          # Normalise line endings on both sides; the content is what matters.
+          $expected = (Get-Content $baseline) -join "`n"
+          $actual = ($dump) -join "`n"
+          if ($expected -ne $actual) {
+            Write-Host "BWAPI's view of StarCraft memory changed."
+            Write-Host "Every difference below is a field that will now be read from a different"
+            Write-Host "address in the running game. Diff:"
+            $diff = Compare-Object -ReferenceObject (Get-Content $baseline) -DifferenceObject $dump
+            $diff | Format-Table -AutoSize | Out-String | Write-Host
+            exit 1
+          }
+          Write-Host "Layout and addresses match the baseline ($((Get-Content $baseline).Count) lines)."
+
       - name: Show what was produced
         working-directory: bwapi
         shell: pwsh
