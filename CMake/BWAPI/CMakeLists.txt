@@ -41,6 +41,7 @@ SET(BWAPI_INCLUDES
     ${BWAPI_INCL_DIR}/BWAPI/Client/Event.h
     ${BWAPI_INCL_DIR}/BWAPI/Client/ForceData.h
     ${BWAPI_INCL_DIR}/BWAPI/Client/ForceImpl.h
+    ${BWAPI_INCL_DIR}/BWAPI/Client/CommandData.h
     ${BWAPI_INCL_DIR}/BWAPI/Client/GameData.h
     ${BWAPI_INCL_DIR}/BWAPI/Client/GameImpl.h
     ${BWAPI_INCL_DIR}/BWAPI/Client/GameTable.h

@@ -13,7 +13,7 @@ namespace BWAPI
 {
   UnitImpl::UnitImpl(int _id)
     : id(_id)
-    , self(&(BWAPI::BWAPIClient.data->units[_id]))
+    , self(&(BWAPI::BWAPIClient.unitMirror[_id]))
   {
     clear();
   }

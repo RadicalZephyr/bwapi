@@ -248,24 +248,17 @@ namespace BWAPI
       this->setLastError(Errors::Invalid_Parameter);
       return;
     }
-    
-    // check if tournament will allow the call
-    if ( !this->tournamentCheck(Tournament::EnableFlag, &flag) )
-      return;
 
     // Modify flag state 
     this->flags[flag] = true;
-    if ( !this->hTournamentModule )
+    switch(flag)
     {
-      switch(flag)
-      {
-      case BWAPI::Flag::CompleteMapInformation:
-        this->sendText("Enabled Flag CompleteMapInformation");
-        break;
-      case BWAPI::Flag::UserInput:
-        this->sendText("Enabled Flag UserInput");
-        break;
-      }
+    case BWAPI::Flag::CompleteMapInformation:
+      this->sendText("Enabled Flag CompleteMapInformation");
+      break;
+    case BWAPI::Flag::UserInput:
+      this->sendText("Enabled Flag UserInput");
+      break;
     }
   }
   //--------------------------------------------- GET UNITS IN RECTANGLE -------------------------------------
@@ -426,9 +419,6 @@ namespace BWAPI
     char buffer[512];
     VSNPrintf(buffer, format, arg);
 
-    if ( !this->tournamentCheck(Tournament::Printf, buffer) )
-      return;
-
     // Dispatch message using existing Storm library function (lobby+game)
     S_EVT evt = { 4, -1, buffer, strlen(buffer) + 1 };
     SEvtDispatch('SNET', 1, 4, &evt);
@@ -442,10 +432,6 @@ namespace BWAPI
     // Expand format and store in buffer
     char buffer[80]; // Use maximum size of 80 since there is a hardcoded limit in Broodwar of 80 characters
     VSNPrintf(buffer, format, arg);
-
-    // Check if tournament module allows sending text
-    if ( !this->tournamentCheck(Tournament::SendText, buffer) )
-      return;
 
     if ( buffer[0] == '/' )    // If we expect a battle.net command
     {
@@ -543,8 +529,6 @@ namespace BWAPI
   {
     // Pauses the game 
     this->setLastError();
-    if ( !this->tournamentCheck(Tournament::PauseGame) )
-      return;
     QUEUE_COMMAND(BW::Orders::PauseGame);
   }
   //---------------------------------------------- RESUME GAME -----------------------------------------------
@@ -552,8 +536,6 @@ namespace BWAPI
   {
     // Resumes the game 
     this->setLastError();
-    if ( !this->tournamentCheck(Tournament::ResumeGame) )
-      return;
     QUEUE_COMMAND(BW::Orders::ResumeGame);
   }
   //---------------------------------------------- LEAVE GAME ------------------------------------------------
@@ -561,8 +543,6 @@ namespace BWAPI
   {
     // Leaves the current game. Moves directly to the post-game score screen 
     this->setLastError();
-    if ( !this->tournamentCheck(Tournament::LeaveGame) )
-      return;
     BW::BWDATA::GameState      = 0;
     BW::BWDATA::gwNextGameMode = 6;
   }
@@ -632,13 +612,18 @@ namespace BWAPI
   void GameImpl::setLocalSpeed(int speed)
   {
     // Sets the frame rate of the client 
-    if (!this->tournamentCheck(Tournament::SetLocalSpeed, &speed) ||
-      this->speedOverride != std::numeric_limits<decltype(this->speedOverride)>::min()) return;
+    if (this->speedOverride != std::numeric_limits<decltype(this->speedOverride)>::min())
+      return;
 
     setLocalSpeedDirect(speed);
   }
   void GameImpl::setLocalSpeedDirect(int speed)
   {
+    // speed is milliseconds per frame and the alternate speeds are three times it, so a
+    // client-supplied int overflows. Any negative value means "reset", so the low clamp loses
+    // nothing, and a minute per frame is already far past anything a bot could want.
+    speed = Util::clamp(speed, -1, 60000);
+
     if (speed < 0)
     {
       // Reset the speed if it is negative
@@ -661,9 +646,6 @@ namespace BWAPI
   void GameImpl::setFrameSkip(int frameSkip)
   {
     setLastError(Errors::None);
-    if ( !this->tournamentCheck(Tournament::SetFrameSkip, &frameSkip) )
-      return;
-
     if ( frameSkip > 0 )
     {
       BW::BWDATA::FrameSkip = frameSkip;
@@ -823,8 +805,6 @@ namespace BWAPI
   }
   void GameImpl::setLatCom(bool isEnabled)
   {
-    if ( !this->tournamentCheck(Tournament::SetLatCom, &isEnabled) )
-      return;
     data->hasLatCom = isEnabled;
   }
   //----------------------------------------------- GET INSTANCE ID ------------------------------------------
@@ -846,10 +826,6 @@ namespace BWAPI
     if ( !std::ifstream(mapFileName).is_open() )
       return setLastError(Errors::File_Not_Found);
 
-    if ( !this->tournamentCheck(Tournament::SetMap, (void*)mapFileName) )
-      return setLastError(Errors::None);
-
-
     strcpy(BW::BWDATA::Game.mapFileName, mapFileName);
     return setLastError(Errors::None);
   }
@@ -862,8 +838,6 @@ namespace BWAPI
   void GameImpl::setCommandOptimizationLevel(int level)
   {
     level = Util::clamp(level, 0, 4);
-    if ( !this->tournamentCheck(Tournament::SetCommandOptimizationLevel, &level) )
-      return;
     this->commandOptimizer.level = level;
   }
   //----------------------------------------------- COUNTDOWN TIMER ------------------------------------------
@@ -890,11 +864,20 @@ namespace BWAPI
   }
   int GameImpl::getLastEventTime() const
   {
-    return this->lastEventTime;
+    // Milliseconds, rounded, for the interface that has always spoken milliseconds.
+    return static_cast<int>((this->lastFrameDurationMicros + 500) / 1000);
   }
-  void GameImpl::setLastEventTime(int lastEventTime)
+  long long GameImpl::getLastFrameDurationMicros() const
   {
-    this->lastEventTime = lastEventTime;
+    return this->lastFrameDurationMicros;
+  }
+  long long GameImpl::getLastIpcDurationMicros() const
+  {
+    return this->server.data ? this->server.data->lastIpcDurationMicros : 0;
+  }
+  void GameImpl::setLastFrameDurationMicros(long long micros)
+  {
+    this->lastFrameDurationMicros = micros;
   }
   bool GameImpl::setRevealAll(bool reveal)
   {

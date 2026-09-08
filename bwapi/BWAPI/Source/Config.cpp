@@ -1,3 +1,5 @@
+#include <limits>
+#include <random>
 #include <string>
 #include <windows.h>
 #include <tlhelp32.h>
@@ -6,6 +8,7 @@
 #include <Util/StringUtil.h>
 
 #include "Config.h"
+#include "BWAPI/Permissions.h"
 
 #include "WMode.h"
 
@@ -14,8 +17,77 @@ std::string screenshotFmt;
 bool isCorrectVersion = true;
 bool showWarn         = true;
 bool serverEnabled    = true;
+int frameTimeoutMs    = 0;
 
 unsigned gdwProcNum = 1;
+
+//--------------------------------------------- MATCH SEED ---------------------------------------------------
+unsigned matchSeed()
+{
+  static const unsigned seed = [] () -> unsigned {
+    const int override_ = LoadConfigInt("starcraft", "seed_override",
+                                        std::numeric_limits<int>::max());
+    if ( override_ != std::numeric_limits<int>::max() )
+      return static_cast<unsigned>(override_);
+
+    // No override: draw once, so the value can still be recorded. GetTickCount could not be -
+    // it is not a value anyone chose, it is barely a value at all at 16 ms of resolution, and
+    // two instances launched together got the same one.
+    std::random_device rd;
+    return rd();
+  }();
+  return seed;
+}
+
+//--------------------------------------------- PERMISSIONS --------------------------------------------------
+// The [permissions] section of bwapi.ini, replacing TournamentModule::onAction (ADR 0001 section
+// 2, defect 2.4). One key per Tournament::ActionID, spelled as the action, plus the one integer
+// threshold the reference policy needs. Read once: policy that could be re-read mid-game is
+// policy a bot with a filesystem could rewrite.
+namespace
+{
+  // Indexed by Tournament::ActionID, so the order is the enum's.
+  const char * const permissionKeys[BWAPI::TOURNAMENT_ACTION_COUNT] = {
+    "enable_flag",
+    "pause_game",
+    "resume_game",
+    "leave_game",
+    "set_local_speed",
+    "set_text_size",
+    "set_lat_com",
+    "set_gui",
+    "set_map",
+    "set_frame_skip",
+    "printf",
+    "send_text",
+    "set_command_optimization_level",
+  };
+
+  BWAPI::PermissionTable loadPermissions()
+  {
+    BWAPI::PermissionTable table = BWAPI::PermissionTable::defaults();
+    for (int i = 0; i < BWAPI::TOURNAMENT_ACTION_COUNT; ++i)
+    {
+      // Anything other than ON or OFF leaves the default in place; a typo must not silently
+      // widen what a bot may do.
+      const std::string value = LoadConfigStringUCase("permissions", permissionKeys[i],
+                                                      table.allowed[i] ? "ON" : "OFF");
+      if (value == "ON")
+        table.allowed[i] = true;
+      else if (value == "OFF")
+        table.allowed[i] = false;
+    }
+    table.minCommandOptimization =
+      LoadConfigInt("permissions", "min_command_optimization", table.minCommandOptimization);
+    return table;
+  }
+}
+
+const BWAPI::PermissionTable &BWAPI::permissions()
+{
+  static const BWAPI::PermissionTable table = loadPermissions();
+  return table;
+}
 
 //--------------------------------------------- GET PROC COUNT -----------------------------------------------
 // Found/modified this from some random help board
@@ -101,6 +173,11 @@ void InitPrimaryConfig()
 
   // Check if shared memory should be enabled
   serverEnabled = LoadConfigStringUCase("config", "shared_memory", "ON") == "ON";
+
+  // How long to wait for a client to finish a frame. Negative is meaningless; treat it as off.
+  frameTimeoutMs = LoadConfigInt("game", "frame_timeout_ms", 0);
+  if ( frameTimeoutMs < 0 )
+    frameTimeoutMs = 0;
 
   // Get process count
   gdwProcNum = getProcessCount("StarCraft.exe");

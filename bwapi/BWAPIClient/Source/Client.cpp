@@ -1,4 +1,6 @@
 #include <BWAPI/Client/Client.h>
+#include <cstring>
+#include "MonotonicClock.h"
 #include <windows.h>
 #include <sstream>
 #include <iostream>
@@ -12,6 +14,7 @@ namespace BWAPI
   Client::Client()
     : pipeObjectHandle(INVALID_HANDLE_VALUE)
     , mapFileHandle(INVALID_HANDLE_VALUE)
+    , commandMapFileHandle(INVALID_HANDLE_VALUE)
     , gameTableFileHandle(INVALID_HANDLE_VALUE)
   {}
   Client::~Client()
@@ -75,6 +78,10 @@ namespace BWAPI
     sharedMemoryName << "Local\\bwapi_shared_memory_";
     sharedMemoryName << serverProcID;
 
+    std::stringstream commandMemoryName;
+    commandMemoryName << "Local\\bwapi_command_memory_";
+    commandMemoryName << serverProcID;
+
     std::stringstream communicationPipe;
     communicationPipe << "\\\\.\\pipe\\bwapi_pipe_";
     communicationPipe << serverProcID;
@@ -96,7 +103,16 @@ namespace BWAPI
     SetCommTimeouts(pipeObjectHandle,&c);
 
     std::cout << "Connected" << std::endl;
-    mapFileHandle = OpenFileMappingA(FILE_MAP_WRITE | FILE_MAP_READ, FALSE, sharedMemoryName.str().c_str());
+
+    // The state plane is opened and mapped read-only. A bot has no business writing to the
+    // game's view of itself, and until now it mapped all 33 MB of it writable just to be able to
+    // say "move this unit" - defect 2.3 in ADR 0001 section 2.
+    //
+    // This is defence in depth and not a boundary, and it should not be sold as one: the section
+    // is named after the server's process id, this process just derived that name, and nothing
+    // stops it opening the same section again with FILE_MAP_WRITE. Raising the cost is what a
+    // fork can do here; an OS privilege boundary needs separate accounts.
+    mapFileHandle = OpenFileMappingA(FILE_MAP_READ, FALSE, sharedMemoryName.str().c_str());
     if (mapFileHandle == INVALID_HANDLE_VALUE || mapFileHandle == NULL)
     {
       std::cerr << "Unable to open shared memory mapping: " << sharedMemoryName.str() << std::endl;
@@ -104,17 +120,33 @@ namespace BWAPI
       CloseHandle(gameTableFileHandle);
       return false;
     }
-    data = static_cast<GameData*>( MapViewOfFile(mapFileHandle, FILE_MAP_WRITE | FILE_MAP_READ, 0, 0, sizeof(GameData)) );
+    data = static_cast<GameData*>( MapViewOfFile(mapFileHandle, FILE_MAP_READ, 0, 0, sizeof(GameData)) );
     if ( data == nullptr )
     {
       std::cerr << "Unable to map game data." << std::endl;
       return false;
     }
 
+    // The command plane is the half this process is supposed to write.
+    commandMapFileHandle = OpenFileMappingA(FILE_MAP_WRITE | FILE_MAP_READ, FALSE, commandMemoryName.str().c_str());
+    if (commandMapFileHandle == INVALID_HANDLE_VALUE || commandMapFileHandle == NULL)
+    {
+      std::cerr << "Unable to open command memory mapping: " << commandMemoryName.str() << std::endl;
+      CloseHandle(pipeObjectHandle);
+      CloseHandle(gameTableFileHandle);
+      return false;
+    }
+    commandData = static_cast<CommandData*>( MapViewOfFile(commandMapFileHandle, FILE_MAP_WRITE | FILE_MAP_READ, 0, 0, sizeof(CommandData)) );
+    if ( commandData == nullptr )
+    {
+      std::cerr << "Unable to map command data." << std::endl;
+      return false;
+    }
+
     // Create new instance of Game/Broodwar
     if ( BWAPI::BroodwarPtr )
       delete static_cast<GameImpl*>(BWAPI::BroodwarPtr);
-    BWAPI::BroodwarPtr = new GameImpl(data);
+    BWAPI::BroodwarPtr = new GameImpl(data, commandData);
     assert( BWAPI::BroodwarPtr != nullptr );
 
     if (BWAPI::CLIENT_VERSION != BWAPI::Broodwar->getClientVersion())
@@ -144,6 +176,10 @@ namespace BWAPI
     std::cout << "Connection successful" << std::endl;
     assert( BWAPI::BroodwarPtr != nullptr);
 
+    // The first frame's copy, so a bot that reads anything between connect() and the first
+    // update() sees the game rather than a zeroed mirror.
+    refreshMirror();
+
     this->connected = true;
     return true;
   }
@@ -163,6 +199,10 @@ namespace BWAPI
       CloseHandle(mapFileHandle);
     mapFileHandle = INVALID_HANDLE_VALUE;
 
+    if ( commandMapFileHandle != INVALID_HANDLE_VALUE )
+      CloseHandle(commandMapFileHandle);
+    commandMapFileHandle = INVALID_HANDLE_VALUE;
+
     this->connected = false;
     std::cout << "Disconnected" << std::endl;
 
@@ -170,8 +210,30 @@ namespace BWAPI
       delete static_cast<GameImpl*>(BWAPI::BroodwarPtr);
     BWAPI::BroodwarPtr = nullptr;
   }
+  void Client::refreshMirror()
+  {
+    if ( !data )
+      return;
+
+    // unitCount is the number of handles the server has issued, so this is proportional to what
+    // this bot has actually seen rather than to the array's ten thousand entries - which is only
+    // true because handles are issued on exposure (defect 2.7).
+    int count = data->unitCount;
+    if ( count < 0 )
+      count = 0;
+    if ( count > GameData::MAX_UNITS )
+      count = GameData::MAX_UNITS;
+
+    std::memcpy(unitMirror, data->units, sizeof(UnitData) * static_cast<size_t>(count));
+    std::memcpy(playerMirror, data->players, sizeof(playerMirror));
+  }
   void Client::update()
   {
+    // The bot's own work for the previous frame ends here, on the way back into the server. The
+    // server cannot see this instant - all it can measure is the round trip, which includes two
+    // pipe hops it caused itself - so the client records it and the server subtracts.
+    commandData->clientReplyMicros = Clock::micros();
+
     DWORD writtenByteCount;
     int code = 1;
     WriteFile(pipeObjectHandle, &code, sizeof(code), &writtenByteCount, NULL);
@@ -189,7 +251,13 @@ namespace BWAPI
         return;
       }
     }
-    //std::cout << "about to enter event loop" << std::endl;
+
+    // And it begins again here, with the new frame in hand.
+    commandData->clientWakeMicros = Clock::micros();
+
+    // Take a copy before anything reads it: from here until the next frame the bot is looking
+    // at the mirror, and latency compensation is writing into it.
+    refreshMirror();
 
     for(int i = 0; i < data->eventCount; ++i)
     {

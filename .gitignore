@@ -42,3 +42,6 @@ apps/cygwin/
 apps/http*
 BWAPI.7z
 
+
+# Out-of-tree CMake build directories for bwapi/tests
+build/

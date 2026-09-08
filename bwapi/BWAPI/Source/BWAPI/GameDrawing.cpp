@@ -1,3 +1,4 @@
+#include "ClientInput.h"
 #include "GameImpl.h"
 
 #include "../Graphics.h"
@@ -121,15 +122,19 @@ namespace BWAPI
   }
   int GameImpl::addShape(const BWAPIC::Shape &s)
   {
-    assert(data->shapeCount < GameData::MAX_SHAPES);
-    data->shapes[data->shapeCount] = s;
-    return data->shapeCount++;
+    const int slot = ClientInput::reserveSlot(commandData->shapeCount, CommandData::MAX_SHAPES);
+    if ( slot < 0 )
+      return -1;
+    commandData->shapes[slot] = s;
+    return slot;
   }
   int GameImpl::addString(const char* text)
   {
-    assert(data->stringCount < GameData::MAX_STRINGS);
-    StrCopy(data->strings[data->stringCount], text);
-    return data->stringCount++;
+    const int slot = ClientInput::reserveSlot(commandData->stringCount, CommandData::MAX_STRINGS);
+    if ( slot < 0 )
+      return -1;
+    StrCopy(commandData->strings[slot], text);
+    return slot;
   }
   int GameImpl::addText(BWAPIC::Shape &s, const char* text)
   {
@@ -142,8 +147,6 @@ namespace BWAPI
     // Clamp to valid sizes
     size = Util::clamp(size, Text::Size::Small, Text::Size::Huge);
 
-    if ( !this->tournamentCheck(Tournament::SetTextSize, &size) )
-      return;
     this->textSize = size;
   }
   void GameImpl::vDrawText(CoordinateType::Enum ctype, int x, int y, const char *format, va_list arg)
@@ -198,8 +201,6 @@ namespace BWAPI
   //--------------------------------------------------- SET GUI ----------------------------------------------
   void GameImpl::setGUI(bool enabled)
   {
-    if ( !this->tournamentCheck(Tournament::SetGUI, &enabled) )
-      return;
     data->hasGUI = enabled;
     setFrameSkip(enabled ? -1 : 9999999);
   }
@@ -211,25 +212,36 @@ namespace BWAPI
   //--------------------------------------------- DRAW SHAPES ------------------------------------------------
   int GameImpl::drawShapes()
   {
-    for ( int i = 0; i < data->shapeCount; i++ )
+    // shapeCount and the string index inside a Text shape are both written by the untrusted
+    // client, and this runs on the trusted side every frame.
+    const int stringCount = ClientInput::clampCount(commandData->stringCount, CommandData::MAX_STRINGS);
+    const int shapeCount  = ClientInput::clampCount(commandData->shapeCount, CommandData::MAX_SHAPES);
+
+    for ( int i = 0; i < shapeCount; i++ )
     {
-      BWAPIC::ShapeType::Enum s = data->shapes[i].type;
-      int x1 = data->shapes[i].x1;
-      int y1 = data->shapes[i].y1;
+      BWAPIC::ShapeType::Enum s = commandData->shapes[i].type;
+      int x1 = commandData->shapes[i].x1;
+      int y1 = commandData->shapes[i].y1;
       int x2, y2, w, h;
       int radius, f, ddF_x, ddF_y, xi, yi;
       int xrad, yrad;
-      CoordinateType::Enum ctype = data->shapes[i].ctype;
-      bool isSolid = data->shapes[i].isSolid;
-      BWAPI::Color color = Color(data->shapes[i].color);
+      CoordinateType::Enum ctype = commandData->shapes[i].ctype;
+      bool isSolid = commandData->shapes[i].isSolid;
+      BWAPI::Color color = Color(commandData->shapes[i].color);
       switch ( s )
       {
         case BWAPIC::ShapeType::Text:
-           bwDrawText(x1,y1,data->strings[data->shapes[i].extra1],ctype,(char)data->shapes[i].extra2);
+        {
+           const int stringIndex = commandData->shapes[i].extra1;
+           const char *text = ClientInput::indexInRange(stringIndex, stringCount)
+             ? ClientInput::terminate(commandData->strings[stringIndex], sizeof(commandData->strings[stringIndex]))
+             : "";
+           bwDrawText(x1,y1,text,ctype,(char)commandData->shapes[i].extra2);
+        }
            break;
         case BWAPIC::ShapeType::Box:
-          x2 = data->shapes[i].x2;
-          y2 = data->shapes[i].y2;
+          x2 = commandData->shapes[i].x2;
+          y2 = commandData->shapes[i].y2;
           w = abs(x2 - x1);
           h = abs(y2 - y1);
           if (isSolid)
@@ -246,10 +258,10 @@ namespace BWAPI
           break;
         case BWAPIC::ShapeType::Triangle:
         {
-          x2 = data->shapes[i].x2;
-          y2 = data->shapes[i].y2;
-          int x3 = data->shapes[i].extra1;
-          int y3 = data->shapes[i].extra2;
+          x2 = commandData->shapes[i].x2;
+          y2 = commandData->shapes[i].y2;
+          int x3 = commandData->shapes[i].extra1;
+          int y3 = commandData->shapes[i].extra2;
           if (isSolid)
           {
             int ly, ry, lx, rx;
@@ -292,7 +304,7 @@ namespace BWAPI
           break;
         }
         case BWAPIC::ShapeType::Circle:
-          radius = data->shapes[i].extra1;
+          radius = commandData->shapes[i].extra1;
           if (isSolid)
           {
             f = 1 - radius;
@@ -358,8 +370,8 @@ namespace BWAPI
           }
           break;
         case BWAPIC::ShapeType::Ellipse:
-          xrad = data->shapes[i].extra1;
-          yrad = data->shapes[i].extra2;
+          xrad = commandData->shapes[i].extra1;
+          yrad = commandData->shapes[i].extra2;
           if (xrad != 0 && yrad != 0)
           {
             if (isSolid)
@@ -487,8 +499,8 @@ namespace BWAPI
           bwDrawDot(x1, y1, color, ctype);
           break;
         case BWAPIC::ShapeType::Line:
-          x2 = data->shapes[i].x2;
-          y2 = data->shapes[i].y2;
+          x2 = commandData->shapes[i].x2;
+          y2 = commandData->shapes[i].y2;
           if ( x1 == x2 && y1 == y2 )
             bwDrawDot(x1, y1, color, ctype);
           else if ( x1 == x2 )
@@ -502,7 +514,7 @@ namespace BWAPI
           break;
       }
     }
-    return data->shapeCount;
+    return commandData->shapeCount;
   }
 #undef fixed2Int
 #undef int2Fixed

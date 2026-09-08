@@ -92,6 +92,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\BulletImpl.cpp" />
+    <ClInclude Include="..\Shared\MonotonicClock.h" />
     <ClCompile Include="..\Shared\BulletShared.cpp" />
     <ClCompile Include="Source\Client.cpp" />
     <ClCompile Include="Source\ForceImpl.cpp" />
@@ -115,6 +116,7 @@
     <ClInclude Include="..\include\BWAPI\Client\Event.h" />
     <ClInclude Include="..\include\BWAPI\Client\ForceData.h" />
     <ClInclude Include="..\include\BWAPI\Client\ForceImpl.h" />
+    <ClInclude Include="..\include\BWAPI\Client\CommandData.h" />
     <ClInclude Include="..\include\BWAPI\Client\GameData.h" />
     <ClInclude Include="..\include\BWAPI\Client\GameImpl.h" />
     <ClInclude Include="..\include\BWAPI\Client\GameTable.h" />

@@ -56,11 +56,14 @@ jobs:
           /nologo
           /verbosity:minimal
 
-      - name: Build BWAPIClient and ExampleAIClient
+      # AIModuleLoader is how an AI module DLL runs now that the game does not load one: it is
+      # an ordinary client that loads the module into its own process. TestAIModule is the suite
+      # it hosts. Both are on the migration path, so both have to keep compiling.
+      - name: Build the clients
         working-directory: bwapi
         run: >
           msbuild bwapi.sln
-          "/t:BWAPIClient;ExampleAIClient"
+          "/t:BWAPIClient;ExampleAIClient;AIModuleLoader;TestAIModule;ExampleAIModule"
           /p:Configuration=Release
           /p:Platform=Win32
           /m
@@ -294,7 +297,7 @@ jobs:
         working-directory: bwapi
         shell: pwsh
         run: |
-          Get-ChildItem -Recurse -Include BWAPI.dll,BWAPIClient.lib,ExampleAIClient.exe |
+          Get-ChildItem -Recurse -Include BWAPI.dll,BWAPIClient.lib,ExampleAIClient.exe,AIModuleLoader.exe,TestAIModule.dll |
             Select-Object FullName,Length | Format-Table -AutoSize
 
       - uses: actions/upload-artifact@v4
@@ -304,4 +307,5 @@ jobs:
             bwapi/**/BWAPI.dll
             bwapi/**/BWAPI.pdb
             bwapi/**/ExampleAIClient.exe
+            bwapi/**/AIModuleLoader.exe
           if-no-files-found: error

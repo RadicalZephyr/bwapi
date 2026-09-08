@@ -1,6 +1,7 @@
 #pragma once
 #include <BWAPI.h>
 
+#include "CommandData.h"
 #include "GameData.h"
 #include "Client.h"
 #include "Shape.h"
@@ -34,6 +35,7 @@ namespace BWAPI
       void clearAll();
 
       GameData* data;
+      CommandData* commandData;
       std::vector<ForceImpl>  forceVector;
       std::vector<PlayerImpl> playerVector;
       std::vector<UnitImpl>   unitVector;
@@ -71,7 +73,7 @@ namespace BWAPI
       Event makeEvent(BWAPIC::Event e);
       int addUnitCommand(BWAPIC::UnitCommand& c);
       bool inGame;
-      GameImpl(GameData* data);
+      GameImpl(GameData* data, CommandData* commandData);
       void onMatchStart();
       void onMatchEnd();
       void onMatchFrame();
@@ -196,6 +198,8 @@ namespace BWAPI
       virtual const Regionset &getAllRegions() const override;
       virtual BWAPI::Region getRegionAt(int x, int y) const override;
       virtual int getLastEventTime() const override;
+      virtual long long getLastFrameDurationMicros() const override;
+      virtual long long getLastIpcDurationMicros() const override;
       virtual bool setRevealAll(bool reveal = true) override;
       virtual unsigned getRandomSeed() const override;
   };

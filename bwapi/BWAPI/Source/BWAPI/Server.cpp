@@ -5,13 +5,15 @@
 #include <Util/Convenience.h>
 #include <cassert>
 #include <sstream>
-#include <AclAPI.h>
 
+#include "ClientInput.h"
+#include "MonotonicClock.h"
 #include "GameImpl.h"
 #include "PlayerImpl.h"
 #include "UnitImpl.h"
 #include "BulletImpl.h"
 #include "RegionImpl.h"
+#include <BWAPI/Client/CommandData.h>
 #include <BWAPI/Client/GameData.h>
 #include <BWAPI/Client/GameTable.h>
 
@@ -90,7 +92,7 @@ namespace BWAPI
           //We have a game table index now, initialize our row
           gameTable->gameInstances[gameTableIndex].serverProcessID = processID;
           gameTable->gameInstances[gameTableIndex].isConnected = false;
-          gameTable->gameInstances[gameTableIndex].lastKeepAliveTime = GetTickCount();
+          gameTable->gameInstances[gameTableIndex].lastKeepAliveTime = Clock::millis();
         } // if gameTable
       } // if gameTableFileHandle
 
@@ -99,10 +101,20 @@ namespace BWAPI
       ssShareName << "Local\\bwapi_shared_memory_";
       ssShareName << processID;
 
-      // Create the file mapping and shared memory
+      // Two sections, because they have different owners. The state plane is written here and
+      // read by the client; the command plane is written by the client and read here. The client
+      // maps the first read-only, which is the whole point of the split (defect 2.3).
+      std::stringstream ssCommandName;
+      ssCommandName << "Local\\bwapi_command_memory_";
+      ssCommandName << processID;
+
       mapFileHandle = CreateFileMappingA( INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(GameData), ssShareName.str().c_str() );
       if ( mapFileHandle )
         data = static_cast<GameData*>(MapViewOfFile(mapFileHandle, FILE_MAP_WRITE | FILE_MAP_READ, 0, 0, sizeof(GameData)));
+
+      commandMapFileHandle = CreateFileMappingA( INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, sizeof(CommandData), ssCommandName.str().c_str() );
+      if ( commandMapFileHandle )
+        commandData = static_cast<CommandData*>(MapViewOfFile(commandMapFileHandle, FILE_MAP_WRITE | FILE_MAP_READ, 0, 0, sizeof(CommandData)));
     } // if serverEnabled
 
     // check if memory was created or if we should create it locally
@@ -111,103 +123,55 @@ namespace BWAPI
       data = new GameData;
       localOnly = true;
     }
+    if ( !commandData )
+      commandData = new CommandData();
     initializeSharedMemory();
 
     if ( serverEnabled )
     {
-	    //--------------------------------------------------------------------------------------------------------
-	    // Security Structure hobbled together from this document:
-	    // http://msdn.microsoft.com/en-us/library/aa446595%28VS.85%29.aspx
-	    //
-
-	    this->pEveryoneSID = NULL;
-	    SID_IDENTIFIER_AUTHORITY SIDAuthWorld = SECURITY_WORLD_SID_AUTHORITY;
-	    
-      // Create a well-known SID for the Everyone group.
-      if( !AllocateAndInitializeSid( &SIDAuthWorld, 
-                                    1,
-                                    SECURITY_WORLD_RID,
-                                    0, 0, 0, 0, 0, 0, 0,
-                                    &this->pEveryoneSID) )
-      {
-        // AllocateAndInitializeSid failed
-        //Util::Logger::globalLog->log("Error: AllocateAndInitializeSid");
-		    //printf("AllocateAndInitializeSid Error %u\n", GetLastError());
-      }
-
-      // Initialize an EXPLICIT_ACCESS structure for an ACE.
-      // The ACE will allow Everyone access.
-      EXPLICIT_ACCESS ea = {};
-      ea.grfAccessPermissions  = GENERIC_ALL;
-	    ea.grfAccessMode         = GRANT_ACCESS;
-      ea.grfInheritance        = NO_INHERITANCE;
-      ea.Trustee.TrusteeForm   = TRUSTEE_IS_SID;
-      ea.Trustee.TrusteeType   = TRUSTEE_IS_WELL_KNOWN_GROUP;
-      ea.Trustee.ptstrName     = (LPTSTR)this->pEveryoneSID;
-
-	    this->pACL = NULL;  //a NULL DACL is assigned to the security descriptor, which allows all access to the object
-
-      // Create a new ACL that contains the new ACEs.
-      DWORD dwRes = SetEntriesInAcl(1, &ea, NULL, &this->pACL);
-      if (ERROR_SUCCESS != dwRes) 
-      {
-        // SetEntriesInAcl failed
-        //Util::Logger::globalLog->log("Error: SetEntriesInAcl");
-		    //printf("SetEntriesInAcl Error %u\n", GetLastError());
-      }
-
-      // Initialize a security descriptor.  
-      this->pSD = (PSECURITY_DESCRIPTOR) LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH); 
-      if ( NULL == this->pSD ) 
-      { 
-        // LocalAlloc failed
-        //Util::Logger::globalLog->log("Error: LocalAlloc");
-		    //printf("LocalAlloc Error %u\n", GetLastError()); 
-      } 
- 
-      if ( !InitializeSecurityDescriptor(this->pSD, SECURITY_DESCRIPTOR_REVISION) ) 
-      {
-        // InitializeSecurityDescriptor failed
-        //Util::Logger::globalLog->log("Error: InitializeSecurityDescriptor");
-		    //printf("InitializeSecurityDescriptor Error %u\n",GetLastError()); 
-      } 
-
-	    // Add the ACL to the security descriptor. 
-      if ( !SetSecurityDescriptorDacl(this->pSD, 
-									                    TRUE,     // bDaclPresent flag   
-									                    this->pACL, 
-									                    FALSE) )   // not a default DACL 
-      {
-        // SetSecurityDescriptorDacl failed
-		    //Util::Logger::globalLog->log("Error: InitializeSecurityDescriptor");
-		    //printf("SetSecurityDescriptorDacl Error %u\n",GetLastError());
-      } 
-
-      // Initialize a security attributes structure.
-      SECURITY_ATTRIBUTES sa = { 0 };
-	    sa.nLength = sizeof(sa);
-      sa.lpSecurityDescriptor = this->pSD;
-      sa.bInheritHandle = FALSE;
-	    //--------------------------------------------------------------------------------------------------------
+      // No security descriptor: the default DACL grants the account this process runs as and
+      // nothing else.
+      //
+      // Upstream built an explicit one granting Everyone GENERIC_ALL, which is wider than the
+      // default it replaced and is the opposite of what a tournament wants. Narrowing it to the
+      // running account is as far as a fork can go: an OS privilege boundary between bot and
+      // game needs separate accounts, which ADR 0001 section 2 lists among the things a fork
+      // cannot reach.
 
       std::stringstream communicationPipe;
       communicationPipe << "\\\\.\\pipe\\bwapi_pipe_";
       communicationPipe << processID;
       
+      // FILE_FLAG_OVERLAPPED is what makes the wait on the client boundable at all. Without
+      // it a ReadFile on a PIPE_WAIT handle blocks until the client answers or the pipe breaks,
+      // and a bot that hangs wedges the game forever - defect 2.1 in ADR 0001 section 2.
       pipeObjectHandle = CreateNamedPipeA(communicationPipe.str().c_str(),
-                                         PIPE_ACCESS_DUPLEX,
-                                         PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_NOWAIT,
+                                         PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED,
+                                         PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
                                          PIPE_UNLIMITED_INSTANCES,
                                          PIPE_SYSTEM_BUFFER_SIZE,
                                          PIPE_SYSTEM_BUFFER_SIZE,
                                          PIPE_TIMEOUT,
-                                         &sa);
+                                         NULL);
+
+      // Manual-reset, initially unsignalled. One event per outstanding operation, and there is
+      // never more than one of each: the connect completes before any frame is exchanged.
+      connectEvent = CreateEventA(nullptr, TRUE, FALSE, nullptr);
+      ioEvent      = CreateEventA(nullptr, TRUE, FALSE, nullptr);
     }
   }
   Server::~Server()
   {
     if ( pipeObjectHandle && pipeObjectHandle != INVALID_HANDLE_VALUE )
+    {
+      CancelIoEx(pipeObjectHandle, nullptr);
       DisconnectNamedPipe(pipeObjectHandle);
+    }
+
+    if ( connectEvent )
+      CloseHandle(connectEvent);
+    if ( ioEvent )
+      CloseHandle(ioEvent);
 
     if ( localOnly && data )
     {
@@ -215,39 +179,42 @@ namespace BWAPI
       data = nullptr;
     }
 
-    if ( this->pEveryoneSID )
-      FreeSid(this->pEveryoneSID);
-    if ( this->pACL )
-      LocalFree(this->pACL);
-    if ( this->pSD )
-      LocalFree(this->pSD);
+    if ( commandMapFileHandle )
+      CloseHandle(commandMapFileHandle);
+    else
+      delete commandData;
+    commandData = nullptr;
+
   }
   void Server::update()
   {
     // Reset data coming in to server
-    data->stringCount      = 0;
-    data->commandCount     = 0;
-    data->unitCommandCount = 0;
-    data->shapeCount       = 0;
+    commandData->stringCount      = 0;
+    commandData->commandCount     = 0;
+    commandData->unitCommandCount = 0;
+    commandData->shapeCount       = 0;
     if (gameTable && gameTableIndex >= 0)
     {
-      gameTable->gameInstances[gameTableIndex].lastKeepAliveTime = GetTickCount();
+      // A client picks the instance with the oldest keep-alive, and GetTickCount resolves
+      // about 16 ms, so two instances launched together used to tie.
+      gameTable->gameInstances[gameTableIndex].lastKeepAliveTime = Clock::millis();
       gameTable->gameInstances[gameTableIndex].isConnected = connected;
     }
     if (connected)
     {
       // Update BWAPI Client
       updateSharedMemory();
-      auto const onFrameStart = GetTickCount();
-      callOnFrame();
-      BroodwarImpl.setLastEventTime(GetTickCount() - onFrameStart);
-      processCommands();
+      meterFrame();
+      // A client that never handed the frame back left whatever it had written half-finished;
+      // there is nothing there worth applying.
+      if (connected)
+        processCommands();
     }
     else
     {
-      // Update BWAPI DLL
-      BroodwarImpl.processEvents();
-
+      // No client attached: the match runs unattended. Events are produced and dropped, and the
+      // connection window stays open only until the first in-game frame - a client that misses
+      // the menu does not get a second chance.
       BroodwarImpl.events.clear();
       if (!BroodwarImpl.startedClient)
         checkForConnections();
@@ -262,14 +229,19 @@ namespace BWAPI
   }
   int Server::addString(const char* text)
   {
-    StrCopy(data->eventStrings[data->eventStringCount], text);
-    return data->eventStringCount++;
+    const int slot = ClientInput::reserveSlot(data->eventStringCount, GameData::MAX_EVENT_STRINGS);
+    if (slot < 0)
+      return -1;
+    StrCopy(data->eventStrings[slot], text);
+    return slot;
   }
   int Server::addEvent(const BWAPI::Event& e)
   {
-    assert(data->eventCount < GameData::MAX_EVENTS);
-    BWAPIC::Event* e2 = &(data->events[data->eventCount++]);
-    int id   = data->eventCount;
+    const int slot = ClientInput::reserveSlot(data->eventCount, GameData::MAX_EVENTS);
+    if (slot < 0)
+      return -1;
+    BWAPIC::Event* e2 = &(data->events[slot]);
+    int id   = slot + 1;
     e2->type = e.getType();
     e2->v1   = 0;
     e2->v2   = 0;
@@ -302,7 +274,7 @@ namespace BWAPI
     case BWAPI::EventType::UnitHide:
     case BWAPI::EventType::UnitRenegade:
     case BWAPI::EventType::UnitComplete:
-      e2->v1 = getUnitID(e.getUnit());
+      e2->v1 = issueUnitID(e.getUnit());
       break;
     default:
       break;
@@ -310,26 +282,118 @@ namespace BWAPI
     return id;
   }
 
-  void Server::setWaitForResponse(bool wait)
-  {
-    if ( !pipeObjectHandle || pipeObjectHandle == INVALID_HANDLE_VALUE )
-      return;
-
-    DWORD dwMode = PIPE_READMODE_MESSAGE | (wait ? PIPE_WAIT : PIPE_NOWAIT);
-    SetNamedPipeHandleState(pipeObjectHandle, &dwMode, NULL, NULL);
-  }
+  // Poll for a client without blocking the menu.
+  //
+  // The pipe is overlapped now, so ConnectNamedPipe returns immediately with ERROR_IO_PENDING and
+  // completes later; the operation is left outstanding between calls and its event is checked
+  // with a zero timeout, which is the same "look, do not wait" this always had.
   void Server::checkForConnections()
   {
     if (connected || localOnly || !pipeObjectHandle || pipeObjectHandle == INVALID_HANDLE_VALUE )
       return;
-    BOOL success = ConnectNamedPipe(pipeObjectHandle, nullptr);
-    if (!success && GetLastError() != ERROR_PIPE_CONNECTED)
+
+    if (!connectPending)
+    {
+      ResetEvent(connectEvent);
+      connectOverlapped = {};
+      connectOverlapped.hEvent = connectEvent;
+
+      if (ConnectNamedPipe(pipeObjectHandle, &connectOverlapped))
+      {
+        connected = true;   // cannot happen on an overlapped pipe, but the API allows it
+        return;
+      }
+      switch (GetLastError())
+      {
+      case ERROR_PIPE_CONNECTED:  // a client got there between the create and the connect
+        connected = true;
+        return;
+      case ERROR_IO_PENDING:
+        connectPending = true;
+        return;
+      default:
+        return;
+      }
+    }
+
+    if (WaitForSingleObject(connectEvent, 0) != WAIT_OBJECT_0)
       return;
-    if (GetLastError() == ERROR_PIPE_CONNECTED)
+
+    DWORD transferred = 0;
+    if (GetOverlappedResult(pipeObjectHandle, &connectOverlapped, &transferred, FALSE))
+    {
+      connectPending = false;
       connected = true;
-    if (!connected)
-      return;
-    setWaitForResponse(true);
+    }
+  }
+
+  // Write on the overlapped handle. Every operation on it must carry an OVERLAPPED, including
+  // the ones that would never have blocked.
+  bool Server::pipeWrite(const void *buffer, DWORD size)
+  {
+    ResetEvent(ioEvent);
+    OVERLAPPED ov = {};
+    ov.hEvent = ioEvent;
+
+    DWORD written = 0;
+    if (WriteFile(pipeObjectHandle, buffer, size, &written, &ov))
+      return written == size;
+
+    if (GetLastError() != ERROR_IO_PENDING)
+      return false;
+
+    if (!GetOverlappedResult(pipeObjectHandle, &ov, &written, TRUE))
+      return false;
+    return written == size;
+  }
+
+  // Read on the overlapped handle, giving up after timeoutMicros. Zero means wait forever, which
+  // is what BWAPI has always done and remains the default.
+  Server::PipeResult Server::pipeRead(void *buffer, DWORD size, long long timeoutMicros)
+  {
+    ResetEvent(ioEvent);
+    OVERLAPPED ov = {};
+    ov.hEvent = ioEvent;
+
+    DWORD received = 0;
+    if (ReadFile(pipeObjectHandle, buffer, size, &received, &ov))
+      return received == size ? PipeResult::Ok : PipeResult::Failed;
+
+    if (GetLastError() != ERROR_IO_PENDING)
+      return PipeResult::Failed;
+
+    const DWORD waitMs = timeoutMicros > 0 ? Clock::waitMillis(timeoutMicros) : INFINITE;
+
+    const DWORD waited = WaitForSingleObject(ioEvent, waitMs);
+    if (waited == WAIT_TIMEOUT)
+    {
+      // Cancel and reap, so no completion lands in this OVERLAPPED after it goes out of scope.
+      CancelIoEx(pipeObjectHandle, &ov);
+      GetOverlappedResult(pipeObjectHandle, &ov, &received, TRUE);
+      return PipeResult::TimedOut;
+    }
+    if (waited != WAIT_OBJECT_0)
+      return PipeResult::Failed;
+
+    if (!GetOverlappedResult(pipeObjectHandle, &ov, &received, FALSE))
+      return PipeResult::Failed;
+    return received == size ? PipeResult::Ok : PipeResult::Failed;
+  }
+
+  // End the match's connection and say why.
+  //
+  // ADR decision 1: the deadline is a bounded wait, and the adjudication rule belongs to the
+  // referee this library does not contain. So expiry does what a broken pipe has always done -
+  // stop waiting, record the cause - and the match plays on unattended.
+  void Server::disconnectClient(const char *reason, long long elapsedMicros)
+  {
+    CancelIoEx(pipeObjectHandle, nullptr);
+    DisconnectNamedPipe(pipeObjectHandle);
+    connected = false;
+    connectPending = false;
+
+    BWAPIError("Client disconnected: %s after %lld us on frame %d.",
+               reason, elapsedMicros, Broodwar->getFrameCount());
   }
   void Server::initializeSharedMemory()
   {
@@ -340,16 +404,22 @@ namespace BWAPI
     data->isDebug          = (BUILD_DEBUG == 1);
     data->eventCount       = 0;
     data->eventStringCount = 0;
-    data->commandCount     = 0;
-    data->unitCommandCount = 0;
-    data->shapeCount       = 0;
-    data->stringCount      = 0;
+    commandData->commandCount     = 0;
+    commandData->unitCommandCount = 0;
+    commandData->shapeCount       = 0;
+    commandData->stringCount      = 0;
     data->mapFileName[0]   = 0;
     data->mapPathName[0]   = 0;
     data->mapName[0]       = 0;
     data->mapHash[0]       = 0;
     data->hasGUI           = true;
     data->hasLatCom        = true;
+    // The localOnly path allocates GameData with new and it has no constructor, so the meter
+    // starts at whatever was on the heap unless it is set here.
+    commandData->clientWakeMicros        = 0;
+    commandData->clientReplyMicros       = 0;
+    data->lastFrameDurationMicros = 0;
+    data->lastIpcDurationMicros   = 0;
     clearAll();
   }
   void Server::onMatchStart()
@@ -490,11 +560,14 @@ namespace BWAPI
   void Server::updateSharedMemory()
   {
     for (Unit u : BroodwarImpl.evadeUnits)
-      data->units[getUnitID(u)] = static_cast<UnitImpl*>(u)->data;
+    {
+      const int id = lookupUnitID(u);
+      if (id >= 0)
+        data->units[id] = static_cast<UnitImpl*>(u)->data;
+    }
 
     data->frameCount              = Broodwar->getFrameCount();
     data->replayFrameCount        = Broodwar->getReplayFrameCount();
-    data->randomSeed              = Broodwar->getRandomSeed();
     data->fps                     = Broodwar->getFPS();
     data->botAPM_noselects        = Broodwar->getAPM(false);
     data->botAPM_selects          = Broodwar->getAPM(true);
@@ -533,7 +606,7 @@ namespace BWAPI
 
       int idx = 0;
       for(Unit t : Broodwar->getSelectedUnits())
-        data->selectedUnits[idx++] = getUnitID(t);
+        data->selectedUnits[idx++] = lookupUnitID(t);
 
       //dynamic map data
       Map::copyToSharedMemory();
@@ -596,14 +669,18 @@ namespace BWAPI
 
       //dynamic unit data
       for(Unit i : Broodwar->getAllUnits())
-        data->units[getUnitID(i)] = static_cast<UnitImpl*>(i)->data;
+      {
+        const int id = issueUnitID(i);
+        if (id >= 0)
+          data->units[id] = static_cast<UnitImpl*>(i)->data;
+      }
 
       for(int i = 0; i < BW::UNIT_ARRAY_MAX_LENGTH; ++i)
       {
         Unit u = Broodwar->indexToUnit(i);
         int id = -1;
         if ( u )
-          id = getUnitID(u);
+          id = lookupUnitID(u);
         data->unitArray[i] = id;
       }
 
@@ -621,7 +698,7 @@ namespace BWAPI
           if ( u && u->canAccess() )
           {
             xf->searchValue = bwxf->searchValue;
-            xf->unitIndex = getUnitID(u);
+            xf->unitIndex = lookupUnitID(u);
             xf++;
           }
         } // x index
@@ -632,7 +709,7 @@ namespace BWAPI
           if ( u && u->canAccess() )
           {
             yf->searchValue = bwyf->searchValue;
-            yf->unitIndex = getUnitID(u);
+            yf->unitIndex = lookupUnitID(u);
             yf++;
           }
         } // x index
@@ -668,17 +745,15 @@ namespace BWAPI
 
       // Add the event to the server queue
       addEvent(e);
-
-      // ignore if tournament AI not loaded
-      if (!BroodwarImpl.tournamentAI)
-        continue;
-
-      // call the tournament module callbacks for server/client
-      BroodwarImpl.isTournamentCall = true;
-      GameImpl::SendClientEvent(BroodwarImpl.tournamentAI, e);
-      BroodwarImpl.isTournamentCall = false;
     }
     BroodwarImpl.events.clear();
+
+    // Last, because everything above can issue a handle: the publishing loop for units that
+    // became accessible this frame, and addEvent for the units the events name. The client copies
+    // exactly this much of units[] into its mirror, so a count taken any earlier would leave a
+    // unit discovered this frame out of the copy - present in the plane, named by a
+    // UnitDiscover event, and stale in the only memory the bot actually reads.
+    data->unitCount = static_cast<int>(unitVector.size());
   }
 
   int Server::getForceID(Force force)
@@ -716,16 +791,45 @@ namespace BWAPI
     return playerVector[id];
   }
 
-  int Server::getUnitID(Unit unit)
+  // Defect 2.7 in ADR 0001 section 2, and the reason this is two functions rather than one.
+  //
+  // Upstream has a single allocate-on-lookup getUnitID, first called from extractUnitData over
+  // *every unit alive in the game*. So the handle a bot receives for a scouted enemy marine is
+  // that unit's global creation ordinal, and the gap between two of the bot's own consecutive
+  // handles is the number of units everyone else created in between - which is how you recognise
+  // a four-pool without scouting. The nine call sites in UnitUpdate.cpp make it worse: a visible
+  // enemy unit's target field allocated a handle for, and handed the bot, a unit it had never
+  // seen.
+  //
+  // Splitting the function splits the question. Handles are issued where the bot is told a unit
+  // exists, and looked up everywhere else, so they are dense in the order this bot discovered
+  // things and a unit it has not seen has no handle to leak.
+  int Server::issueUnitID(Unit unit)
   {
     if ( !unit )
       return -1;
-    if (unitLookup.find(unit) == unitLookup.end())
-    {
-      unitLookup[unit] = (int)(unitVector.size());
-      unitVector.push_back(unit);
-    }
-    return unitLookup[unit];
+    auto it = unitLookup.find(unit);
+    if (it != unitLookup.end())
+      return it->second;
+
+    // The handle is the subscript into data->units, so there is no handle to give past the end
+    // of it. Upstream keeps counting, and the writes then run off the array. Whether a match can
+    // reach ten thousand handles was never measured, which is exactly the reason not to leave it
+    // to chance - and issuing only on exposure makes it far harder to reach in the first place.
+    const int id = static_cast<int>(unitVector.size());
+    if (id >= GameData::MAX_UNITS)
+      return -1;
+
+    unitLookup[unit] = id;
+    unitVector.push_back(unit);
+    return id;
+  }
+  int Server::lookupUnitID(Unit unit) const
+  {
+    if ( !unit )
+      return -1;
+    auto it = unitLookup.find(unit);
+    return it == unitLookup.end() ? -1 : it->second;
   }
   Unit Server::getUnit(int id) const
   {
@@ -734,31 +838,107 @@ namespace BWAPI
     return unitVector[id];
   }
 
+  // Hand the frame to the client, wait for it, and charge what it cost.
+  //
+  // The server can only see the span from "frame published" to "reply received", and that span
+  // contains two pipe round trips the server itself caused. The client stamps the two instants
+  // that bracket its own work into the plane, so the bot is charged for its own work and the
+  // transport is recorded separately rather than billed to whoever is holding it (ADR 0001
+  // section 2, defect 2.5: "a second timestamp so a bot is not billed for the referee's IPC").
+  //
+  // Only client-to-client and server-to-server differences are taken, so the two clocks never
+  // have to agree on an epoch.
+  void Server::meterFrame()
+  {
+    const long long previousReply = commandData->clientReplyMicros;
+
+    const long long handoff = Clock::micros();
+    callOnFrame();
+    const long long roundTrip = Clock::micros() - handoff;
+
+    long long botSpan = roundTrip;
+    if (commandData->clientReplyMicros > commandData->clientWakeMicros &&
+        commandData->clientReplyMicros != previousReply)
+    {
+      // The client stamped a complete frame this time round.
+      botSpan = commandData->clientReplyMicros - commandData->clientWakeMicros;
+      if (botSpan > roundTrip)
+        botSpan = roundTrip;  // the two clocks disagreed; never charge more than really elapsed
+    }
+
+    data->lastFrameDurationMicros = botSpan;
+    data->lastIpcDurationMicros   = roundTrip - botSpan;
+    BroodwarImpl.setLastFrameDurationMicros(botSpan);
+  }
+
+  // Publish the frame and wait for the client to hand it back.
+  //
+  // The wait is bounded by [game] frame_timeout_ms, which defaults to zero - wait forever, which
+  // is what this has always done. Above zero, a client that does not answer is disconnected and
+  // the match plays on rather than the game hanging on it (ADR 0001 section 2, defect 2.1).
   void Server::callOnFrame()
-  { 
-    DWORD writtenByteCount;
+  {
+    const long long timeoutMicros = static_cast<long long>(frameTimeoutMs) * 1000;
+    const long long started = Clock::micros();
+
     int code = 2;
-    WriteFile(pipeObjectHandle, &code, sizeof(int), &writtenByteCount, NULL);
+    if (!pipeWrite(&code, sizeof(code)))
+    {
+      disconnectClient("the pipe broke while publishing the frame", Clock::micros() - started);
+      return;
+    }
+
     while (code != 1)
     {
-      DWORD receivedByteCount;
-      BOOL success = ReadFile(pipeObjectHandle, &code, sizeof(int), &receivedByteCount,NULL);
-      if (!success)
+      // The deadline is on the whole exchange, not on each read, or a client that answers with
+      // something other than 1 could reset the clock as often as it liked.
+      long long remaining = 0;
+      if (timeoutMicros > 0)
       {
-        DisconnectNamedPipe(pipeObjectHandle);
-        connected = false;
-        setWaitForResponse(false);
+        remaining = timeoutMicros - (Clock::micros() - started);
+        if (remaining <= 0)
+        {
+          disconnectClient("it did not finish the frame within frame_timeout_ms",
+                           Clock::micros() - started);
+          return;
+        }
+      }
+
+      switch (pipeRead(&code, sizeof(code), remaining))
+      {
+      case PipeResult::Ok:
         break;
+      case PipeResult::TimedOut:
+        disconnectClient("it did not finish the frame within frame_timeout_ms",
+                         Clock::micros() - started);
+        return;
+      case PipeResult::Failed:
+        disconnectClient("the pipe broke while waiting for the frame",
+                         Clock::micros() - started);
+        return;
       }
     }
   }
   void Server::processCommands()
   {
-    for(int i = 0; i < data->commandCount; ++i)
+    // Every count and index below is written by the untrusted client, so each is clamped or
+    // range-checked here rather than trusted. The only bound the protocol ships is an assert in
+    // the client itself (BWAPIClient/Source/GameImpl.cpp), which NDEBUG compiles out.
+    const int stringCount  = ClientInput::clampCount(commandData->stringCount, CommandData::MAX_STRINGS);
+    const int commandCount = ClientInput::clampCount(commandData->commandCount, CommandData::MAX_COMMANDS);
+
+    // A string a command names, NUL-terminated, or the empty string if the index is out of range.
+    const auto clientString = [&](int index) -> const char * {
+      if (!ClientInput::indexInRange(index, stringCount))
+        return "";
+      return ClientInput::terminate(commandData->strings[index], sizeof(commandData->strings[index]));
+    };
+
+    for(int i = 0; i < commandCount; ++i)
     {
-      BWAPIC::CommandType::Enum c = data->commands[i].type;
-      int v1 = data->commands[i].value1;
-      int v2 = data->commands[i].value2;
+      BWAPIC::CommandType::Enum c = commandData->commands[i].type;
+      int v1 = commandData->commands[i].value1;
+      int v2 = commandData->commands[i].value2;
       switch (c)
       {
       case BWAPIC::CommandType::SetScreenPosition:
@@ -770,27 +950,29 @@ namespace BWAPI
           Broodwar->pingMinimap(v1,v2);
         break;
       case BWAPIC::CommandType::EnableFlag:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::EnableFlag, &v1))
           Broodwar->enableFlag(v1);
         break;
       case BWAPIC::CommandType::Printf:
-        if (Broodwar->isInGame())
-          Broodwar->printf("%s", data->strings[v1]);
+        if (Broodwar->isInGame() &&
+            BroodwarImpl.permissionCheck(Tournament::Printf, (void*)clientString(v1)))
+          Broodwar->printf("%s", clientString(v1));
         break;
       case BWAPIC::CommandType::SendText:
-        if (Broodwar->isInGame())
-          Broodwar->sendTextEx(v2 != 0, "%s", data->strings[v1]);
+        if (Broodwar->isInGame() &&
+            BroodwarImpl.permissionCheck(Tournament::SendText, (void*)clientString(v1)))
+          Broodwar->sendTextEx(v2 != 0, "%s", clientString(v1));
         break;
       case BWAPIC::CommandType::PauseGame:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::PauseGame))
           Broodwar->pauseGame();
         break;
       case BWAPIC::CommandType::ResumeGame:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::ResumeGame))
           Broodwar->resumeGame();
         break;
       case BWAPIC::CommandType::LeaveGame:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::LeaveGame))
           Broodwar->leaveGame();
         break;
       case BWAPIC::CommandType::RestartGame:
@@ -798,21 +980,30 @@ namespace BWAPI
           Broodwar->restartGame();
         break;
       case BWAPIC::CommandType::SetLocalSpeed:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::SetLocalSpeed, &v1))
           Broodwar->setLocalSpeed(v1);
         break;
       case BWAPIC::CommandType::SetLatCom:
-        Broodwar->setLatCom(v1 == 1);
+      {
+        bool enabled = v1 == 1;
+        if (BroodwarImpl.permissionCheck(Tournament::SetLatCom, &enabled))
+          Broodwar->setLatCom(enabled);
         break;
+      }
       case BWAPIC::CommandType::SetGui:
-        Broodwar->setGUI(v1 == 1);
+      {
+        bool enabled = v1 == 1;
+        if (BroodwarImpl.permissionCheck(Tournament::SetGUI, &enabled))
+          Broodwar->setGUI(enabled);
         break;
+      }
       case BWAPIC::CommandType::SetFrameSkip:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() && BroodwarImpl.permissionCheck(Tournament::SetFrameSkip, &v1))
           Broodwar->setFrameSkip(v1);
         break;
       case BWAPIC::CommandType::SetMap:
-        Broodwar->setMap(data->strings[v1]);
+        if (BroodwarImpl.permissionCheck(Tournament::SetMap, (void*)clientString(v1)))
+          Broodwar->setMap(clientString(v1));
         break;
       case BWAPIC::CommandType::SetAllies:
         if (Broodwar->isInGame())
@@ -823,7 +1014,8 @@ namespace BWAPI
           Broodwar->setVision(getPlayer(v1), v2 != 0);
         break;
       case BWAPIC::CommandType::SetCommandOptimizerLevel:
-        if (Broodwar->isInGame())
+        if (Broodwar->isInGame() &&
+            BroodwarImpl.permissionCheck(Tournament::SetCommandOptimizationLevel, &v1))
           Broodwar->setCommandOptimizationLevel(v1);
         break;
       case BWAPIC::CommandType::SetRevealAll:
@@ -836,16 +1028,28 @@ namespace BWAPI
     }
     if ( Broodwar->isInGame() )
     {
-      for ( int i = 0; i < data->unitCommandCount; ++i )
+      const int unitCount = static_cast<int>(unitVector.size());
+      const int unitCommandCount =
+        ClientInput::clampCount(commandData->unitCommandCount, CommandData::MAX_UNIT_COMMANDS);
+      for ( int i = 0; i < unitCommandCount; ++i )
       {
-        if (data->unitCommands[i].unitIndex < 0 || data->unitCommands[i].unitIndex >= (int)unitVector.size())
+        if (!ClientInput::indexInRange(commandData->unitCommands[i].unitIndex, unitCount))
           continue;
-        Unit unit = unitVector[data->unitCommands[i].unitIndex];
-        Unit target = nullptr;
-        if (data->unitCommands[i].targetIndex >= 0 && data->unitCommands[i].targetIndex < (int)unitVector.size())
-          target = unitVector[data->unitCommands[i].targetIndex];
 
-        unit->issueCommand(UnitCommand(unit, data->unitCommands[i].type, target, data->unitCommands[i].x, data->unitCommands[i].y, data->unitCommands[i].extra));
+        // The type is an enum id the client wrote, and it is not checked downstream: the switch
+        // in Templates::canIssueCommandType falls through to `return true` for anything it does
+        // not recognise, so an unknown type reaches executeCommand, queues a select order for
+        // the unit and charges APM before doing nothing. Twenty thousand of those fit in one
+        // frame.
+        if (!ClientInput::indexInRange(commandData->unitCommands[i].type, UnitCommandTypes::Enum::MAX))
+          continue;
+
+        Unit unit = unitVector[commandData->unitCommands[i].unitIndex];
+        Unit target = nullptr;
+        if (ClientInput::indexInRange(commandData->unitCommands[i].targetIndex, unitCount))
+          target = unitVector[commandData->unitCommands[i].targetIndex];
+
+        unit->issueCommand(UnitCommand(unit, commandData->unitCommands[i].type, target, commandData->unitCommands[i].x, commandData->unitCommands[i].y, commandData->unitCommands[i].extra));
       }
     } // if isInGame
   }

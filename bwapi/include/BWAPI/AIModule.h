@@ -1,6 +1,5 @@
 #pragma once
 #include <BWAPI/Position.h>
-#include <BWAPI/TournamentAction.h>
 #include <BWAPI/Unit.h>
 #include <string>
 
@@ -207,46 +206,4 @@ namespace BWAPI
       virtual void onUnitComplete(Unit unit);
   };
 
-  /// <summary>TournamentModule is a virtual class that is intended to be implemented or inherited
-  /// by a custom Tournament class.</summary> Like AIModule, the Broodwar interface is guaranteed
-  /// to be initialized if any of these predefined interface functions are invoked by BWAPI.
-  ///
-  /// @note
-  ///   The TournamentModule is to be implemented by Tournament Modules ONLY. A standard AI module
-  ///   should never implement it. The Tournament Module is invoked only if it is explicitly
-  ///   defined in the configuration file. Tournament Modules also contain an AI Module interface
-  ///   so that it can monitor the time an AI module spent during its calls using
-  ///   Game::getLastEventTime.
-  ///
-  /// @ingroup Interface
-  class TournamentModule
-  {
-    public:
-      TournamentModule();
-      virtual ~TournamentModule();
-
-      /// <summary>This function regulates the functions involving game settings that an AI module
-      /// is allowed to execute.</summary> For example, if the tournament forbids the enabling of
-      /// Flag::CompleteMapInformation, then this function can deny the request.
-      ///
-      /// <param name="actionType">
-      ///   An ActionID containing the action that the AI module is requesting.
-      /// </param>
-      ///
-      /// <param name="parameter">
-      ///   An optional parameter that pertains to certain action requests. For example, if 
-      ///   \p actionType is Tournament::ActionID::SendText, then \p parameter is a pointer to a
-      ///   null-terminated character array containing the message. If \p actionType is
-      ///   Tournament::ActionID::SetLocalSpeed, then parameter is a pointer to an integer.
-      /// </param>
-      ///
-      /// @see BWAPI::Tournament::ActionID
-      virtual bool onAction(BWAPI::Tournament::ActionID actionType, void *parameter = nullptr);
-
-      /// <summary>This function is called if the current player is chosen to advertise the BWAPI
-      /// revision.</summary> When tournament mode is enabled, to reduce spam, only one bot sends
-      /// the revision message. The bot that is chosen depends on its player ID. Only one of the
-      /// bots can call this function during a tournament game.
-      virtual void onFirstAdvertisement();
-  };
 }

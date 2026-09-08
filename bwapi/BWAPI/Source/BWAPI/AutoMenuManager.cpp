@@ -18,14 +18,16 @@ using namespace BWAPI;
 
 namespace
 {
-  std::mt19937 mt{ static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()) };
+  // Seeded from the match seed in the constructor, not from the wall clock here: this generator
+  // picks the map, and a map nobody chose and nobody can reproduce is the same defect as a race
+  // nobody chose (ADR 0001 section 2, defect 2.8). It used to be seeded from the clock unless
+  // seed_override was set, so the one case that mattered was the one nobody ran.
+  std::mt19937 mt;
 }
 
 AutoMenuManager::AutoMenuManager()
 {
-  auto const seedOverride = LoadConfigInt("starcraft", "seed_override", std::numeric_limits<decltype(GameImpl::seedOverride)>::max());
-  if (seedOverride != std::numeric_limits<decltype(seedOverride)>::max())
-    mt.seed(seedOverride);
+  mt.seed(matchSeed());
   this->reloadConfig();
 }
 

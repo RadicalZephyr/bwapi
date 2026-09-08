@@ -17,8 +17,9 @@
 
 namespace BWAPI
 {
-  GameImpl::GameImpl(GameData* _data)
+  GameImpl::GameImpl(GameData* _data, CommandData* _commandData)
     : data(_data)
+    , commandData(_commandData)
   {
     this->clearAll();
     for(int i = 0; i < 5; ++i)
@@ -35,15 +36,17 @@ namespace BWAPI
   }
   int GameImpl::addShape(const BWAPIC::Shape &s)
   {
-    assert(data->shapeCount < GameData::MAX_SHAPES);
-    data->shapes[data->shapeCount] = s;
-    return data->shapeCount++;
+    if ( commandData->shapeCount >= CommandData::MAX_SHAPES )
+      return -1;
+    commandData->shapes[commandData->shapeCount] = s;
+    return commandData->shapeCount++;
   }
   int GameImpl::addString(const char* text)
   {
-    assert(data->stringCount < GameData::MAX_STRINGS);
-    StrCopy(data->strings[data->stringCount], text);
-    return data->stringCount++;
+    if ( commandData->stringCount >= CommandData::MAX_STRINGS )
+      return -1;
+    StrCopy(commandData->strings[commandData->stringCount], text);
+    return commandData->stringCount++;
   }
   int GameImpl::addText(BWAPIC::Shape &s, const char* text)
   {
@@ -52,15 +55,17 @@ namespace BWAPI
   }
   int GameImpl::addCommand(const BWAPIC::Command &c)
   {
-    assert(data->commandCount < GameData::MAX_COMMANDS);
-    data->commands[data->commandCount] = c;
-    return data->commandCount++;
+    if ( commandData->commandCount >= CommandData::MAX_COMMANDS )
+      return -1;
+    commandData->commands[commandData->commandCount] = c;
+    return commandData->commandCount++;
   }
   int GameImpl::addUnitCommand(BWAPIC::UnitCommand& c)
   {
-    assert(data->unitCommandCount < GameData::MAX_UNIT_COMMANDS);
-    data->unitCommands[data->unitCommandCount] = c;
-    return data->unitCommandCount++;
+    if ( commandData->unitCommandCount >= CommandData::MAX_UNIT_COMMANDS )
+      return -1;
+    commandData->unitCommands[commandData->unitCommandCount] = c;
+    return commandData->unitCommandCount++;
   }
   Unit GameImpl::_unitFromIndex(int index)
   {
@@ -68,6 +73,14 @@ namespace BWAPI
   }
   Event GameImpl::makeEvent(BWAPIC::Event e)
   {
+    // The server hands out -1 for a string it had no room to store, so the index is checked
+    // before it is used as a subscript.
+    const auto eventString = [&](int index) -> const char * {
+      if (index < 0 || index >= GameData::MAX_EVENT_STRINGS)
+        return "";
+      return data->eventStrings[index];
+    };
+
     Event e2;
     e2.setType(e.type);
     if (e.type == EventType::MatchEnd)
@@ -77,11 +90,11 @@ namespace BWAPI
     if (e.type == EventType::PlayerLeft)
       e2.setPlayer(getPlayer(e.v1));
     if (e.type == EventType::SaveGame || e.type == EventType::SendText)
-      e2.setText(data->eventStrings[e.v1]);
+      e2.setText(eventString(e.v1));
     if (e.type == EventType::ReceiveText)
     {
       e2.setPlayer(getPlayer(e.v1));
-      e2.setText(data->eventStrings[e.v2]);
+      e2.setText(eventString(e.v2));
     }
     if (e.type == EventType::UnitDiscover ||
         e.type == EventType::UnitEvade ||
@@ -857,9 +870,9 @@ namespace BWAPI
   {
     int e=0;
     if (isEnabled) e=1;
-    //update shared memory
-    data->hasLatCom = isEnabled;
-    //queue up command for server so it also applies the change
+    // The state plane is read-only now, so this is a request rather than a fact. The server
+    // applies it and publishes hasLatCom back; until it does, isLatComEnabled reports what is
+    // actually in force rather than what was asked for.
     addCommand(BWAPIC::Command(BWAPIC::CommandType::SetLatCom, e));
   }
   bool GameImpl::isGUIEnabled() const
@@ -870,8 +883,7 @@ namespace BWAPI
   {
     int e=0;
     if (enabled) e=1;
-    data->hasGUI = enabled;
-    //queue up command for server so it also applies the change
+    // As with setLatCom: a request, not a write.
     addCommand(BWAPIC::Command(BWAPIC::CommandType::SetGui, e));
   }
   int GameImpl::getInstanceNumber() const
@@ -946,7 +958,15 @@ namespace BWAPI
   }
   int GameImpl::getLastEventTime() const
   {
-    return 0;
+    return static_cast<int>((data->lastFrameDurationMicros + 500) / 1000);
+  }
+  long long GameImpl::getLastFrameDurationMicros() const
+  {
+    return data->lastFrameDurationMicros;
+  }
+  long long GameImpl::getLastIpcDurationMicros() const
+  {
+    return data->lastIpcDurationMicros;
   }
   bool GameImpl::setRevealAll(bool reveal)
   {
@@ -961,7 +981,14 @@ namespace BWAPI
   }
   unsigned GameImpl::getRandomSeed() const
   {
-    return data->randomSeed;
+    // Brood War's own seed is no longer published to the client.
+    //
+    // ADR 0001 section 4.3 lists engine randomness under "no bot access", because draw counts
+    // correlate with events - OpenBW instruments random_counts per call site for exactly that
+    // reason. Handing a bot the seed the engine is drawing from is the same defect as seeding
+    // BWAPI's own generators from the wall clock, one step further along, and fixing the second
+    // while leaving the first would have been hollow.
+    return 0;
   }
 };
 

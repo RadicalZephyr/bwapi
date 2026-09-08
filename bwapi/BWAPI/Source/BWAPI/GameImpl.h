@@ -9,6 +9,7 @@
 #include <BWAPI/Game.h>
 #include <BWAPI/Server.h>
 #include <BWAPI/Map.h>
+#include <BWAPI/Client/CommandData.h>
 #include <BWAPI/Client/GameData.h>
 #include <BWAPI/TournamentAction.h>
 #include <BWAPI/CoordinateType.h>
@@ -180,7 +181,9 @@ namespace BWAPI
       virtual BWAPI::Region   getRegionAt(int x, int y) const override;
 
       virtual int getLastEventTime() const override;
-      void setLastEventTime(int lastEventTime);
+      virtual long long getLastFrameDurationMicros() const override;
+      virtual long long getLastIpcDurationMicros() const override;
+      void setLastFrameDurationMicros(long long micros);
 
       virtual bool setRevealAll(bool reveal = true) override;
 
@@ -194,8 +197,7 @@ namespace BWAPI
       void update(); // Updates unitArrayCopy according to bw memory
       void updateStatistics();
       void updateOverlays();
-      void initializeTournamentModule();
-      void initializeAIModule();
+      void announceAttachment();
 
       void loadAutoMenuData();
 
@@ -226,7 +228,6 @@ namespace BWAPI
       void moveToSelectedUnits();
       void executeCommand(UnitCommand command);
 
-      static void SendClientEvent(BWAPI::AIModule *module, Event &e);
 
       void queueSentMessage(std::string const &message);
 
@@ -243,7 +244,6 @@ namespace BWAPI
       void dropPlayers();
 
       int drawShapes();
-      void processEvents();
       Unit _unitFromIndex(int index);
 
     public:
@@ -265,6 +265,9 @@ namespace BWAPI
       AutoMenuManager autoMenuManager;
 
       int seedOverride = std::numeric_limits<int>::max();
+      /// How many matches this process has started. Mixed into the per-match seed so successive
+      /// matches differ without anything reading a clock.
+      unsigned matchIndex = 0;
       int speedOverride = std::numeric_limits<int>::min();
       bool wantDropPlayers = true;
 
@@ -272,15 +275,13 @@ namespace BWAPI
       bool startedClient;
 
       std::array<UnitImpl*, BW::UNIT_ARRAY_MAX_LENGTH> unitArray;
-      bool isTournamentCall = false;
 
       GameData* data = server.data;
+      /// The client's half of shared memory. Untrusted; every read of it is clamped or
+      /// range-checked (ClientInput.h).
+      CommandData* commandData = server.commandData;
 
-      HMODULE hAIModule;
-      AIModule* client = nullptr;
 
-      HMODULE hTournamentModule;
-      AIModule* tournamentAI = nullptr;
 
       // NOTE: This MUST be a POD array (NOT std::array) because of the crappy assembly hacks that are being used
       // Until we can get rid of the assembly hacks, this must be treated like a pissed off cat
@@ -329,8 +330,6 @@ namespace BWAPI
       void computeSecondaryUnitSets();
 
       std::array<bool,BWAPI::Flag::Max> flags;
-      TournamentModule* tournamentController = nullptr;
-      bool              bTournamentMessageAppeared = false;
       mutable BWAPI::Error lastError;
       Unitset deadUnits;    // Keeps track of units that were removed from the game, used only to deallocate them
       u32 cheatFlags;
@@ -356,23 +355,32 @@ namespace BWAPI
       bool grid = false;
       bool showfps = false;
 
-      bool externalModuleConnected = false;
       bool calledMatchEnd = false;
 
-      int lastEventTime = 0;
+      long long lastFrameDurationMicros = 0;
 
     public:
       APMCounter apmCounter;
       CommandOptimizer commandOptimizer;
 
-    private:
-      bool tournamentCheck(Tournament::ActionID type, void *parameter = nullptr);
+    public:
+      /// May the bot perform \p type? Answered by the [permissions] table in bwapi.ini, which
+      /// the game process reads once at startup.
+      ///
+      /// This is asked where a request *arrives* - Server::processCommands for the client's
+      /// commands, parseText for a command typed into the game - and never inside the method that
+      /// carries the request out. Those methods are also how BWAPI does its own housekeeping:
+      /// initializeData resets the frame skip and the GUI flag at every match start, setGUI sets
+      /// the frame skip, and the drawing code changes the text size several times a frame. Asking
+      /// there denies BWAPI its own resets, silently, which is a defect this arrangement had until
+      /// the shadow-StarCraft harness caught the frame skip not being reset.
+      bool permissionCheck(Tournament::ActionID type, void *parameter = nullptr);
 
+    private:
       int addShape(const BWAPIC::Shape &s);
       int addString(const char* text);
       int addText(BWAPIC::Shape &s, const char* text);
 
-      static std::string getTournamentString();
   };
   /**
    * Broodwar is, and always should be the ONLY instance of the Game class, it is singleton.

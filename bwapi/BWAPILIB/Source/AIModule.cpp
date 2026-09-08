@@ -43,14 +43,4 @@ namespace BWAPI
   void AIModule::onUnitComplete(BWAPI::Unit )
   { }
 
-  TournamentModule::TournamentModule()
-  { }
-  TournamentModule::~TournamentModule()
-  { }
-  bool TournamentModule::onAction(BWAPI::Tournament::ActionID, void*)
-  {
-    return true;
-  }
-  void TournamentModule::onFirstAdvertisement()
-  { }
 }

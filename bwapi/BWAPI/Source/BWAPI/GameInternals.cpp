@@ -1,4 +1,6 @@
 #include "GameImpl.h"
+#include "Permissions.h"
+#include "../Config.h"
 #include <vector>
 #include <string>
 
@@ -152,15 +154,22 @@ namespace BWAPI
 
     ss >> cmd;
 
-    // commands list
+    // These are typed into the game's chat box - _SStrCopy intercepts them - so they are a request
+    // like the client's commands are, and the ones that name a gated action ask the table here. The
+    // methods they call no longer ask on their own behalf: they are also how BWAPI does its own
+    // housekeeping, and a table that denied an action denied BWAPI its own resets along with it.
     if (cmd == "/leave")
     {
+      if (!permissionCheck(Tournament::LeaveGame))
+        return true;
       this->leaveGame();
     }
     else if (cmd == "/speed")
     {
       n = -1;
       ss >> n;
+      if (!permissionCheck(Tournament::SetLocalSpeed, &n))
+        return true;
       setLocalSpeedDirect(n);
       Broodwar << "Changed game speed" << std::endl;
     }
@@ -168,11 +177,15 @@ namespace BWAPI
     {
       n = 1;
       ss >> n;
+      if (!permissionCheck(Tournament::SetFrameSkip, &n))
+        return true;
       setFrameSkip(n);
       Broodwar << "Altered frame skip" << std::endl;
     }
     else if (cmd == "/cheats")
     {
+      if (!permissionCheck(Tournament::SendText, (void*)"power overwhelming"))
+        return true;
       sendText("power overwhelming");
       sendText("operation cwal");
       sendText("the gathering");
@@ -195,7 +208,10 @@ namespace BWAPI
     }
     else if (cmd == "/nogui")
     {
-      setGUI(!data->hasGUI);
+      bool enabled = !data->hasGUI;
+      if (!permissionCheck(Tournament::SetGUI, &enabled))
+        return true;
+      setGUI(enabled);
       Broodwar << "GUI: " << (data->hasGUI ? "enabled" : "disabled") << std::endl;
     }
     else if (cmd == "/wmode")
@@ -270,14 +286,12 @@ namespace BWAPI
   {
     return BW::BWDATA::g_LocalHumanID;
   }
-  bool GameImpl::tournamentCheck(Tournament::ActionID type, void *parameter)
+  bool GameImpl::permissionCheck(Tournament::ActionID type, void *parameter)
   {
-    if ( this->tournamentController && !isTournamentCall )
+    if ( !permissions().permits(type, parameter) )
     {
-      isTournamentCall  = true;
-      bool allow        = this->tournamentController->onAction(type, parameter);
-      isTournamentCall  = false;
-      return allow;
+      this->setLastError(Errors::Access_Denied);
+      return false;
     }
     return true;
   }
@@ -292,8 +306,14 @@ namespace BWAPI
     this->BWAPIPlayer = nullptr;
     this->enemyPlayer = nullptr;
 
-    // Set random seed
-    srand(GetTickCount());
+    // Seed the C runtime generator from the match seed rather than from the wall clock (ADR
+    // 0001 section 2, defect 2.8). Its only consumer is the auto-menu's random race pick, and a
+    // race nobody chose and nobody can reproduce is not a small thing when the point of the
+    // artifact is that a match can be replayed and audited.
+    //
+    // The match index keeps successive matches in one session different from each other, the way
+    // a fresh clock reading used to, while staying a function of the seed.
+    srand(matchSeed() + static_cast<unsigned>(this->matchIndex++));
 
     // clear all sets
     this->aliveUnits.clear();
@@ -388,43 +408,10 @@ namespace BWAPI
     // @NOTE: Freeing libraries comes after because of some destructors for functionals in Interface Events
 
     // Destroy the AI Module client
-    if ( this->client )
-    {
-      delete this->client;
-      this->client = nullptr;
-    }
 
     // Unload the AI Module library
-    if ( hAIModule )
-    {
-      FreeLibrary(hAIModule);
-      hAIModule = nullptr;
-    }
 
     this->startedClient = false;
-
-    // Destroy the Tournament Module controller
-    if ( this->tournamentController )
-    {
-      delete this->tournamentController;
-      this->tournamentController = nullptr;
-    }
-
-    // Destroy the Tournament Module AI
-    if ( this->tournamentAI )
-    {
-      delete this->tournamentAI;
-      this->tournamentAI = nullptr;
-    }
-
-    // Destroy the Tournament Module Library
-    if ( hTournamentModule )
-    {
-      FreeLibrary(hTournamentModule);
-      hTournamentModule = nullptr;
-    }
-
-    this->bTournamentMessageAppeared = false;
   }
 
   void GameImpl::queueSentMessage(std::string const &message)
