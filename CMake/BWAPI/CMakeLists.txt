@@ -301,7 +301,7 @@ SET(BWAPI_SHARED_SRC
 SOURCE_GROUP("BWAPI/Shared" FILES ${BWAPI_SHARED_SRC})
 
 ADD_CUSTOM_COMMAND(OUTPUT ${BWAPI_ROOT}/svnrev.h PRE_BUILD
-        COMMAND cscript.exe ${BWAPI_ROOT}/revisionUpdate.vbs
+        COMMAND powershell -NoProfile -ExecutionPolicy Bypass -File ${BWAPI_ROOT}/revisionUpdate.ps1
         WORKING_DIRECTORY ${BWAPI_ROOT})
 
 SET(BWAPI_EVERYTHING

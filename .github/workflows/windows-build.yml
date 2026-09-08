@@ -1,0 +1,84 @@
+# Builds the pieces of BWAPI this fork changes, so that a change to them is compile-checked.
+#
+# Upstream ships no CI and pins v141_xp, so nothing here was ever built automatically. The
+# defect series (bwapi-c2 docs/bwapi-fork-defect-plan.md, stage A.1) makes this job the
+# foundation it stands on: with bwapi-c2 frozen until a later pin bump, this job and the
+# Linux validator tests are the only verification the series gets.
+#
+# Release_Pipeline|Win32 is upstream's own CI configuration: BWAPI builds Release_Pipeline and
+# every dependency builds Release, which is the mapping bwapi.sln already declares.
+
+name: Windows build
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: BWAPI.dll and the client (x86)
+    runs-on: windows-2025
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # revisionUpdate.ps1 derives SVN_REV from `git rev-list HEAD --count`, which a
+          # shallow clone answers wrongly.
+          fetch-depth: 0
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Generate include/svnrev.h
+        working-directory: bwapi
+        shell: pwsh
+        run: |
+          ./revisionUpdate.ps1
+          Get-Content include/svnrev.h
+
+      - name: Build BWAPI.dll
+        working-directory: bwapi
+        run: >
+          msbuild bwapi.sln
+          /t:BWAPI
+          /p:Configuration=Release_Pipeline
+          /p:Platform=Win32
+          /m
+          /nologo
+          /verbosity:minimal
+
+      - name: Build BWAPIClient and ExampleAIClient
+        working-directory: bwapi
+        run: >
+          msbuild bwapi.sln
+          "/t:BWAPIClient;ExampleAIClient"
+          /p:Configuration=Release
+          /p:Platform=Win32
+          /m
+          /nologo
+          /verbosity:minimal
+
+      - name: Show what was produced
+        working-directory: bwapi
+        shell: pwsh
+        run: |
+          Get-ChildItem -Recurse -Include BWAPI.dll,BWAPIClient.lib,ExampleAIClient.exe |
+            Select-Object FullName,Length | Format-Table -AutoSize
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bwapi-win32
+          path: |
+            bwapi/**/BWAPI.dll
+            bwapi/**/BWAPI.pdb
+            bwapi/**/ExampleAIClient.exe
+          if-no-files-found: error
