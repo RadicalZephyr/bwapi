@@ -1,0 +1,21 @@
+{
+  "_comment": [
+    "Upstream's released BWAPI 4.4.0 binary, which is the only ground truth this repository has",
+    "for what the offsets and hooks looked like before the toolset was retargeted off v141_xp.",
+    "tests/shadow_bw runs it and the current build against the same shadow StarCraft image and",
+    "requires the two reports to be identical.",
+    "",
+    "Both hashes are pinned because the job downloads over the network: the archive hash pins what",
+    "the release serves, and the dll hash pins what came out of it. Leave a hash empty and the job",
+    "prints what it found and fails, which is how these were filled in.",
+    "",
+    "This does not move at a pin bump. It moves when upstream cuts a release we decide to compare",
+    "against instead, and that is a deliberate change of reference, not maintenance."
+  ],
+  "repository": "bwapi/bwapi",
+  "tag": "v4.4.0",
+  "asset": "BWAPI.7z",
+  "archive_sha256": "e6d1abeff2a9b31886d9ade15c5c783a32f7e973f1f0e7137911f3d083fa72e2",
+  "dll_member": "Release_Binary/Starcraft/bwapi-data/BWAPI.dll",
+  "dll_sha256": "f2e0f937e9592157656118fa7e5ff30c2327694ed56c1d8f55687972ad97d308"
+}

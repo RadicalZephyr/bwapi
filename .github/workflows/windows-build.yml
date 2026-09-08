@@ -108,6 +108,188 @@ jobs:
           }
           Write-Host "Layout and addresses match the baseline ($((Get-Content $baseline).Count) lines)."
 
+      # Tier 2 of the offsets smoke test. Tier 1 asks the compiler what BWAPI believes about
+      # StarCraft; this asks the linked binary what it does about it, and compares that against
+      # upstream's released v4.4.0 - the last build of these offsets that predates the retarget,
+      # and the only ground truth available without StarCraft itself. See tests/shadow_bw/.
+      #
+      # Everything the reference costs lands in RUNNER_TEMP, not in the checkout, so that the
+      # artifact upload and the listing below keep describing this build and not upstream's binary.
+      - name: Build the shadow StarCraft host
+        working-directory: bwapi
+        run: >
+          msbuild tests/shadow_bw/ShadowHost.vcxproj
+          /p:Configuration=Release
+          /p:Platform=Win32
+          /nologo
+          /verbosity:minimal
+
+      - name: Fetch upstream's v4.4.0 BWAPI.dll
+        working-directory: bwapi
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $pin = Get-Content tests/shadow_bw/reference.json -Raw | ConvertFrom-Json
+          $scratch = Join-Path $env:RUNNER_TEMP 'offsets-smoke'
+          New-Item -ItemType Directory -Force -Path $scratch | Out-Null
+          $headers = @{
+            Authorization = "Bearer $env:GH_TOKEN"
+            Accept        = 'application/vnd.github+json'
+            'User-Agent'  = 'bwapi-offsets-smoke-test'
+          }
+
+          $url = "https://api.github.com/repos/$($pin.repository)/releases/tags/$($pin.tag)"
+          try {
+            $release = Invoke-RestMethod $url -Headers $headers
+          } catch {
+            Write-Host "No release tagged '$($pin.tag)' in $($pin.repository). Releases available:"
+            $all = Invoke-RestMethod "https://api.github.com/repos/$($pin.repository)/releases?per_page=100" -Headers $headers
+            $all | ForEach-Object { Write-Host ("  {0}" -f $_.tag_name) }
+            exit 1
+          }
+
+          Write-Host "Release $($release.tag_name) offers:"
+          $release.assets | ForEach-Object { Write-Host ("  {0}  ({1} bytes)" -f $_.name, $_.size) }
+
+          # An empty pin is the bootstrap: discover every field in one pass and print the block to
+          # paste into reference.json, rather than one CI round trip per field.
+          $assetName = $pin.asset
+          if (-not $assetName) {
+            $candidates = @($release.assets | Where-Object { $_.name -match '\.(zip|exe|7z)$' })
+            if ($candidates.Count -ne 1) {
+              Write-Host "Set 'asset' in tests/shadow_bw/reference.json to one of the names above."
+              exit 1
+            }
+            $assetName = $candidates[0].name
+            Write-Host "No asset pinned; taking the only candidate, $assetName."
+          }
+
+          $asset = $release.assets | Where-Object { $_.name -eq $assetName }
+          if (-not $asset) { Write-Host "Release has no asset named '$assetName'."; exit 1 }
+
+          # No Authorization header on the download: the asset URL redirects to a storage host that
+          # rejects a GitHub token.
+          $archive = Join-Path $scratch $assetName
+          Invoke-WebRequest $asset.browser_download_url -OutFile $archive
+
+          $archiveHash = (Get-FileHash $archive -Algorithm SHA256).Hash.ToLower()
+          Write-Host "archive sha256 $archiveHash"
+
+          # 7-Zip reads both the zip and the NSIS installer shapes upstream has released over the
+          # years, so the pin does not have to say which one this is.
+          $sevenZip = (Get-Command 7z -ErrorAction SilentlyContinue).Source
+          if (-not $sevenZip) { $sevenZip = 'C:\Program Files\7-Zip\7z.exe' }
+          if (-not (Test-Path $sevenZip)) { Write-Host 'No 7-Zip on this runner.'; exit 1 }
+
+          $extracted = Join-Path $scratch 'extracted'
+          & $sevenZip x -y "-o$extracted" $archive | Out-Null
+          if ($LASTEXITCODE -ne 0) { Write-Host "7-Zip could not extract $assetName."; exit 1 }
+
+          function Relative($full) {
+            $full.Substring($extracted.Length).TrimStart('\', '/').Replace('\', '/')
+          }
+
+          $dlls = @(Get-ChildItem $extracted -Recurse -Filter BWAPI.dll)
+          Write-Host "BWAPI.dll copies inside the archive:"
+          $dlls | ForEach-Object {
+            Write-Host ("  {0}  ({1} bytes, sha256 {2})" -f (Relative $_.FullName), $_.Length,
+                        (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower())
+          }
+
+          $memberName = $pin.dll_member
+          if (-not $memberName) {
+            if ($dlls.Count -ne 1) {
+              Write-Host "Set 'dll_member' in tests/shadow_bw/reference.json to one of the paths above."
+              exit 1
+            }
+            $memberName = Relative $dlls[0].FullName
+            Write-Host "No member pinned; taking the only BWAPI.dll, $memberName."
+          }
+
+          $member = Join-Path $extracted $memberName
+          if (-not (Test-Path $member)) { Write-Host "The archive has no member '$memberName'."; exit 1 }
+          $dllHash = (Get-FileHash $member -Algorithm SHA256).Hash.ToLower()
+
+          $problems = @()
+          if (-not $pin.asset) { $problems += 'asset is not pinned' }
+          if (-not $pin.dll_member) { $problems += 'dll_member is not pinned' }
+          if (-not $pin.archive_sha256) { $problems += 'archive_sha256 is not pinned' }
+          elseif ($pin.archive_sha256 -ne $archiveHash) {
+            $problems += "archive_sha256 is $($pin.archive_sha256) but the release served $archiveHash"
+          }
+          if (-not $pin.dll_sha256) { $problems += 'dll_sha256 is not pinned' }
+          elseif ($pin.dll_sha256 -ne $dllHash) {
+            $problems += "dll_sha256 is $($pin.dll_sha256) but the archive holds $dllHash"
+          }
+
+          if ($problems.Count -gt 0) {
+            Write-Host ''
+            $problems | ForEach-Object { Write-Host "  - $_" }
+            Write-Host ''
+            Write-Host 'A reference that is not pinned is not ground truth. Put this in tests/shadow_bw/reference.json:'
+            Write-Host ('  "asset": "{0}",' -f $assetName)
+            Write-Host ('  "archive_sha256": "{0}",' -f $archiveHash)
+            Write-Host ('  "dll_member": "{0}",' -f $memberName)
+            Write-Host ('  "dll_sha256": "{0}"' -f $dllHash)
+            exit 1
+          }
+
+          Copy-Item $member (Join-Path $scratch 'BWAPI-4.4.0.dll')
+          Write-Host "Reference is $assetName -> $memberName, sha256 $dllHash."
+
+      - name: Compare the hooks against v4.4.0
+        working-directory: bwapi
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $shadowHost  = './Release/ShadowHost.exe'
+          $scratch     = Join-Path $env:RUNNER_TEMP 'offsets-smoke'
+          $reference   = Join-Path $scratch 'BWAPI-4.4.0.dll'
+          $reportRef   = Join-Path $scratch 'reference.txt'
+          $reportNow   = Join-Path $scratch 'current.txt'
+          $reportAgain = Join-Path $scratch 'current-again.txt'
+
+          function Invoke-ShadowHost($dll, $report) {
+            & $shadowHost $dll $report | Out-Null
+            if ($LASTEXITCODE -ne 0) {
+              Write-Host "ShadowHost.exe failed on $dll (exit $LASTEXITCODE)."
+              exit 1
+            }
+          }
+
+          # A differential test is worth nothing if its own output wanders, so settle that first and
+          # separately: the same DLL twice has to give the same report. A difference here is a defect
+          # in the harness - a heap address leaking into the report, a race with the persistent-patch
+          # thread - and says nothing about either DLL.
+          Invoke-ShadowHost ./Release_Pipeline/BWAPI.dll $reportNow
+          Invoke-ShadowHost ./Release_Pipeline/BWAPI.dll $reportAgain
+          if (((Get-Content $reportNow) -join "`n") -ne ((Get-Content $reportAgain) -join "`n")) {
+            Write-Host 'The report is not reproducible - two runs of the same DLL disagree.'
+            Compare-Object (Get-Content $reportNow) (Get-Content $reportAgain) -SyncWindow 0 |
+              Format-Table -AutoSize | Out-String | Write-Host
+            exit 1
+          }
+
+          Invoke-ShadowHost $reference $reportRef
+
+          if (((Get-Content $reportRef) -join "`n") -ne ((Get-Content $reportNow) -join "`n")) {
+            Write-Host 'This build does not patch StarCraft the way v4.4.0 did.'
+            Write-Host 'Left is v4.4.0, right is this build. Every line is an import slot BWAPI'
+            Write-Host 'redirects or an address in the game image it writes to.'
+            Compare-Object (Get-Content $reportRef) (Get-Content $reportNow) -SyncWindow 0 |
+              Format-Table -AutoSize | Out-String | Write-Host
+            Write-Host '--- v4.4.0 ---'
+            Get-Content $reportRef | ForEach-Object { Write-Host $_ }
+            Write-Host '--- this build ---'
+            Get-Content $reportNow | ForEach-Object { Write-Host $_ }
+            exit 1
+          }
+
+          Write-Host "Identical to v4.4.0 ($((Get-Content $reportNow).Count) lines)."
+          Get-Content $reportNow | ForEach-Object { Write-Host $_ }
+
       - name: Show what was produced
         working-directory: bwapi
         shell: pwsh
