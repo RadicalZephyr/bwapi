@@ -18,13 +18,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -51,7 +51,7 @@
     <PreBuildEvent />
     <CustomBuildStep>
       <Command>pushd ".."
-cscript "./revisionUpdate.vbs"
+powershell -NoProfile -ExecutionPolicy Bypass -File "./revisionUpdate.ps1"
 popd</Command>
     </CustomBuildStep>
     <CustomBuildStep>
@@ -76,7 +76,7 @@ popd</Command>
     <PreBuildEvent />
     <CustomBuildStep>
       <Command>pushd ".."
-cscript "./revisionUpdate.vbs"
+powershell -NoProfile -ExecutionPolicy Bypass -File "./revisionUpdate.ps1"
 popd</Command>
     </CustomBuildStep>
     <CustomBuildStep>

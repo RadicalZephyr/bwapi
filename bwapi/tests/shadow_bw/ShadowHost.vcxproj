@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The shadow StarCraft host. See shadow_host.cpp.
+
+  Two link settings carry the whole fixture and are not style choices:
+
+  BaseAddress 0x20000000 with RandomizedBaseAddress off, so that this executable is never mapped
+  over StarCraft's image base and the VirtualAlloc at 0x00400000 always succeeds. With ASLR on, an
+  x86 executable can land anywhere, including there, and the failure would be intermittent.
+
+  Storm.lib, so that the storm.dll ordinals BWAPI detours are in this executable's import table.
+  It is built by bwapi.sln into ../../Release, which is also where this executable goes - the
+  loader searches the executable's own directory first, so BWAPI.dll's storm.dll import resolves
+  to the same stub this host already has loaded.
+-->
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3A6B1F92-5C4D-4E80-9B17-8F2A0D6C4B75}</ProjectGuid>
+    <RootNamespace>ShadowHost</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <OutDir>$(MSBuildThisFileDirectory)..\..\Release\</OutDir>
+    <IntDir>$(MSBuildThisFileDirectory)Release\obj\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../Storm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NOMINMAX;WIN32;_WIN32_WINNT=0x0601;NTDDI_VERSION=0x06010000;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Version.lib;Storm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MSBuildThisFileDirectory)..\..\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <BaseAddress>0x20000000</BaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="shadow_host.cpp" />
+    <ClCompile Include="shadow_imports.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="shadow_imports.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ShadowHost.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
