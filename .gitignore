@@ -42,3 +42,6 @@ apps/cygwin/
 apps/http*
 BWAPI.7z
 
+
+# Out-of-source CMake builds (this fork's top-level CMakeLists.txt)
+/build/
