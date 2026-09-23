@@ -16,6 +16,7 @@
 #include <BWAPI/Input.h>
 #include <BWAPI/CoordinateType.h>
 
+#include <cstdint>
 #include <sstream>
 #include <functional>
 

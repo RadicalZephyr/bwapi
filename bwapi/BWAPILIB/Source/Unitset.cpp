@@ -5,6 +5,7 @@
 #include <BWAPI/Game.h>
 #include <BWAPI/TechType.h>
 
+#include <cstdint>
 #include <utility>
 
 namespace BWAPI
